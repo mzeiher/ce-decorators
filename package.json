@@ -1,6 +1,6 @@
 {
   "name": "ce-decorators",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Custom Element decorators for typescript",
   "module": "es6/index.js",
   "browser": "es5/index.js",
@@ -14,6 +14,7 @@
     "build": "tsc --project ./tsconfig.es6.json && tsc --project ./tsconfig.es5.json && webpack"
   },
   "author": "Mathis Zeiher",
+  "keywords": ["custom elements", "web components", "typescript", "decorators", "cev1", "lit-html", "ce"],
   "repository": {
     "type" : "git",
     "url" : "https://github.com/mzeiher/ce-decorators.git"
