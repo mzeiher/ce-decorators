@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es2017",
+    "declaration": true,
+    "outDir": "./es6",
+  },
+  "exclude": [
+    "node_modules",
+    "src/test/*"
+  ]
+}
