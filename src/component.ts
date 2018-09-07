@@ -70,7 +70,6 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
         constructor(...args: any[]) {
           super(...args);
           const value: ValueMapType = getValue(this);
-          Object.assign(value, { state: STATE.INIT, properties: {}, dirty: true });
 
           if (!this.shadowRoot) {
             this.attachShadow({ mode: 'open' });
@@ -102,6 +101,7 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
               }
             };
           }
+          value.state = STATE.CONSTRUCTED;
         }
 
         protected connectedCallback(): void {
@@ -135,6 +135,9 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
             const propertyKey: string = kebapToCamelCase(attrName);
             const prop: PropertyOptions = properties.get(propertyKey);
             if (prop) {
+              if (prop.readonly) {
+                throw new Error('property is readonly');
+              }
               if (prop.type === Boolean) {
                 getValue(this).properties[propertyKey] = true;
               }

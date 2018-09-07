@@ -38,7 +38,7 @@ import { Component, CutomElement, Prop, Watch Event, EventEmitter } from 'ce-dec
 export class MyCustomElement extends CustomElement {
 
   @Prop()
-  propertyOne: string;
+  propertyOne: string = "default value";
 
   @Event()
   change: EventEmitter<string>; // will trigger a custom event of type "change"

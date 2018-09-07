@@ -17,5 +17,6 @@
 export enum STATE {
   CONNECTED,
   DISCONNECTED,
-  INIT
+  INIT,
+  CONSTRUCTED
 }

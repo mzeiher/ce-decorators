@@ -22,6 +22,7 @@ export default () => {
   describe('property-tests', function () {
     const element = new TestWithMultipleProperties();
     const elementWithDefault = new TestWithMultipleProperties();
+    const elementWithInitializer = new TestWithMultipleProperties();
     it('string-property', function () {
       element.stringProperty = "test";
       expect(element.stringProperty).toEqual("test", "stringProperty set/get property");
@@ -111,6 +112,53 @@ export default () => {
       expect(elementWithDefault.arrayPropertyWithDefault).toEqual([0, 1, 2], "arrayPropertyWithDefault set property");
       elementWithDefault.setAttribute('array-property-with-default', '[2,1,0]');
       expect(elementWithDefault.arrayPropertyWithDefault).toEqual([2, 1, 0], "arrayPropertyWithDefault set attribute");
+    });
+    it('string-property-with-initializer', function () {
+      expect(elementWithInitializer.stringPropertyWithInitializer).toEqual("test", "stringPropertyWithInitializer initializer value");
+      elementWithInitializer.stringPropertyWithInitializer = "testtest";
+      expect(elementWithInitializer.stringPropertyWithInitializer).toEqual("testtest", "stringPropertyWithInitializer set/get property");
+      elementWithInitializer.setAttribute('string-property-with-initializer', 'test2');
+      expect(elementWithInitializer.getAttribute('string-property-with-initializer')).toEqual("test2", "stringPropertyWithInitializer set/get attribute");
+      elementWithInitializer.stringPropertyWithInitializer = "test3";
+      expect(elementWithInitializer.getAttribute('string-property-with-initializer')).toEqual("test3", "stringPropertyWithInitializer set property get attribute");
+      elementWithInitializer.setAttribute('string-property-with-initializer', 'test4');
+      expect(elementWithInitializer.stringPropertyWithInitializer).toEqual("test4", "stringPropertyWithInitializer set attribute get property");
+    });
+    it('number-property-with-initializer', function () {
+      expect(elementWithInitializer.numberPropertyWithInitializer).toEqual(0, "numberPropertyWithInitializer initializer value");
+      elementWithInitializer.numberPropertyWithInitializer = 1;
+      expect(elementWithInitializer.numberPropertyWithInitializer).toEqual(1, "numberPropertyWithInitializer set/get property");
+      elementWithInitializer.setAttribute('number-property-with-initializer', '1');
+      expect(elementWithInitializer.getAttribute('number-property-with-initializer')).toEqual("1", "numberPropertyWithInitializer set/get attribute");
+      elementWithInitializer.numberPropertyWithInitializer = 2;
+      expect(elementWithInitializer.getAttribute('number-property-with-initializer')).toEqual("2", "numberPropertyWithInitializer set property get attribute");
+      elementWithInitializer.setAttribute('number-property-with-initializer', '3');
+      expect(elementWithInitializer.numberPropertyWithInitializer).toEqual(3, "numberPropertyWithInitializer set attribute get property");
+    });
+    it('boolean-property-with-initializer', function () {
+      expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(true, "booleanPropertyWithInitializer initializer valuebooleanPropertyWithInitializer");
+      elementWithInitializer.booleanPropertyWithInitializer = true;
+      expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(true, "booleanPropertyWithInitializer set property");
+      elementWithInitializer.booleanPropertyWithInitializer = false;
+      expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(false, "booleanPropertyWithInitializer set property");
+      elementWithInitializer.setAttribute('boolean-property-with-initializer', 'true');
+      expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(true, "booleanPropertyWithInitializer set with attribute");
+      elementWithInitializer.removeAttribute('boolean-property-with-initializer');
+      expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(false, "booleanPropertyWithInitializer set with attribute");
+    });
+    it('object-property-with-initializer', function () {
+      expect(elementWithInitializer.objectPropertyWithInitializer).toEqual({ test: "default" }, "objectPropertyWithInitializer initializer value");
+      elementWithInitializer.objectPropertyWithInitializer = { test: "test" };
+      expect(elementWithInitializer.objectPropertyWithInitializer).toEqual({ test: "test" }, "objectPropertyWithInitializer set property");
+      elementWithInitializer.setAttribute('object-property-with-initializer', '{ "test" : "test2"} ');
+      expect(elementWithInitializer.objectPropertyWithInitializer).toEqual({ test: "test2" }, "objectPropertyWithInitializer set attribute");
+    });
+    it('array-property-with-initializer', function () {
+      expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([0, 0, 0], "arrayPropertyWithInitializer set property");
+      elementWithInitializer.arrayPropertyWithInitializer = [0, 1, 2];
+      expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([0, 1, 2], "arrayPropertyWithInitializer set property");
+      elementWithInitializer.setAttribute('array-property-with-initializer', '[2,1,0]');
+      expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([2, 1, 0], "arrayPropertyWithInitializer set attribute");
     });
 
   });

@@ -30,9 +30,9 @@ export type ValueMapType = {
 export function getValue(element: CustomElement): ValueMapType {
   if (!valueMap.has(element)) {
     valueMap.set(element, {
-      dirty: false,
+      dirty: true,
       properties: {},
-      state: null
+      state: STATE.INIT
     });
   }
 

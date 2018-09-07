@@ -20,6 +20,7 @@ import { getPropertyOptions } from './propertymap';
 import { camelToKebapCase, deserializeValue, serializeValue } from './utils';
 import { getValue, ValueMapType } from './valuemap';
 import { getWatcher } from './watchmap';
+import { STATE } from './state';
 
 export interface PropertyOptions {
   reflectAsAttribute?: boolean;
@@ -55,7 +56,9 @@ export function Prop(options?: PropertyOptions): PropertyDecorator { // tslint:d
         }
         const valMap: ValueMapType = getValue(this);
         valMap.dirty = true;
-        if (scopedOptions.type === Number || scopedOptions.type === String || scopedOptions.reflectAsAttribute) {
+        if (valMap.state === STATE.INIT) {
+          scopedOptions.defaultValue = newValue;
+        } else if (scopedOptions.type === Number || scopedOptions.type === String || scopedOptions.reflectAsAttribute) {
           this.setAttribute(attributeKey, serializeValue(newValue, scopedOptions.type));
         } else if (scopedOptions.type === Boolean) {
           if (newValue) {

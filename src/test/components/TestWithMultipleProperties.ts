@@ -57,12 +57,18 @@ export class TestWithMultipleProperties extends CustomElement {
   public stringPropertyWithDefault: string;
 
   @Prop()
+  public stringPropertyWithInitializer: string = 'test';
+
+  @Prop()
   public booleanProperty: boolean;
 
   @Prop({
     defaultValue: true
   })
   public booleanPropertyWithDefault: boolean;
+
+  @Prop()
+  public booleanPropertyWithInitializer: boolean = true;
 
   @Prop()
   public numberProperty: number;
@@ -73,6 +79,9 @@ export class TestWithMultipleProperties extends CustomElement {
   public numberPropertyWithDefault: number;
 
   @Prop()
+  public numberPropertyWithInitializer: number = 0;
+
+  @Prop()
   public objectProperty: {};
 
   @Prop({
@@ -81,12 +90,18 @@ export class TestWithMultipleProperties extends CustomElement {
   public objectPropertyWithDefault: {};
 
   @Prop()
+  public objectPropertyWithInitializer: {} = { test: 'default' };
+
+  @Prop()
   public arrayProperty: any[];
 
   @Prop({
     defaultValue: [0, 0, 0]
   })
   public arrayPropertyWithDefault: any[];
+
+  @Prop()
+  public arrayPropertyWithInitializer: any[] = [0, 0, 0];
 
   @Event('change')
   public changeEvent: EventEmitter<string>;
