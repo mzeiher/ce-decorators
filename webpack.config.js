@@ -13,7 +13,7 @@ const webpackConfigDevelop = {
     umdNamedDefine: true,
     path: path.resolve(__dirname, 'umd')
   },
-  externals: ['lit-html'],
+  externals: ['lit-html', 'lit-html/lib/shady-render'],
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
     extensions: ['.ts', '.tsx', '.js']
