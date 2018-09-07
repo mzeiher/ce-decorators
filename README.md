@@ -6,9 +6,7 @@ The decorators are compatible with IE11 (es5-target), Chrome, FF, Edge, Safari a
 
 For IE11, Firefox, Safari Browsers you need the `@webcomponents/webcomponentjs` polyfill (for ShadowDOM and ShadyCSS), if you taget ES5 you also need either babel or the `custom-elements-es5-adapter.js` from the webcomponentjs project. If you target IE11 you also need `core-js` for the `Map` and `WeakMap` polyfill. Unfortunatelly, lit-html is ES6 so you need @babel/preset-env to compile it down to ES5.
 
-The decorators will take care of style registering if the ShadyCSS scoping shim is needed, attribute-property reflection with type transformation from attribute to property and vice versa.
-
-Furthermore there is a small cheap "dependecy injection" functionality built in via the @Inject decorator
+The decorators will take care of style registering if the ShadyCSS scoping shim is needed, attribute-property reflection with type transformation from attribute to property and vice versa and there is a small cheap "dependecy injection" functionality built in via the @Inject decorator. All in just 10kb (22kb with lit-html bundled)
 
 # Install
 `npm install ce-decorators`
