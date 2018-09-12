@@ -9,7 +9,7 @@ module.exports = function (config) {
       'node_modules/core-js/client/core.js',
       'test/test-istanbul.js'
     ],
-    reporters: ['mocha', 'coverage-istanbul'],
+    reporters: ['mocha', 'coverage-istanbul', 'junit'],
     port: 9876, // karma web server port
     colors: true,
     logLevel: config.LOG_DISABLED,
@@ -19,13 +19,16 @@ module.exports = function (config) {
     concurrency: Infinity,
     customLaunchers: {},
 
+    junitReporter: {
+      outputDir: path.join(__dirname, 'reports', 'junit')
+    },
     // any of these options are valid: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-api/lib/config.js#L33-L39
     coverageIstanbulReporter: {
       // reports can be any that are listed here: https://github.com/istanbuljs/istanbuljs/tree/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib
       reports: ['html', 'lcovonly', 'text-summary'],
 
       // base output directory. If you include %browser% in the path it will be replaced with the karma browser name
-      dir: path.join(__dirname, 'coverage'),
+      dir: path.join(__dirname, 'reports', 'coverage'),
 
       // Combines coverage information from multiple browsers into one report rather than outputting a report
       // for each browser.
