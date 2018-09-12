@@ -2,7 +2,7 @@
 ce-decorators is a typescript library for custom element development. It's powered by the great [lit-html](https://polymer.github.io/lit-html/guide/writing-templates.html) for effective DOM updates. The decorator API is similar to stenciljs but without the need of a special compiler, just the ts-compiler is needed.
 
 I just created the small ibrary for my own needs but I'd like to invite everyone to use it if it suits.
-The decorators are compatible with IE11 (es5-target), Chrome, FF, Edge, Safari and the mobile Safari and Chrome Browser.
+The decorators are compatible with IE11 (needs babel transpile), Chrome, FF, Edge, Safari and the mobile Safari and Chrome Browser.
 
 For IE11, Firefox, Safari Browsers you need the `@webcomponents/webcomponentjs` polyfill (for ShadowDOM and ShadyCSS), if you taget ES5 you also need either babel or the `custom-elements-es5-adapter.js` from the webcomponentjs project. If you target IE11 you also need `core-js` for the `Map` and `WeakMap` polyfill. Unfortunatelly, lit-html is ES6 so you need @babel/preset-env to compile it down to ES5.
 
@@ -22,7 +22,7 @@ after that you can import the decorators
 ```javascript
 import { Component, Prop ..} from 'ce-decorators'
 ```
-If you want to target ES5 Browser you can also import `ce-decorators/es5` or let babel do the heavy lifting.
+If you want to target ES5 Browser you have to let babel do the heavy lifting.
 
 # Sample
 ```typescript
