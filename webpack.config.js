@@ -25,7 +25,7 @@ const webpackConfigDevelop = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
         options: {
-          configFile: 'tsconfig.es5.json',
+          configFile: 'tsconfig.json',
           compilerOptions: {
             declaration: false
           }

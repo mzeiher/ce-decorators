@@ -1,6 +1,6 @@
-coverage
+reports
 node_modules
-.editoconfig
+.editorconfig
 .gitignore
 index.html
 test

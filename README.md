@@ -8,6 +8,9 @@ For IE11, Firefox, Safari Browsers you need the `@webcomponents/webcomponentjs` 
 
 The decorators will take care of style registering if the ShadyCSS scoping shim is needed, attribute-property reflection with type transformation from attribute to property and vice versa and there is a small cheap "dependecy injection" functionality built in via the @Inject decorator. All in just 10kb (22kb with lit-html bundled)
 
+# But why???
+I'm lazy and I don't like to write much boilerplate code, furthermore you have intellisense since all properties are named and have type.
+
 # Install
 `npm install ce-decorators`
 important! you need the following compiler settings in your tsconfig.json

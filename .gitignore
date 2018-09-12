@@ -1,8 +1,7 @@
 node_modules
-/es5
-/es6
+/dist
 /test
+/reports
 /umd
-/coverage
 *.tgz
 stats.json
