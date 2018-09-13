@@ -10,7 +10,7 @@
     "test:all": "karma start --single-run --browser Chrome,Edge,IE karma.conf.js",
     "test:all-auto": "karma start --browser --auto-run Chrome,Edge,IE karma.conf.js",
     "test:chrome": "karma start --single-run --browser Chrome karma.conf.js",
-    "build": "tsc --project ./tsconfig.json && webpack"
+    "build": "tsc --project ./tsconfig.dist.json && webpack"
   },
   "author": "Mathis Zeiher",
   "keywords": [
