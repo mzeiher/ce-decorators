@@ -24,14 +24,14 @@ export function getSingleton(type: ClassType): Object {
     singletonServiceRegistry.set(type, new (type)());
   }
 
-  return singletonServiceRegistry.get(type);
+  return <Object>singletonServiceRegistry.get(type);
 }
 
 export function getInstance(instance: Object, property: string | symbol, type: ClassType): any {
   if (!instanceServiceRegistry.has(instance)) {
     instanceServiceRegistry.set(instance, new Map());
   }
-  const map: Map<string | symbol, Object> = instanceServiceRegistry.get(instance);
+  const map: Map<string | symbol, Object> = <Map<string | symbol, Object>>instanceServiceRegistry.get(instance);
   if (!map.has(property)) {
     map.set(property, new (type)());
   }

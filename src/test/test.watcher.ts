@@ -32,8 +32,8 @@ export default () => {
       let element: TestWithMultipleProperties = new TestWithMultipleProperties();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.booleanProperty = true;
-      expect((<any>element).watchGuard).toHaveBeenCalledWith(null, true);
-      element.setAttribute('boolean-property', "false");
+      expect((<any>element).watchGuard).toHaveBeenCalledWith(false, true);
+      element.removeAttribute('boolean-property');
       expect((<any>element).watchGuard).toHaveBeenCalledWith(true, false);
     });
     it('number watcher test', function () {

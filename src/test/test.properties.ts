@@ -160,6 +160,61 @@ export default () => {
       elementWithInitializer.setAttribute('array-property-with-initializer', '[2,1,0]');
       expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([2, 1, 0], "arrayPropertyWithInitializer set attribute");
     });
-
+    it('get-property-test string', function() {
+      expect(element.getPropertyStringTest).toEqual('');
+      element.getPropertyStringTest = "test";
+      expect(element.getPropertyStringTest).toEqual('test');
+      expect(element.hasAttribute('get-property-string-test')).toBeTruthy();
+      element.setAttribute('get-property-string-test', 'testtest');
+      expect(element.getPropertyStringTest).toEqual('testtest');
+    });
+    it('set-property-test string', function() {
+      expect(element.setPropertyStringTest).toEqual('');
+      element.setPropertyStringTest = "test";
+      expect(element.setPropertyStringTest).toEqual('test');
+      expect(element.hasAttribute('set-property-string-test')).toBeTruthy();
+      element.setAttribute('set-property-string-test', 'testtest');
+      expect(element.setPropertyStringTest).toEqual('testtest');
+    });
+    it('get-property-test boolean', function() {
+      expect(element.getPropertyBooleanTest).toEqual(false);
+      element.getPropertyBooleanTest = true;
+      expect(element.getPropertyBooleanTest).toEqual(true);
+      expect(element.hasAttribute('get-property-boolean-test')).toBeTruthy();
+      element.removeAttribute('get-property-boolean-test');
+      expect(element.getPropertyBooleanTest).toEqual(false);
+      element.getPropertyBooleanTest = true;
+      expect(element.hasAttribute('get-property-boolean-test')).toBeTruthy();
+      element.getPropertyBooleanTest = false;
+      expect(element.hasAttribute('get-property-boolean-test')).toBeFalsy();
+    });
+    it('set-property-test boolean', function() {
+      expect(element.setPropertyBooleanTest).toEqual(false);
+      element.setPropertyBooleanTest = true;
+      expect(element.setPropertyBooleanTest).toEqual(true);
+      expect(element.hasAttribute('set-property-boolean-test')).toBeTruthy();
+      element.removeAttribute('set-property-boolean-test');
+      expect(element.setPropertyBooleanTest).toEqual(false);
+      element.setPropertyBooleanTest = true;
+      expect(element.hasAttribute('set-property-boolean-test')).toBeTruthy();
+      element.setPropertyBooleanTest = false;
+      expect(element.hasAttribute('set-property-boolean-test')).toBeFalsy();
+    });
+    it('get-property-test object', function() {
+      expect(element.getPropertyObjectTest).toEqual({});
+      element.getPropertyObjectTest = {test : "test"};
+      expect(element.getPropertyObjectTest).toEqual({test : "test"});
+      expect(element.hasAttribute('get-property-object-test')).toBeFalsy();
+      element.setAttribute('get-property-object-test', '{"test" : "testtest"}');
+      expect(element.getPropertyObjectTest).toEqual({test : "testtest"});
+    });
+    it('set-property-test object', function() {
+      expect(element.setPropertyObjectTest).toEqual({});
+      element.setPropertyObjectTest = {test : "test"};
+      expect(element.setPropertyObjectTest).toEqual({test : "test"});
+      expect(element.hasAttribute('set-property-object-test')).toBeFalsy();
+      element.setAttribute('set-property-object-test', '{"test" : "testtest"}');
+      expect(element.setPropertyObjectTest).toEqual({test : "testtest"});
+    });
   });
 }

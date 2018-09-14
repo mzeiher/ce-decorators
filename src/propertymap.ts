@@ -15,12 +15,19 @@
  */
 
 import { CustomElement } from './element';
-import { PropertyOptions } from './prop';
+import { PropertyOptions, PropertyType } from './prop';
 
-const propertyMap: Map<CustomElement, Map<string, PropertyOptions>> = new Map();
+const propertyMap: Map<CustomElement, Map<string, PropDescriptor>> = new Map();
 
-export function getPropertyOptions(element: CustomElement): Map<string, PropertyOptions> {
-  let properties: Map<string, PropertyOptions> = propertyMap.get(element);
+export interface PropDescriptor {
+  descriptor: PropertyDescriptor;
+  type: PropertyType;
+  options: PropertyOptions;
+  originalSetter(v: any): void;
+}
+
+export function getPropertyOptions(element: CustomElement): Map<string, PropDescriptor> {
+  let properties: Map<string, PropDescriptor> | undefined = propertyMap.get(element);
   if (!properties) {
     properties = new Map();
     propertyMap.set(element, properties);

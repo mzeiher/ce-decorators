@@ -23,11 +23,11 @@ export type ValueMapType = {
   state: STATE | null;
   dirty: boolean;
   properties: {
-    [prop: string]: string | number | boolean | object;
+    [prop: string]: string | number | boolean | object | null;
   };
 };
 
-export function getValue(element: CustomElement): ValueMapType {
+export function getValue(element: CustomElement): ValueMapType | undefined {
   if (!valueMap.has(element)) {
     valueMap.set(element, {
       dirty: true,

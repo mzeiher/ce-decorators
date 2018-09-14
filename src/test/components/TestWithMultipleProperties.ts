@@ -48,6 +48,69 @@ import { Component, CustomElement, Event, EventEmitter, Prop, Watch } from './..
   `
 })
 export class TestWithMultipleProperties extends CustomElement {
+  private internalPropertyString: string = '';
+  private internalPropertyString2: string = '';
+
+  private internalPropertyBoolean: boolean = false;
+  private internalPropertyBoolean2: boolean = false;
+
+  private internalPropertyObject: object = {};
+  private internalPropertyObject2: object = {};
+
+  @Prop()
+  public get getPropertyStringTest(): string {
+    return this.internalPropertyString;
+  }
+
+  public set getPropertyStringTest(value: string) {
+    this.internalPropertyString = value;
+  }
+
+  public get setPropertyStringTest(): string {
+    return this.internalPropertyString2;
+  }
+
+  @Prop()
+  public set setPropertyStringTest(value: string) {
+    this.internalPropertyString2 = value;
+  }
+
+  @Prop()
+  public get getPropertyBooleanTest(): boolean {
+    return this.internalPropertyBoolean;
+  }
+
+  public set getPropertyBooleanTest(value: boolean) {
+    this.internalPropertyBoolean = value;
+  }
+
+  public get setPropertyBooleanTest(): boolean {
+    return this.internalPropertyBoolean2;
+  }
+
+  @Prop()
+  public set setPropertyBooleanTest(value: boolean) {
+    this.internalPropertyBoolean2 = value;
+  }
+
+  @Prop()
+  public get getPropertyObjectTest(): object {
+    return this.internalPropertyObject;
+  }
+
+  public set getPropertyObjectTest(value: object) {
+    this.internalPropertyObject = value;
+  }
+
+  public get setPropertyObjectTest(): object {
+    return this.internalPropertyObject2;
+  }
+
+  @Prop()
+  public set setPropertyObjectTest(value: object) {
+    this.internalPropertyObject2 = value;
+  }
+
   @Prop()
   public stringProperty: string;
 
@@ -134,8 +197,7 @@ export class TestWithMultipleProperties extends CustomElement {
     this.watchGuard(oldValue, newValue);
   }
 
-  public watchGuard(oldValue: any, newValue: any): void {
-    console.log(`${oldValue} ${newValue}`);
+  public watchGuard(_oldValue: any, _newValue: any): void {
   }
 
   protected render(): void {
