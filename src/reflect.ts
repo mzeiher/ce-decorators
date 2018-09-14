@@ -27,7 +27,7 @@ const reflectMap: TargetMap = new Map();
 namespace ReflectPoorlyFill {
 
   function getOrCreateMetadataMap(map: PropMap, property: string | symbol): MetadataMap {
-    let metadataMap: MetadataMap = map.get(property);
+    let metadataMap: MetadataMap | undefined = map.get(property);
     if (!metadataMap) {
       metadataMap = new Map();
       map.set(property, metadataMap);
@@ -37,7 +37,7 @@ namespace ReflectPoorlyFill {
   }
 
   function getOrCreatePropMap(map: TargetMap, target: Object): PropMap {
-    let propMap: PropMap = map.get(target);
+    let propMap: PropMap | undefined = map.get(target);
     if (!propMap) {
       propMap = new Map();
       map.set(target, propMap);
@@ -77,7 +77,7 @@ namespace ReflectPoorlyFill {
       return origReflect.getMetadata(metadataKey, target, propertyKey);
     } else {
 
-      return getOrCreateMetadataMap(getOrCreatePropMap(reflectMap, target), propertyKey).get(metadataKey);
+      return getOrCreateMetadataMap(getOrCreatePropMap(reflectMap, target), propertyKey!).get(metadataKey);
     }
   }
 

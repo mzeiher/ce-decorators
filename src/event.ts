@@ -16,6 +16,7 @@
 
 import { CustomElement } from './element';
 
+export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
 /**
  * base interface for event emitter
  */
@@ -32,9 +33,9 @@ export interface EventOptions {
  *
  * @param name (string) optional: name of the event, if no state, property name will be used
  */
-export function Event(name?: string): PropertyDecorator { // tslint:disable-line:function-name
-  return ((scopedOptions?: string): PropertyDecorator => {
-    return <Clazz extends CustomElement>(target: Clazz, propertyKey: string | symbol): void => {
+export function Event(name?: string): FixedPropertyDecorator { // tslint:disable-line:function-name
+  return ((scopedOptions?: string): FixedPropertyDecorator => {
+    return <Clazz extends CustomElement>(_target: Clazz, propertyKey: string | symbol): PropertyDescriptor => {
 
       const getter = function (this: CustomElement): EventEmitter<any> { // tslint:disable-line
         return {
@@ -45,11 +46,11 @@ export function Event(name?: string): PropertyDecorator { // tslint:disable-line
           }
         };
       };
-      Object.defineProperty(target, propertyKey, {
-        enumerable: true,
-        get: getter
-      });
 
+      return {
+        enumerable: false,
+        get: getter
+      };
     };
   })(name);
 }

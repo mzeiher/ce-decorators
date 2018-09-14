@@ -19,7 +19,7 @@ import { CustomElement } from './element';
 const watchMap: Map<CustomElement, Map<string, (() => void)[]>> = new Map();
 
 export function getWatcher(element: CustomElement, property: string): (() => void)[] {
-  let watcher: Map<string, (() => void)[]> = watchMap.get(element);
+  let watcher: Map<string, (() => void)[]> | undefined = watchMap.get(element);
   if (!watcher) {
     watcher = new Map();
     watchMap.set(element, watcher);
@@ -28,5 +28,5 @@ export function getWatcher(element: CustomElement, property: string): (() => voi
     watcher.set(property, []);
   }
 
-  return watcher.get(property);
+  return < (() => void)[]>watcher.get(property);
 }

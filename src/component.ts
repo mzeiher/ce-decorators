@@ -17,8 +17,7 @@
 import { render as litRender, html } from 'lit-html';
 import { render as shadyRender } from 'lit-html/lib/shady-render';
 import { CustomElement } from './element';
-import { PropertyOptions } from './prop';
-import { getPropertyOptions } from './propertymap';
+import { getPropertyOptions, PropDescriptor } from './propertymap';
 import { needShadyDOM } from './shadycss';
 import { STATE } from './state';
 import { camelToKebapCase, deserializeValue, kebapToCamelCase, makeTemplate } from './utils';
@@ -45,7 +44,7 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
       const observedAttributes: string[] = target.observedAttributes;
 
       // tslint:disable-next-line
-      const propMap: Map<string, PropertyOptions> = getPropertyOptions(target.prototype);
+      const propMap: Map<string, PropDescriptor> = getPropertyOptions(target.prototype);
       if (propMap) {
         const attributes: string[] = Array.from(propMap.keys()).map((camelToKebapCase));
         observedAttributes.push(...attributes);
@@ -69,13 +68,13 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
         // tslint:disable-next-line:no-any
         constructor(...args: any[]) {
           super(...args);
-          const value: ValueMapType = getValue(this);
+          const value: ValueMapType | undefined = getValue(this);
 
           if (!this.shadowRoot) {
             this.attachShadow({ mode: 'open' });
 
-            let cache: TemplateStringsArray = null;
-            let cachedLiterals: TemplateStringsArray = null;
+            let cache: TemplateStringsArray | null = null;
+            let cachedLiterals: TemplateStringsArray | null = null;
 
             // tslint:disable-next-line:no-any
             this.renderToDom = (literals: TemplateStringsArray, ...placeholder: any[]): void => {
@@ -95,18 +94,18 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
               }
 
               if (needShadyDOM()) {
-                shadyRender(html(cache, ...placeholder), this.shadowRoot, scopedOptions.tag);
+                shadyRender(html(cache, ...placeholder), this.shadowRoot!, scopedOptions.tag);
               } else {
-                litRender(html(cache, ...placeholder), this.shadowRoot);
+                litRender(html(cache, ...placeholder), this.shadowRoot!);
               }
             };
           }
-          value.state = STATE.CONSTRUCTED;
+          value!.state = STATE.CONSTRUCTED;
         }
 
         protected connectedCallback(): void {
-          const value: ValueMapType = getValue(this);
-          value.state = STATE.CONNECTED;
+          const value: ValueMapType | undefined = getValue(this);
+          value!.state = STATE.CONNECTED;
           super.connectedCallback();
           this.render();
           if (needShadyDOM()) {
@@ -115,39 +114,43 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
         }
 
         protected disconnectedCallback(): void {
-          getValue(this).state = STATE.DISCONNECTED;
+          getValue(this)!.state = STATE.DISCONNECTED;
           super.disconnectedCallback();
         }
 
         protected render(): void {
-          const valMap: ValueMapType = getValue(this);
-          if (valMap.dirty && valMap.state === STATE.CONNECTED) {
+          const valMap: ValueMapType | undefined = getValue(this);
+          if (valMap!.dirty && valMap!.state === STATE.CONNECTED) {
             super.render();
-            valMap.dirty = false;
+            valMap!.dirty = false;
           }
         }
         protected attributeChangedCallback(attrName: string, oldVal: string, newVal: string): void {
           if (oldVal === newVal) {
             return;
           }
-          const properties: Map<string, PropertyOptions> = getPropertyOptions(target.prototype) || null;
+          const properties: Map<string, PropDescriptor> = getPropertyOptions(target.prototype) || null;
           if (properties) {
             const propertyKey: string = kebapToCamelCase(attrName);
-            const prop: PropertyOptions = properties.get(propertyKey);
+            const prop: PropDescriptor | undefined = properties.get(propertyKey);
             if (prop) {
-              if (prop.readonly) {
+              if (prop.options.readonly) {
                 throw new Error('property is readonly');
               }
-              if (prop.type === Boolean) {
-                getValue(this).properties[propertyKey] = true;
-              }
               if (prop.type === Number || prop.type === String || prop.type === Boolean) {
-                const watcher: (() => void)[] = getWatcher(target.prototype, propertyKey);
-                watcher.forEach((callback: (oldValue: any, newValue: any) => void) => {
+                if (prop.type === Boolean) { // indicate that a boolean property is set so don't return default value
+                  getValue(this)!.properties[propertyKey] = true;
+                }
+                const watcher: (() => void)[] | undefined = getWatcher(target.prototype, propertyKey);
+                watcher!.forEach((callback: (oldValue: any, newValue: any) => void) => {
                   callback.apply(this, [deserializeValue(oldVal, prop.type), deserializeValue(newVal, prop.type)]);
                 });
 
-                getValue(this).dirty = true;
+                getValue(this)!.dirty = true;
+                if (prop.originalSetter) {
+                  prop.originalSetter.apply(this, [deserializeValue(newVal, prop.type)]);
+                }
+
                 this.render();
               } else {
                 this[propertyKey] = deserializeValue(newVal, prop.type);

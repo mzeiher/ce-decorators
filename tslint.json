@@ -5,6 +5,7 @@
     "interface-name": false,
     "no-relative-imports": false,
     "align": false,
-    "no-non-null-assertion": false
+    "no-non-null-assertion": false,
+    "member-ordering": false
   }
 }

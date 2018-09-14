@@ -1,3 +1,5 @@
+import { PropertyType } from './prop';
+
 /**
  * Copyright (c) 2018 Mathis Zeiher
  *
@@ -19,11 +21,11 @@
  * @param value value string to be transformed
  * @param type type transformer type for string value
  */
-export function deserializeValue(value: string, type: Number | Boolean | String | Object | Array<any>): null | string | object | number | boolean | any[] { // tslint:disable-line
-  if (value === null || value === undefined) {
+export function deserializeValue(value: string, type: PropertyType): null | string | object | number | boolean | any[] { // tslint:disable-line
+  if ((value === null || value === undefined) && type !== Boolean) {
     return null;
   } else if (type === Boolean) {
-    return value.toLowerCase() === 'true';
+    return value !== null;
   } else if (type === Number) {
     return parseFloat(value);
   } else if (type === String) {
@@ -40,8 +42,10 @@ export function deserializeValue(value: string, type: Number | Boolean | String 
  * @param value value
  * @param type type
  */
-export function serializeValue(value: any, type: Number | Boolean | String | Object | Array<any>): string { // tslint:disable-line
-  if (type === String) {
+export function serializeValue(value: any, type: PropertyType): string | null { // tslint:disable-line
+  if (value === null || value === undefined) {
+    return null;
+  } else if (type === String) {
     return value;
   } else if (type instanceof Object) {
     return JSON.stringify(value);
