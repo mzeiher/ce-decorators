@@ -44,7 +44,7 @@ export class MyCustomElement extends CustomElement {
   @Event()
   change: EventEmitter<string>; // will trigger a custom event of type "change"
 
-  @Watch()
+  @Watch('propertyOne')
   propertyOneChanged(oldValue:string, newValue:string) {
     console.log('propertyOne Changed');
   }
@@ -67,7 +67,7 @@ import './my-custom-element'
 ```
 in the template
 ```html
-<my-custom-element [propertyOne]={{this.propertyOne}} attribute-one={{this.attributeOne}} (change)={{$evt => handleEvent($evt)}}>
+<my-custom-element [propertyOne]="this.propertyOne" attribute-one="this.attributeOne" (change)="$evt => handleEvent($evt)">
 </my-custom-element>
 ```
 # Usage with react
