@@ -1,6 +1,6 @@
 {
   "name": "ce-decorators",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Custom Element decorators for typescript",
   "module": "dist/index.js",
   "main": "umd/bundle.min.js",
