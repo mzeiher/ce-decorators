@@ -16,24 +16,41 @@
 
 import { getInstance, getSingleton } from './servicemap';
 
+export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
+
+export type ObjectConstructor = {
+  new(): any;
+};
+
+export interface InjectOptions {
+  singleton: boolean;
+  type?: ObjectConstructor;
+}
 /**
  * Simple dependency injection decorator
  *
  * @param newInstance (boolean) determines if a new instance should be created
  */
-export function Inject(newInstance: boolean = false): PropertyDecorator {
-  return ((scopedNewInstance: boolean): PropertyDecorator => (target: Object, propertyKey: string | symbol): void => {
-    const type = ReflectPoorlyFill.getMetadata('design:type', target, propertyKey.toString()); // tslint:disable-line
+export function Inject(options: InjectOptions = { singleton: true }): FixedPropertyDecorator {
+  return ((scopedOptions: InjectOptions): FixedPropertyDecorator => (target: Object, propertyKey: string | symbol): PropertyDescriptor => {
 
-    Object.defineProperty(target, propertyKey, {
+    const type = (<any>Reflect).getMetadata('design:type', target, propertyKey.toString()) || scopedOptions!.type; // tslint:disable-line
+    if (!type) {
+      // throw new Error('No type specified, injection not possible');
+      return null;
+    }
+
+    return {
+      configurable: true,
+      enumerable: false,
       // tslint:disable-next-line:no-function-expression
       get: function (this: Object): any {
-        if (scopedNewInstance) {
-          return getInstance(this, propertyKey, type);
-        } else {
+        if (scopedOptions.singleton) {
           return getSingleton(type);
+        } else {
+          return getInstance(this, propertyKey, type);
         }
       }
-    });
-  })(newInstance);
+    };
+  })(options);
 }

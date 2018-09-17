@@ -16,12 +16,16 @@
 /* tslint:disable */
 
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
+import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+
+declare var BABEL_COMPILE:boolean;
 
 /* istanbul ignore next */
-export default () => {
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
+  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
   describe('watcher tests', function () {
     it('string watcher test', function () {
-      let element: TestWithMultipleProperties = new TestWithMultipleProperties();
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.stringProperty = "test";
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, 'test');
@@ -29,7 +33,7 @@ export default () => {
       expect((<any>element).watchGuard).toHaveBeenCalledWith('test', 'test2');
     });
     it('boolean watcher test', function () {
-      let element: TestWithMultipleProperties = new TestWithMultipleProperties();
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.booleanProperty = true;
       expect((<any>element).watchGuard).toHaveBeenCalledWith(false, true);
@@ -37,7 +41,7 @@ export default () => {
       expect((<any>element).watchGuard).toHaveBeenCalledWith(true, false);
     });
     it('number watcher test', function () {
-      let element: TestWithMultipleProperties = new TestWithMultipleProperties();
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.numberProperty = 0;
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, 0);
@@ -45,7 +49,7 @@ export default () => {
       expect((<any>element).watchGuard).toHaveBeenCalledWith(0, 1);
     });
     it('object watcher test', function () {
-      let element: TestWithMultipleProperties = new TestWithMultipleProperties();
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.objectProperty = { test: "test" };
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, { test: "test" });
@@ -53,7 +57,7 @@ export default () => {
       expect((<any>element).watchGuard).toHaveBeenCalledWith({ test: "test" }, { test: "test2" });
     });
     it('array watcher test', function () {
-      let element: TestWithMultipleProperties = new TestWithMultipleProperties();
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.arrayProperty = [0, 1];
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, [0, 1]);

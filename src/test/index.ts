@@ -21,6 +21,10 @@ import testRender from './test.render';
 import testWatcher from './test.watcher';
 import testEvents from './test.events';
 import testService from './test.service';
+import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
+import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+import { ServiceTest } from './services/ServiceObject';
+import { ServiceTestWithType } from './services/ServiceObjectWithType';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -33,9 +37,9 @@ describe('root', function () {
       })
     }
   });
-  testProperties();
-  testRender();
-  testWatcher();
-  testEvents();
-  testService();
+  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testProperties(value));
+  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testRender(value));
+  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testWatcher(value));
+  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testEvents(value));
+  [ServiceTest, ServiceTestWithType].forEach(value=>testService(value));
 });

@@ -16,12 +16,16 @@
 /* tslint:disable */
 
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
+import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+
+declare var BABEL_COMPILE:boolean;
 
 /* istanbul ignore next */
-export default () => {
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
+  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
   describe('event tests', function () {
     it('event emitter', function (done) {
-      const element = new TestWithMultipleProperties();
+      const element = new constructorInstance();
       element.addEventListener('change', (event: CustomEvent) => {
         expect(event.detail).toEqual('test');
         done();
@@ -29,7 +33,7 @@ export default () => {
       element.changeEvent.emit("test");
     });
     it('event emitter without name', function (done) {
-      const element = new TestWithMultipleProperties();
+      const element = new constructorInstance();
       element.addEventListener('test', (event: CustomEvent) => {
         expect(event.detail).toEqual('test');
         done();

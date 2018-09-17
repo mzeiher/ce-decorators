@@ -11,7 +11,7 @@ The decorators will take care of style registering if the ShadyCSS scoping shim 
 # But why???
 I'm lazy and I don't like to write much boilerplate code, furthermore you have intellisense since all properties are named and have type.
 
-# Install
+# Install/Compability
 `npm install ce-decorators`
 important! you need the following compiler settings in your tsconfig.json
 ```json
@@ -23,6 +23,25 @@ after that you can import the decorators
 import { Component, Prop ..} from 'ce-decorators'
 ```
 If you want to target ES5 Browser you have to let babel do the heavy lifting.
+
+## with babel
+for babel you need the following dependencies (at the moment only stage-0 proposal decorators are supported)
+```json
+"@babel/plugin-proposal-class-properties": "^7.0.0",
+"@babel/plugin-proposal-decorators": "^7.0.0",
+"@babel/preset-env": "^7.0.0",
+"@babel/preset-typescript": "^7.0.0", (optional only when using typescript)
+```
+
+in the babel config you just have to enable the two plugins:
+```javascript
+plugins: [
+  ["@babel/plugin-proposal-decorators", { legacy: true}],
+  ["@babel/plugin-proposal-class-properties", { "loose" : true }]
+]
+```
+
+If you use the decorators with babel you have to specify the typ for Prop and Inject otherwise it won't work 🙁
 
 # Sample
 ```typescript

@@ -17,13 +17,17 @@
 
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { needShadyDOM } from '../shadycss';
+import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+
+declare var BABEL_COMPILE:boolean;
 
 /* istanbul ignore next */
-export default () => {
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
+  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
   describe('render tests', function () {
-    let element: TestWithMultipleProperties = null;
+    let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = null;
     beforeEach(function () {
-      element = new TestWithMultipleProperties();
+      element = new constructorInstance();
     });
     afterEach(function () {
       if (element) {

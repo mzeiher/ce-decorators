@@ -33,7 +33,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
     "@types/chai": "^4.1.4",
     "@types/jasmine": "^2.8.8",
     "@webcomponents/webcomponentsjs": "^2.1.0",

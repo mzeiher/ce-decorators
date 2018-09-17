@@ -22,6 +22,6 @@ export class SingletonService {
   @Inject()
   public nestedSingletonService: NestedService;
 
-  @Inject(true)
+  @Inject({singleton: false})
   public nestedInstanceService: NestedService;
 }
