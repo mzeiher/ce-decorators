@@ -14,15 +14,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 /* tslint:disable */
-
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
+import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+
+declare var BABEL_COMPILE:boolean;
 
 /* istanbul ignore next */
-export default () => {
-  describe('property-tests', function () {
-    const element = new TestWithMultipleProperties();
-    const elementWithDefault = new TestWithMultipleProperties();
-    const elementWithInitializer = new TestWithMultipleProperties();
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
+  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
+    describe('property-tests', function () {
+      const element = new constructorInstance();
+      const elementWithDefault = new constructorInstance();
+      const elementWithInitializer = new constructorInstance();
     it('string-property', function () {
       element.stringProperty = "test";
       expect(element.stringProperty).toEqual("test", "stringProperty set/get property");
@@ -65,7 +68,7 @@ export default () => {
       element.setAttribute('array-property', '[2,1,0]');
       expect(element.arrayProperty).toEqual([2, 1, 0], "Array Property set attribute");
     });
-
+    
     it('string-property-with-default', function () {
       expect(elementWithDefault.stringPropertyWithDefault).toEqual("test", "stringPropertyWithDefault default value");
       elementWithDefault.stringPropertyWithDefault = "testtest";

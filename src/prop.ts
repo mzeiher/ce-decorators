@@ -46,15 +46,19 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
 
       const attributeKey: string = camelToKebapCase(propertyKey.toString());
 
-      if (!scopedOptions.type) {
-        scopedOptions.type = ReflectPoorlyFill.getMetadata('design:type', target, propertyKey.toString()); // tslint:disable-line
+      if (!scopedOptions.type!) {
+        scopedOptions.type = (<any>Reflect).getMetadata('design:type', target, propertyKey.toString()); // tslint:disable-line
       }
 
+      // for babel transpiled decorators
+      if (descriptor && (<any>descriptor)['initializer'] && typeof (<any>descriptor)['initializer'] === 'function') {
+        scopedOptions.defaultValue = ((<any>descriptor)['initializer'])();
+      }
       const entry: Map<string, PropDescriptor> = getPropertyOptions(target);
 
-      const propertyDescriptor: PropertyDescriptor = descriptor || {
+      const propertyDescriptor: PropertyDescriptor = {
         configurable: true,
-        enumerable: false
+        enumerable: true
       };
 
       const originalSetter: ((v: any) => void) | undefined = descriptor ? descriptor.set : undefined;
@@ -96,7 +100,7 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
         }
       };
 
-      if (!descriptor && !propertyDescriptor.get) {
+      if (!descriptor || !descriptor.get) {
         propertyDescriptor.get = function (this: CustomElement): string | number | boolean | object | null { // tslint:disable-line
           const valMap: ValueMapType | undefined = getValue(this);
           if (scopedOptions.type === Number || scopedOptions.type === String || scopedOptions.reflectAsAttribute) {
@@ -112,6 +116,8 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
               (scopedOptions.defaultValue !== undefined ? scopedOptions.defaultValue : null);
           }
         };
+      } else {
+        propertyDescriptor.get = descriptor.get;
       }
 
       if (!entry.has(propertyKey.toString())) {
