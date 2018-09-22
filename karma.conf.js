@@ -6,7 +6,6 @@ module.exports = function (config) {
     files: [
       'node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
       'node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js',
-      'node_modules/core-js/client/core.js',
       'test/test-istanbul.js'
     ],
     reporters: ['mocha', 'coverage-istanbul', 'junit'],

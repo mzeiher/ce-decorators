@@ -47,7 +47,7 @@ const webpackConfigProduction = webpackMerge(webpackConfigDevelop, {
 const webpackConfigTestBabel = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: './src/test/index.ts',
+  entry: ['@babel/polyfill', './src/test/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -74,7 +74,8 @@ const webpackConfigTestBabel = {
                     "safari": "11",
                     "ie": "11"
                   },
-                  modules: false
+                  modules: false,
+                  useBuiltIns: 'entry'
                 }]
               ],
               plugins: [
@@ -97,7 +98,8 @@ const webpackConfigTestBabel = {
                   "safari": "11",
                   "ie": "11"
                 },
-                modules: false
+                modules: false,
+                useBuiltIns: 'entry'
               }]
             ]
           }
@@ -115,7 +117,7 @@ const webpackConfigTestBabel = {
 const webpackConfigTest = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: './src/test/index.ts',
+  entry: ['@babel/polyfill', './src/test/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -141,7 +143,8 @@ const webpackConfigTest = {
                     "safari": "11",
                     "ie": "11"
                   },
-                  modules: false
+                  modules: false,
+                  useBuiltIns: 'entry'
                 }]
               ]
             }
@@ -169,7 +172,8 @@ const webpackConfigTest = {
                   "safari": "11",
                   "ie": "11"
                 },
-                modules: false
+                modules: false,
+                useBuiltIns: 'entry'
               }]
             ]
           }
@@ -187,7 +191,7 @@ const webpackConfigTest = {
 const webpackConfigTestCoverage = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: './src/test/index.ts',
+  entry: ['@babel/polyfill', './src/test/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -219,7 +223,8 @@ const webpackConfigTestCoverage = {
                     "safari": "11",
                     "ie": "11"
                   },
-                  modules: false
+                  modules: false,
+                  useBuiltIns: 'entry'
                 }]
               ]
             }
@@ -247,7 +252,8 @@ const webpackConfigTestCoverage = {
                   "safari": "11",
                   "ie": "11"
                 },
-                modules: false
+                modules: false,
+                useBuiltIns: 'entry'
               }]
             ]
           }

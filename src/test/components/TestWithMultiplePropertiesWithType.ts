@@ -15,6 +15,7 @@
  */
 
 import { Component, CustomElement, Event, EventEmitter, Prop, Watch } from './../../index';
+import { html, TemplateResult } from 'lit-html';
 
 @Component({
   tag: 'test-with-multiple-properties-with-type',
@@ -205,8 +206,8 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
   public watchGuard(_oldValue: any, _newValue: any): void {
   }
 
-  protected render(): void {
-    this.renderToDom`<div>${this.stringPropertyWithDefault}</div>
+  protected render(): TemplateResult {
+    return html`<div>${this.stringPropertyWithDefault}</div>
                      <div>${this.numberPropertyWithDefault}</div>
                      <div>${this.booleanPropertyWithDefault}</div>
                      <div>${JSON.stringify(this.objectPropertyWithDefault)}</div>

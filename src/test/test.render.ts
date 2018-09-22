@@ -19,11 +19,11 @@ import { TestWithMultipleProperties } from './components/TestWithMultiplePropert
 import { needShadyDOM } from '../shadycss';
 import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
 
-declare var BABEL_COMPILE:boolean;
+declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
-  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
+  if (BABEL_COMPILE && constructorInstance === TestWithMultipleProperties) return;
   describe('render tests', function () {
     let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = null;
     beforeEach(function () {
@@ -34,40 +34,50 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
         element = null;
       }
     });
-    it('render on connected', function () {
+    it('render on connected', function (done) {
       spyOn(<any>element, 'renderToDom').and.callThrough();
       document.querySelector('body').appendChild(element);
-      document.querySelector('body').removeChild(element);
-      expect((<any>element).renderToDom).toHaveBeenCalled();
+      window.setTimeout(() => { //we have to wait for the microtask of render to be done
+        expect((<any>element).renderToDom).toHaveBeenCalled();
+        document.querySelector('body').removeChild(element);
+        done();
+      }, 0)
     });
-    it('dom rendering tests', function () {
+    it('dom rendering tests', function (done) {
       document.querySelector('body').appendChild(element);
       element.stringPropertyWithDefault = "foobar";
       element.numberPropertyWithDefault = 1;
-      const divs = element.shadowRoot.querySelectorAll('div');
-      expect(divs[0].innerText).toEqual('foobar');
-      expect(divs[1].innerText).toEqual('1');
-      if (needShadyDOM()) {
-        expect(divs[0].getAttribute('class')).toContain('style-scope');
-        expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
-      }
-      document.querySelector('body').removeChild(element);
+      window.setTimeout(() => { //we have to wait for the microtask of render to be done
+        const divs = element.shadowRoot.querySelectorAll('div');
+        expect(divs[0].innerText).toEqual('foobar');
+        expect(divs[1].innerText).toEqual('1');
+        if (needShadyDOM()) {
+          expect(divs[0].getAttribute('class')).toContain('style-scope');
+          expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
+        }
+        document.querySelector('body').removeChild(element);
+        done();
+      }, 0);
     });
-    it('effective dom rendering', function () {
+    it('effective dom rendering', function (done) {
       document.querySelector('body').appendChild(element);
-      const divs = element.shadowRoot.querySelectorAll('div');
+      window.setTimeout(() => { //we have to wait for the microtask of render to be done
+        const divs = element.shadowRoot.querySelectorAll('div');
 
-      element.stringPropertyWithDefault = "foo";
-      element.numberPropertyWithDefault = 1;
-      element.booleanProperty = true;
-      element.objectPropertyWithDefault = {};
-      element.arrayPropertyWithDefault = [];
-
-      const newDivs = element.shadowRoot.querySelectorAll('div');
-      newDivs.forEach((value, key) => {
-        expect(value).toBe(divs[key]);
-      });
-      document.querySelector('body').removeChild(element);
+        element.stringPropertyWithDefault = "foo";
+        element.numberPropertyWithDefault = 1;
+        element.booleanProperty = true;
+        element.objectPropertyWithDefault = {};
+        element.arrayPropertyWithDefault = [];
+        window.setTimeout(() => {
+          const newDivs = element.shadowRoot.querySelectorAll('div');
+          newDivs.forEach((value, key) => {
+            expect(value).toBe(divs[key]);
+          });
+          document.querySelector('body').removeChild(element);
+          done();
+        }, 0);
+      }, 0);
     });
   });
 }

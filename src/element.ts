@@ -1,3 +1,5 @@
+import { TemplateResult } from 'lit-html';
+
 /**
  * Copyright (c) 2018 Mathis Zeiher
  *
@@ -17,7 +19,7 @@
 /**
  * Base class for Component decorator
  */
-export class CustomElement extends HTMLElement {
+export abstract class CustomElement extends HTMLElement {
 
   /**
    * list of custom observed attributes
@@ -36,7 +38,9 @@ export class CustomElement extends HTMLElement {
   }
 
   // tslint:disable-next-line:no-empty
-  protected render(): void { }
+  protected render(): TemplateResult {
+    return null;
+  }
 
   // tslint:disable-next-line:no-empty
   protected connectedCallback(): void { }

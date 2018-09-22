@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { render as litRender, html } from 'lit-html';
+import { render as litRender, html, TemplateResult } from 'lit-html';
 import { render as shadyRender } from 'lit-html/lib/shady-render';
 import { CustomElement } from './element';
 import { getPropertyOptions, PropDescriptor } from './propertymap';
@@ -64,6 +64,7 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
 
         // tslint:disable-next-line:no-any
         [idx: string]: any;
+        private _promiseWaiting: boolean = false;
 
         // tslint:disable-next-line:no-any
         constructor(...args: any[]) {
@@ -118,12 +119,20 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
           super.disconnectedCallback();
         }
 
-        protected render(): void {
+        protected render(): TemplateResult {
           const valMap: ValueMapType | undefined = getValue(this);
           if (valMap!.dirty && valMap!.state === STATE.CONNECTED) {
-            super.render();
-            valMap!.dirty = false;
+            if (!this._promiseWaiting) {
+              this._promiseWaiting = true;
+              Promise.resolve().then(() => { // execute repaint in microtask
+                this.renderToDom`${super.render()}`;
+                valMap!.dirty = false;
+                this._promiseWaiting = false;
+              });
+            }
           }
+
+          return null;
         }
         protected attributeChangedCallback(attrName: string, oldVal: string, newVal: string): void {
           if (oldVal === newVal) {
