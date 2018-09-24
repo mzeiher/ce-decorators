@@ -17,7 +17,7 @@
 import { CustomElement } from './element';
 import { PropertyOptions, PropertyType } from './prop';
 
-const propertyMap: Map<CustomElement, Map<string, PropDescriptor>> = new Map();
+// const propertyMap: Map<CustomElement, Map<string, PropDescriptor>> = new Map();
 
 export interface PropDescriptor {
   descriptor: PropertyDescriptor;
@@ -27,10 +27,10 @@ export interface PropDescriptor {
 }
 
 export function getPropertyOptions(element: CustomElement): Map<string, PropDescriptor> {
-  let properties: Map<string, PropDescriptor> | undefined = propertyMap.get(element);
+  let properties: Map<string, PropDescriptor> | undefined = (<any>element)['__propMap'];
   if (!properties) {
     properties = new Map();
-    propertyMap.set(element, properties);
+    (<any>element)['__propMap'] = properties;
   }
 
   return properties;

@@ -16,13 +16,11 @@
 
 import { CustomElement } from './element';
 
-const watchMap: Map<CustomElement, Map<string, (() => void)[]>> = new Map();
-
 export function getWatcher(element: CustomElement, property: string): (() => void)[] {
-  let watcher: Map<string, (() => void)[]> | undefined = watchMap.get(element);
+  let watcher: Map<string, (() => void)[]> | undefined = (<any>element)['__watchMap'];
   if (!watcher) {
     watcher = new Map();
-    watchMap.set(element, watcher);
+    (<any>element)['__watchMap'] = watcher;
   }
   if (!watcher.has(property)) {
     watcher.set(property, []);

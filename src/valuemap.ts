@@ -17,8 +17,6 @@
 import { CustomElement } from './element';
 import { STATE } from './state';
 
-const valueMap: WeakMap<CustomElement, ValueMapType> = new WeakMap();
-
 export type ValueMapType = {
   state: STATE | null;
   dirty: boolean;
@@ -28,13 +26,13 @@ export type ValueMapType = {
 };
 
 export function getValue(element: CustomElement): ValueMapType | undefined {
-  if (!valueMap.has(element)) {
-    valueMap.set(element, {
+  if (!(<any>element)['__valueMap']) {
+    (<any>element)['__valueMap'] = {
       dirty: true,
       properties: {},
       state: STATE.INIT
-    });
+    };
   }
 
-  return valueMap.get(element);
+  return (<any>element)['__valueMap'];
 }
