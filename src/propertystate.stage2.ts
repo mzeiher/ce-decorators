@@ -14,10 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-export { Component, ComponentOptions } from './component';
-export { CustomElement } from './element';
-export { Event, EventEmitter, EventOptions } from './event';
-export { Prop, PropertyOptions } from './prop';
-export { Inject } from './service';
-export { Watch, WatchOptions } from './watch';
-export { State } from './state';
+export enum PROPERTY_STATE {
+  INIT,
+  DIRTY,
+  UPDATE_PROPERTY,
+  REFLECTING,
+  UPDATE_FROM_ATTRIBUTE
+}

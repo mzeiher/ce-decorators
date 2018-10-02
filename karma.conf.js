@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = function (config) {
   config.set({
-    frameworks: ['jasmine', 'source-map-support'],
+    frameworks: ['detectBrowsers', 'jasmine', 'source-map-support'],
     files: [
       'node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
       'node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js',
@@ -12,11 +12,34 @@ module.exports = function (config) {
     port: 9876, // karma web server port
     colors: true,
     logLevel: config.LOG_DISABLED,
-    // browsers: ['ChromeHeadless', 'Firefox', 'FirefoxDeveloper', 'FirefoxNightly', 'IE'],
-    browsers: ['Chrome', 'Edge', 'IE', 'Firefox'],
+    
     autoWatch: false,
+    singleRun: true,
     concurrency: Infinity,
-    customLaunchers: {},
+    customLaunchers: {
+      fixed_chrome: {
+        base: 'ChromeHeadless',
+        flags: ['--headless', '--disable-gpu', '--no-sandbox']
+      }
+    },
+
+    detectBrowsers: {
+      // enable/disable, default is true
+      enabled: true,
+ 
+      // enable/disable phantomjs support, default is true
+      usePhantomJS: false,
+ 
+      // use headless mode, for browsers that support it, default is false
+      preferHeadless: true,
+      postDetection: function(availableBrowsers) {
+        availableBrowsers = availableBrowsers.filter((value) => value.indexOf('Chrome') < 0)
+        availableBrowsers = availableBrowsers.filter((value) => value.indexOf('Safari') < 0)
+        availableBrowsers.push('fixed_chrome');
+        console.log(availableBrowsers);
+        return availableBrowsers;
+      }
+    },
 
     junitReporter: {
       outputDir: path.join(__dirname, 'reports', 'junit')

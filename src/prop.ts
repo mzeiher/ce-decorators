@@ -20,7 +20,7 @@ import { getPropertyOptions, PropDescriptor } from './propertymap';
 import { camelToKebapCase, deserializeValue, serializeValue } from './utils';
 import { getValue, ValueMapType } from './valuemap';
 import { getWatcher } from './watchmap';
-import { STATE } from './state';
+import { COMPONENT_STATE } from './componentstate';
 
 export type PropertyType = Boolean | Number | String | Object | Array<any> | undefined;
 
@@ -49,6 +49,9 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
       if (!scopedOptions.type!) {
         scopedOptions.type = (<any>Reflect).getMetadata('design:type', target, propertyKey.toString()); // tslint:disable-line
       }
+      if (!scopedOptions.type) {
+        throw new Error('Property decorator needs a type');
+      }
 
       // for babel transpiled decorators
       if (descriptor && (<any>descriptor)['initializer'] && typeof (<any>descriptor)['initializer'] === 'function') {
@@ -69,24 +72,29 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
         }
         const valMap: ValueMapType | undefined = getValue(this);
         valMap!.dirty = true;
-        if (valMap!.state === STATE.INIT) {
+        if (valMap!.state === COMPONENT_STATE.INIT) {
           scopedOptions.defaultValue = newValue;
-        } else if (scopedOptions.type === Number || scopedOptions.type === String || scopedOptions.reflectAsAttribute) {
-          const value: string | null = serializeValue(newValue, scopedOptions.type);
-          if (value === null) {
-            this.removeAttribute(attributeKey);
-          } else {
-            this.setAttribute(attributeKey, value);
-          }
-        } else if (scopedOptions.type === Boolean) {
+        } else if (scopedOptions.type === Boolean && (scopedOptions.reflectAsAttribute === undefined || scopedOptions.reflectAsAttribute === true)) {
           if (newValue) {
             this.setAttribute(attributeKey, 'true');
           } else {
             this.removeAttribute(attributeKey);
           }
           valMap!.properties[propertyKey.toString()] = true;
+        } else if (scopedOptions.reflectAsAttribute ||
+          ((scopedOptions.type === Number || scopedOptions.type === String) &&
+            scopedOptions.reflectAsAttribute === undefined)) {
+          const value: string | null = serializeValue(newValue, scopedOptions.type);
+          if (value === null || value === '') {
+            this.removeAttribute(attributeKey);
+          } else {
+            this.setAttribute(attributeKey, value);
+          }
         } else {
           const oldValue: string | boolean | number | object = (<any>this)[propertyKey.toString()];
+          if (oldValue === newValue) {
+            return;
+          }
           const watcher: (() => void)[] | undefined = getWatcher(target, propertyKey.toString());
           watcher!.forEach((callback: (oldValue: any, newValue: any) => void) => {
             callback.apply(this, [oldValue, newValue]);
@@ -103,14 +111,21 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
       if (!descriptor || !descriptor.get) {
         propertyDescriptor.get = function (this: CustomElement): string | number | boolean | object | null { // tslint:disable-line
           const valMap: ValueMapType | undefined = getValue(this);
-          if (scopedOptions.type === Number || scopedOptions.type === String || scopedOptions.reflectAsAttribute) {
-            return deserializeValue(this.getAttribute(attributeKey) || `${(scopedOptions.defaultValue !== undefined ? scopedOptions.defaultValue : null)}`, scopedOptions.type); // tslint:disable-line
-          } else if (scopedOptions.type === Boolean) { // special case get from property to determine default value
+          if (scopedOptions.type === Boolean &&
+            (scopedOptions.reflectAsAttribute === undefined || scopedOptions.reflectAsAttribute === true)) { // special case get from property to determine default value
             if (valMap!.properties[propertyKey.toString()] !== undefined) {
               return this.hasAttribute(attributeKey);
             } else {
               return scopedOptions.defaultValue !== undefined ? scopedOptions.defaultValue : null;
             }
+          } else if (scopedOptions.reflectAsAttribute ||
+            ((scopedOptions.type === Number || scopedOptions.type === String) &&
+              scopedOptions.reflectAsAttribute === undefined)) {
+            let attribute = this.getAttribute(attributeKey);
+            if (scopedOptions.type === String && attribute === null) {
+              attribute = '';
+            }
+            return attribute ? deserializeValue(attribute, scopedOptions.type) : (scopedOptions.defaultValue !== undefined ? scopedOptions.defaultValue : null); // tslint:disable-line
           } else {
             return valMap!.properties[propertyKey.toString()] ||
               (scopedOptions.defaultValue !== undefined ? scopedOptions.defaultValue : null);

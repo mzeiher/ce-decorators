@@ -18,14 +18,16 @@
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { needShadyDOM } from '../shadycss';
 import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
+import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
 
 declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name:string) => {
   if (BABEL_COMPILE && constructorInstance === TestWithMultipleProperties) return;
-  describe('render tests', function () {
-    let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = null;
+  describe('render tests (' + name + ')', function () {
+    let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = null;
     beforeEach(function () {
       element = new constructorInstance();
     });
@@ -34,7 +36,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
         element = null;
       }
     });
-    it('render on connected', function (done) {
+    it('render on connected (' + name + ')', function (done) {
       spyOn(<any>element, 'renderToDom').and.callThrough();
       document.querySelector('body').appendChild(element);
       window.setTimeout(() => { //we have to wait for the microtask of render to be done
@@ -43,7 +45,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
         done();
       }, 0)
     });
-    it('dom rendering tests', function (done) {
+    it('dom rendering tests (' + name + ')', function (done) {
       document.querySelector('body').appendChild(element);
       element.stringPropertyWithDefault = "foobar";
       element.numberPropertyWithDefault = 1;
@@ -59,7 +61,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
         done();
       }, 0);
     });
-    it('effective dom rendering', function (done) {
+    it('effective dom rendering (' + name + ')', function (done) {
       document.querySelector('body').appendChild(element);
       window.setTimeout(() => { //we have to wait for the microtask of render to be done
         const divs = element.shadowRoot.querySelectorAll('div');
@@ -71,7 +73,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
         element.arrayPropertyWithDefault = [];
         window.setTimeout(() => {
           const newDivs = element.shadowRoot.querySelectorAll('div');
-          newDivs.forEach((value, key) => {
+          newDivs.forEach((value:any, key:any) => {
             expect(value).toBe(divs[key]);
           });
           document.querySelector('body').removeChild(element);

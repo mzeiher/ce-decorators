@@ -14,13 +14,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { render as litRender, html, TemplateResult } from 'lit-html';
+import { html, TemplateResult } from 'lit-html';
 import { render as shadyRender } from 'lit-html/lib/shady-render';
 import { CustomElement } from './element';
 import { getPropertyOptions, PropDescriptor } from './propertymap';
 import { needShadyDOM } from './shadycss';
-import { STATE } from './state';
-import { camelToKebapCase, deserializeValue, kebapToCamelCase, makeTemplate } from './utils';
+import { COMPONENT_STATE } from './componentstate';
+import { camelToKebapCase, deserializeValue, kebapToCamelCase, makeTemplateString } from './utils';
 import { getValue, ValueMapType } from './valuemap';
 import { getWatcher } from './watchmap';
 
@@ -51,15 +51,9 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
       }
       Object.defineProperty(target, 'observedAttributes', {
         writable: false,
-        value: observedAttributes
+        value: observedAttributes,
       });
 
-      if (needShadyDOM() && options.style) {
-        const template: HTMLTemplateElement = document.createElement('template');
-        // tslint:disable-next-line:no-inner-html
-        template.innerHTML = `<style>${options.style}</style>`;
-        (<any>window).ShadyCSS.prepareTemplateStyles(template, options.tag);
-      }
       const decoratedTarget: Clazz = class DecoratedClass extends target {
 
         // tslint:disable-next-line:no-any
@@ -84,29 +78,24 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
                 cachedLiterals = literals;
               }
               if (cache === null) {
-                if (!needShadyDOM() && options.style) { //on native shadowdom path literals with <style>
+                if (options.style) {
                   const firstLiteral: string = literals.raw[0];
                   const newLiterals: string[] = literals.raw.map((currentValue: string) => currentValue);
                   newLiterals[0] = `<style>${options.style}</style>${firstLiteral}`;
-                  cache = makeTemplate(newLiterals, newLiterals);
+                  cache = makeTemplateString(newLiterals, newLiterals);
                 } else {
                   cache = literals;
                 }
               }
-
-              if (needShadyDOM()) {
-                shadyRender(html(cache, ...placeholder), this.shadowRoot!, scopedOptions.tag);
-              } else {
-                litRender(html(cache, ...placeholder), this.shadowRoot!);
-              }
+              shadyRender(html(cache, ...placeholder), this.shadowRoot!, scopedOptions.tag);
             };
           }
-          value!.state = STATE.CONSTRUCTED;
+          value!.state = COMPONENT_STATE.CONSTRUCTED;
         }
 
         protected connectedCallback(): void {
           const value: ValueMapType | undefined = getValue(this);
-          value!.state = STATE.CONNECTED;
+          value!.state = COMPONENT_STATE.CONNECTED;
           super.connectedCallback();
           this.render();
           if (needShadyDOM()) {
@@ -115,13 +104,13 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
         }
 
         protected disconnectedCallback(): void {
-          getValue(this)!.state = STATE.DISCONNECTED;
+          getValue(this)!.state = COMPONENT_STATE.DISCONNECTED;
           super.disconnectedCallback();
         }
 
         protected render(): TemplateResult {
           const valMap: ValueMapType | undefined = getValue(this);
-          if (valMap!.dirty && valMap!.state === STATE.CONNECTED) {
+          if (valMap!.dirty && valMap!.state === COMPONENT_STATE.CONNECTED) {
             if (!this._promiseWaiting) {
               this._promiseWaiting = true;
               Promise.resolve().then(() => { // execute repaint in microtask
@@ -146,7 +135,8 @@ export function Component(options: ComponentOptions): CustomElementClassDecorato
               if (prop.options.readonly) {
                 throw new Error('property is readonly');
               }
-              if (prop.type === Number || prop.type === String || prop.type === Boolean) {
+              if ((prop.type === Number || prop.type === String || prop.type === Boolean) &&
+                  (prop.options.reflectAsAttribute === undefined || prop.options.reflectAsAttribute === true)) {
                 if (prop.type === Boolean) { // indicate that a boolean property is set so don't return default value
                   getValue(this)!.properties[propertyKey] = true;
                 }

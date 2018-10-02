@@ -14,10 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-export { Component, ComponentOptions } from './component';
-export { CustomElement } from './element';
-export { Event, EventEmitter, EventOptions } from './event';
-export { Prop, PropertyOptions } from './prop';
-export { Inject } from './service';
-export { Watch, WatchOptions } from './watch';
-export { State } from './state';
+export enum COMPONENT_STATE {
+  CONNECTED,
+  DISCONNECTED,
+  INIT,
+  CONSTRUCTED
+}

@@ -75,7 +75,7 @@ export function kebapToCamelCase(str: string): string {
 /**
  * create a template string array
  */
-export function makeTemplate(template: string[], raw: string[]): TemplateStringsArray {
+export function makeTemplateString(template: string[], raw: string[]): TemplateStringsArray {
   Object.defineProperty(template, 'raw', { value: raw });
 
   return <any>template;

@@ -6,7 +6,6 @@
     "outDir": "./dist",
     "importHelpers": true,
     "moduleResolution": "node",
-
     "lib": [
       "dom",
       "dom.iterable",

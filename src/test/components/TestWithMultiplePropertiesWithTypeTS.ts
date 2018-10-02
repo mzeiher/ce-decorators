@@ -19,7 +19,7 @@ import { html, TemplateResult } from 'lit-html';
 import { classMap } from 'lit-html/directives/classMap';
 
 @Component({
-  tag: 'test-with-multiple-properties',
+  tag: 'test-with-multiple-properties-with-type-ts',
   style: `
   :host {
     background-color: #ababab;
@@ -49,9 +49,9 @@ import { classMap } from 'lit-html/directives/classMap';
   }
   `
 })
-export class TestWithMultipleProperties extends CustomElement {
+export class TestWithMultiplePropertiesWithTypeTS extends CustomElement {
 
-  @Prop()
+  @Prop({ type: String })
   get getPropertyStringTest(): string {
     return this.internalPropertyString;
   }
@@ -64,12 +64,12 @@ export class TestWithMultipleProperties extends CustomElement {
     return this.internalPropertyString2;
   }
 
-  @Prop()
+  @Prop({ type: String })
   set setPropertyStringTest(value: string) {
     this.internalPropertyString2 = value;
   }
 
-  @Prop()
+  @Prop({ type: Boolean })
   get getPropertyBooleanTest(): boolean {
     return this.internalPropertyBoolean;
   }
@@ -82,12 +82,12 @@ export class TestWithMultipleProperties extends CustomElement {
     return this.internalPropertyBoolean2;
   }
 
-  @Prop()
+  @Prop({ type: Boolean })
   set setPropertyBooleanTest(value: boolean) {
     this.internalPropertyBoolean2 = value;
   }
 
-  @Prop()
+  @Prop({ type: Object })
   get getPropertyObjectTest(): object {
     return this.internalPropertyObject;
   }
@@ -100,64 +100,69 @@ export class TestWithMultipleProperties extends CustomElement {
     return this.internalPropertyObject2;
   }
 
-  @Prop()
+  @Prop({ type: Object })
   set setPropertyObjectTest(value: object) {
     this.internalPropertyObject2 = value;
   }
 
-  @Prop()
+  @Prop({ type: String })
   stringProperty: string;
 
   @Prop({
-    defaultValue: 'test'
+    defaultValue: 'test',
+    type: String
   })
   stringPropertyWithDefault: string;
 
-  @Prop()
+  @Prop({ type: String })
   stringPropertyWithInitializer: string = 'test';
 
-  @Prop()
+  @Prop({ type: Boolean })
   booleanProperty: boolean;
 
   @Prop({
-    defaultValue: true
+    defaultValue: true,
+    type: Boolean
   })
   booleanPropertyWithDefault: boolean;
 
-  @Prop()
+  @Prop({ type: Boolean })
   booleanPropertyWithInitializer: boolean = true;
 
-  @Prop()
+  @Prop({ type: Number })
   numberProperty: number;
 
   @Prop({
-    defaultValue: 0
+    defaultValue: 0,
+    type: Number
   })
   numberPropertyWithDefault: number;
 
-  @Prop()
+  @Prop({ type: Number })
   numberPropertyWithInitializer: number = 0;
 
-  @Prop()
+  @Prop({ type: Object })
   objectProperty: {};
 
   @Prop({
-    defaultValue: { test: 'default' }
+    defaultValue: { test: 'default' },
+    type: Object
   })
   objectPropertyWithDefault: {};
 
-  @Prop()
+  @Prop({ type: Object })
   objectPropertyWithInitializer: {} = { test: 'default' };
 
-  @Prop()
+  @Prop({ type: Array })
   arrayProperty: any[];
 
   @Prop({
-    defaultValue: [0, 0, 0]
+    defaultValue: [0, 0, 0],
+    type: Array
   })
   arrayPropertyWithDefault: any[];
 
-  @Prop()
+  @Prop({ type: Array })
   arrayPropertyWithInitializer: any[] = [0, 0, 0];
 
   @Prop({ reflectAsAttribute: false })

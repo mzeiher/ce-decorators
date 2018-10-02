@@ -16,17 +16,19 @@
 /* tslint:disable */
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
+import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
 
 declare var BABEL_COMPILE:boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name:string) => {
   if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
-    describe('property-tests', function () {
+    describe('property-tests (' + name + ')', function () {
       const element = new constructorInstance();
       const elementWithDefault = new constructorInstance();
       const elementWithInitializer = new constructorInstance();
-    it('string-property', function () {
+    it('string-property (' + name + ')', function () {
       element.stringProperty = "test";
       expect(element.stringProperty).toEqual("test", "stringProperty set/get property");
       element.setAttribute('string-property', 'test2');
@@ -36,7 +38,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.setAttribute('string-property', 'test4');
       expect(element.stringProperty).toEqual("test4", "stringProperty set attribute get property");
     });
-    it('number-property', function () {
+    it('number-property (' + name + ')', function () {
       element.numberProperty = 0;
       expect(element.numberProperty).toEqual(0, "numberProperty set/get property");
       element.setAttribute('number-property', '1');
@@ -46,7 +48,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.setAttribute('number-property', '3');
       expect(element.numberProperty).toEqual(3, "numberProperty set attribute get property");
     });
-    it('boolean-property', function () {
+    it('boolean-property (' + name + ')', function () {
       element.booleanProperty = true;
       expect(element.booleanProperty).toEqual(true, "Boolean Property set property");
       element.booleanProperty = false;
@@ -56,20 +58,20 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.removeAttribute('boolean-property');
       expect(element.booleanProperty).toEqual(false, "Boolean Property set with attribute");
     });
-    it('object-property', function () {
+    it('object-property (' + name + ')', function () {
       element.objectProperty = { test: "test" };
       expect(element.objectProperty).toEqual({ test: "test" }, "Object Property set property");
       element.setAttribute('object-property', '{ "test" : "test2"} ');
       expect(element.objectProperty).toEqual({ test: "test2" }, "Object Property set attribute");
     });
-    it('array-property', function () {
+    it('array-property (' + name + ')', function () {
       element.arrayProperty = [0, 1, 2];
       expect(element.arrayProperty).toEqual([0, 1, 2], "Array Property set property");
       element.setAttribute('array-property', '[2,1,0]');
       expect(element.arrayProperty).toEqual([2, 1, 0], "Array Property set attribute");
     });
     
-    it('string-property-with-default', function () {
+    it('string-property-with-default (' + name + ')', function () {
       expect(elementWithDefault.stringPropertyWithDefault).toEqual("test", "stringPropertyWithDefault default value");
       elementWithDefault.stringPropertyWithDefault = "testtest";
       expect(elementWithDefault.stringPropertyWithDefault).toEqual("testtest", "stringPropertyWithDefault set/get property");
@@ -80,7 +82,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       elementWithDefault.setAttribute('string-property-with-default', 'test4');
       expect(elementWithDefault.stringPropertyWithDefault).toEqual("test4", "stringPropertyWithDefault set attribute get property");
     });
-    it('number-property-with-default', function () {
+    it('number-property-with-default (' + name + ')', function () {
       expect(elementWithDefault.numberPropertyWithDefault).toEqual(0, "numberPropertyWithDefault default value");
       elementWithDefault.numberPropertyWithDefault = 1;
       expect(elementWithDefault.numberPropertyWithDefault).toEqual(1, "numberPropertyWithDefault set/get property");
@@ -91,7 +93,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       elementWithDefault.setAttribute('number-property-with-default', '3');
       expect(elementWithDefault.numberPropertyWithDefault).toEqual(3, "numberPropertyWithDefault set attribute get property");
     });
-    it('boolean-property-with-default', function () {
+    it('boolean-property-with-default (' + name + ')', function () {
       expect(elementWithDefault.booleanPropertyWithDefault).toEqual(true, "booleanPropertyWithDefault default valuebooleanPropertyWithDefault");
       elementWithDefault.booleanPropertyWithDefault = true;
       expect(elementWithDefault.booleanPropertyWithDefault).toEqual(true, "booleanPropertyWithDefault set property");
@@ -102,21 +104,21 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       elementWithDefault.removeAttribute('boolean-property-with-default');
       expect(elementWithDefault.booleanPropertyWithDefault).toEqual(false, "booleanPropertyWithDefault set with attribute");
     });
-    it('object-property-with-default', function () {
+    it('object-property-with-default (' + name + ')', function () {
       expect(elementWithDefault.objectPropertyWithDefault).toEqual({ test: "default" }, "objectPropertyWithDefault default value");
       elementWithDefault.objectPropertyWithDefault = { test: "test" };
       expect(elementWithDefault.objectPropertyWithDefault).toEqual({ test: "test" }, "objectPropertyWithDefault set property");
       elementWithDefault.setAttribute('object-property-with-default', '{ "test" : "test2"} ');
       expect(elementWithDefault.objectPropertyWithDefault).toEqual({ test: "test2" }, "objectPropertyWithDefault set attribute");
     });
-    it('array-property-with-default', function () {
+    it('array-property-with-default (' + name + ')', function () {
       expect(elementWithDefault.arrayPropertyWithDefault).toEqual([0, 0, 0], "arrayPropertyWithDefault set property");
       elementWithDefault.arrayPropertyWithDefault = [0, 1, 2];
       expect(elementWithDefault.arrayPropertyWithDefault).toEqual([0, 1, 2], "arrayPropertyWithDefault set property");
       elementWithDefault.setAttribute('array-property-with-default', '[2,1,0]');
       expect(elementWithDefault.arrayPropertyWithDefault).toEqual([2, 1, 0], "arrayPropertyWithDefault set attribute");
     });
-    it('string-property-with-initializer', function () {
+    it('string-property-with-initializer (' + name + ')', function () {
       expect(elementWithInitializer.stringPropertyWithInitializer).toEqual("test", "stringPropertyWithInitializer initializer value");
       elementWithInitializer.stringPropertyWithInitializer = "testtest";
       expect(elementWithInitializer.stringPropertyWithInitializer).toEqual("testtest", "stringPropertyWithInitializer set/get property");
@@ -127,7 +129,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       elementWithInitializer.setAttribute('string-property-with-initializer', 'test4');
       expect(elementWithInitializer.stringPropertyWithInitializer).toEqual("test4", "stringPropertyWithInitializer set attribute get property");
     });
-    it('number-property-with-initializer', function () {
+    it('number-property-with-initializer (' + name + ')', function () {
       expect(elementWithInitializer.numberPropertyWithInitializer).toEqual(0, "numberPropertyWithInitializer initializer value");
       elementWithInitializer.numberPropertyWithInitializer = 1;
       expect(elementWithInitializer.numberPropertyWithInitializer).toEqual(1, "numberPropertyWithInitializer set/get property");
@@ -138,7 +140,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       elementWithInitializer.setAttribute('number-property-with-initializer', '3');
       expect(elementWithInitializer.numberPropertyWithInitializer).toEqual(3, "numberPropertyWithInitializer set attribute get property");
     });
-    it('boolean-property-with-initializer', function () {
+    it('boolean-property-with-initializer (' + name + ')', function () {
       expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(true, "booleanPropertyWithInitializer initializer valuebooleanPropertyWithInitializer");
       elementWithInitializer.booleanPropertyWithInitializer = true;
       expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(true, "booleanPropertyWithInitializer set property");
@@ -149,21 +151,21 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       elementWithInitializer.removeAttribute('boolean-property-with-initializer');
       expect(elementWithInitializer.booleanPropertyWithInitializer).toEqual(false, "booleanPropertyWithInitializer set with attribute");
     });
-    it('object-property-with-initializer', function () {
+    it('object-property-with-initializer (' + name + ')', function () {
       expect(elementWithInitializer.objectPropertyWithInitializer).toEqual({ test: "default" }, "objectPropertyWithInitializer initializer value");
       elementWithInitializer.objectPropertyWithInitializer = { test: "test" };
       expect(elementWithInitializer.objectPropertyWithInitializer).toEqual({ test: "test" }, "objectPropertyWithInitializer set property");
       elementWithInitializer.setAttribute('object-property-with-initializer', '{ "test" : "test2"} ');
       expect(elementWithInitializer.objectPropertyWithInitializer).toEqual({ test: "test2" }, "objectPropertyWithInitializer set attribute");
     });
-    it('array-property-with-initializer', function () {
+    it('array-property-with-initializer (' + name + ')', function () {
       expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([0, 0, 0], "arrayPropertyWithInitializer set property");
       elementWithInitializer.arrayPropertyWithInitializer = [0, 1, 2];
       expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([0, 1, 2], "arrayPropertyWithInitializer set property");
       elementWithInitializer.setAttribute('array-property-with-initializer', '[2,1,0]');
       expect(elementWithInitializer.arrayPropertyWithInitializer).toEqual([2, 1, 0], "arrayPropertyWithInitializer set attribute");
     });
-    it('get-property-test string', function() {
+    it('get-property-test string (' + name + ')', function() {
       expect(element.getPropertyStringTest).toEqual('');
       element.getPropertyStringTest = "test";
       expect(element.getPropertyStringTest).toEqual('test');
@@ -171,7 +173,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.setAttribute('get-property-string-test', 'testtest');
       expect(element.getPropertyStringTest).toEqual('testtest');
     });
-    it('set-property-test string', function() {
+    it('set-property-test string (' + name + ')', function() {
       expect(element.setPropertyStringTest).toEqual('');
       element.setPropertyStringTest = "test";
       expect(element.setPropertyStringTest).toEqual('test');
@@ -179,7 +181,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.setAttribute('set-property-string-test', 'testtest');
       expect(element.setPropertyStringTest).toEqual('testtest');
     });
-    it('get-property-test boolean', function() {
+    it('get-property-test boolean (' + name + ')', function() {
       expect(element.getPropertyBooleanTest).toEqual(false);
       element.getPropertyBooleanTest = true;
       expect(element.getPropertyBooleanTest).toEqual(true);
@@ -191,7 +193,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.getPropertyBooleanTest = false;
       expect(element.hasAttribute('get-property-boolean-test')).toBeFalsy();
     });
-    it('set-property-test boolean', function() {
+    it('set-property-test boolean (' + name + ')', function() {
       expect(element.setPropertyBooleanTest).toEqual(false);
       element.setPropertyBooleanTest = true;
       expect(element.setPropertyBooleanTest).toEqual(true);
@@ -203,7 +205,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.setPropertyBooleanTest = false;
       expect(element.hasAttribute('set-property-boolean-test')).toBeFalsy();
     });
-    it('get-property-test object', function() {
+    it('get-property-test object (' + name + ')', function() {
       expect(element.getPropertyObjectTest).toEqual({});
       element.getPropertyObjectTest = {test : "test"};
       expect(element.getPropertyObjectTest).toEqual({test : "test"});
@@ -211,13 +213,57 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.setAttribute('get-property-object-test', '{"test" : "testtest"}');
       expect(element.getPropertyObjectTest).toEqual({test : "testtest"});
     });
-    it('set-property-test object', function() {
+    it('set-property-test object (' + name + ')', function() {
       expect(element.setPropertyObjectTest).toEqual({});
       element.setPropertyObjectTest = {test : "test"};
       expect(element.setPropertyObjectTest).toEqual({test : "test"});
       expect(element.hasAttribute('set-property-object-test')).toBeFalsy();
       element.setAttribute('set-property-object-test', '{"test" : "testtest"}');
       expect(element.setPropertyObjectTest).toEqual({test : "testtest"});
+    });
+    it('stringPropertyWithNoReflection (' + name + ')', function() {
+      expect(element.stringPropertyWithNoReflection).toBe('');
+      element.stringPropertyWithNoReflection = 'test';
+      expect(element.stringPropertyWithNoReflection).toBe('test');
+      expect(element.hasAttribute('string-property-with-no-reflection')).toBeFalsy();
+      element.setAttribute('string-property-with-no-reflection', 'testtest');
+      expect(element.stringPropertyWithNoReflection).toBe('testtest');
+      expect(element.getAttribute('string-property-with-no-reflection')).toBe('testtest');
+    });
+    it('numberPropertyWithNoReflection (' + name + ')', function() {
+      expect(element.numberPropertyWithNoReflection).toBe(0);
+      element.numberPropertyWithNoReflection = 1;
+      expect(element.numberPropertyWithNoReflection).toBe(1);
+      expect(element.hasAttribute('number-property-with-no-reflection')).toBeFalsy();
+      element.setAttribute('number-property-with-no-reflection', '2');
+      expect(element.numberPropertyWithNoReflection).toBe(2);
+      expect(element.getAttribute('number-property-with-no-reflection')).toBe('2');
+    });
+    it('booleanPropertyWithNoReflection (' + name + ')', function() {
+      expect(element.booleanPropertyWithNoReflection).toBe(false);
+      element.booleanPropertyWithNoReflection = true;
+      expect(element.booleanPropertyWithNoReflection).toBe(true);
+      expect(element.hasAttribute('boolean-property-with-no-reflection')).toBeFalsy();
+      element.booleanPropertyWithNoReflection = false;
+      expect(element.booleanPropertyWithNoReflection).toBe(false);
+      element.setAttribute('boolean-property-with-no-reflection', 'true');
+      expect(element.booleanPropertyWithNoReflection).toBe(true);
+      element.removeAttribute('boolean-property-with-no-reflection');
+      expect(element.booleanPropertyWithNoReflection).toBe(false);
+    });
+    it('objectPropertyWithReflection (' + name + ')', function() {
+      expect(element.objectPropertyWithReflection).toEqual({});
+      element.objectPropertyWithReflection = {"test" : "test"};
+      expect(element.getAttribute('object-property-with-reflection')).toEqual(JSON.stringify({"test" : "test"}));
+      element.setAttribute('object-property-with-reflection', JSON.stringify({"test" : "testtest"}));
+      expect(element.objectPropertyWithReflection).toEqual({"test" : "testtest"});
+    });
+    it('arrayPropertyWithReflection (' + name + ')', function() {
+      expect(element.arrayPropertyWithReflection).toEqual([]);
+      element.arrayPropertyWithReflection = [0,1,2];
+      expect(element.getAttribute('array-property-with-reflection')).toEqual(JSON.stringify([0,1,2]));
+      element.setAttribute('array-property-with-reflection', JSON.stringify([3,4,5]));
+      expect(element.arrayPropertyWithReflection).toEqual([3,4,5]);
     });
   });
 }

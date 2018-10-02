@@ -14,8 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { Component, CustomElement, Event, EventEmitter, Prop, Watch } from './../../index';
-import { html, TemplateResult } from 'lit-html';
+import {
+  Component,
+  CustomElement,
+  Event,
+  EventEmitter,
+  Prop,
+  Watch,
+  State
+} from './../../index';
+import {
+  html,
+  TemplateResult
+} from 'lit-html';
+import {
+  classMap
+} from 'lit-html/directives/classMap';
 
 @Component({
   tag: 'test-with-multiple-properties-with-type',
@@ -49,165 +63,234 @@ import { html, TemplateResult } from 'lit-html';
   `
 })
 export class TestWithMultiplePropertiesWithType extends CustomElement {
-  private internalPropertyString: string = '';
-  private internalPropertyString2: string = '';
 
-  private internalPropertyBoolean: boolean = false;
-  private internalPropertyBoolean2: boolean = false;
-
-  private internalPropertyObject: object = {};
-  private internalPropertyObject2: object = {};
-
-  @Prop({type: String})
-  public get getPropertyStringTest(): string {
+  @Prop({
+    type: String
+  })
+  get getPropertyStringTest() {
     return this.internalPropertyString;
   }
 
-  public set getPropertyStringTest(value: string) {
+  set getPropertyStringTest(value) {
     this.internalPropertyString = value;
   }
 
-  public get setPropertyStringTest(): string {
+  get setPropertyStringTest() {
     return this.internalPropertyString2;
   }
 
-  @Prop({type: String})
-  public set setPropertyStringTest(value: string) {
+  @Prop({
+    type: String
+  })
+  set setPropertyStringTest(value) {
     this.internalPropertyString2 = value;
   }
 
-  @Prop({type: Boolean})
-  public get getPropertyBooleanTest(): boolean {
+  @Prop({
+    type: Boolean
+  })
+  get getPropertyBooleanTest() {
     return this.internalPropertyBoolean;
   }
 
-  public set getPropertyBooleanTest(value: boolean) {
+  set getPropertyBooleanTest(value) {
     this.internalPropertyBoolean = value;
   }
 
-  public get setPropertyBooleanTest(): boolean {
+  get setPropertyBooleanTest() {
     return this.internalPropertyBoolean2;
   }
 
-  @Prop({type: Boolean})
-  public set setPropertyBooleanTest(value: boolean) {
+  @Prop({
+    type: Boolean
+  })
+  set setPropertyBooleanTest(value) {
     this.internalPropertyBoolean2 = value;
   }
 
-  @Prop({type: Object})
-  public get getPropertyObjectTest(): object {
+  @Prop({
+    type: Object
+  })
+  get getPropertyObjectTest() {
     return this.internalPropertyObject;
   }
 
-  public set getPropertyObjectTest(value: object) {
+  set getPropertyObjectTest(value) {
     this.internalPropertyObject = value;
   }
 
-  public get setPropertyObjectTest(): object {
+  get setPropertyObjectTest() {
     return this.internalPropertyObject2;
   }
 
-  @Prop({type: Object})
-  public set setPropertyObjectTest(value: object) {
+  @Prop({
+    type: Object
+  })
+  set setPropertyObjectTest(value) {
     this.internalPropertyObject2 = value;
   }
 
-  @Prop({type: String})
-  public stringProperty: string;
+  @Prop({
+    type: String
+  })
+  stringProperty;
 
   @Prop({
     defaultValue: 'test',
     type: String
   })
-  public stringPropertyWithDefault: string;
+  stringPropertyWithDefault;
 
-  @Prop({type: String})
-  public stringPropertyWithInitializer: string = 'test';
+  @Prop({
+    type: String
+  })
+  stringPropertyWithInitializer = 'test';
 
-  @Prop({type: Boolean})
-  public booleanProperty: boolean;
+  @Prop({
+    type: Boolean
+  })
+  booleanProperty;
 
   @Prop({
     defaultValue: true,
     type: Boolean
   })
-  public booleanPropertyWithDefault: boolean;
+  booleanPropertyWithDefault;
 
-  @Prop({type: Boolean})
-  public booleanPropertyWithInitializer: boolean = true;
+  @Prop({
+    type: Boolean
+  })
+  booleanPropertyWithInitializer = true;
 
-  @Prop({type: Number})
-  public numberProperty: number;
+  @Prop({
+    type: Number
+  })
+  numberProperty;
 
   @Prop({
     defaultValue: 0,
     type: Number
   })
-  public numberPropertyWithDefault: number;
-
-  @Prop({type: Number})
-  public numberPropertyWithInitializer: number = 0;
-
-  @Prop({type: Object})
-  public objectProperty: {};
+  numberPropertyWithDefault;
 
   @Prop({
-    defaultValue: { test: 'default' },
+    type: Number
+  })
+  numberPropertyWithInitializer = 0;
+
+  @Prop({
     type: Object
   })
-  public objectPropertyWithDefault: {};
+  objectProperty;
 
-  @Prop({type: Object})
-  public objectPropertyWithInitializer: {} = { test: 'default' };
+  @Prop({
+    defaultValue: {
+      test: 'default'
+    },
+    type: Object
+  })
+  objectPropertyWithDefault;
 
-  @Prop({type: Array})
-  public arrayProperty: any[];
+  @Prop({
+    type: Object
+  })
+  objectPropertyWithInitializer = {
+    test: 'default'
+  };
+
+  @Prop({
+    type: Array
+  })
+  arrayProperty;
 
   @Prop({
     defaultValue: [0, 0, 0],
     type: Array
   })
-  public arrayPropertyWithDefault: any[];
+  arrayPropertyWithDefault;
 
-  @Prop({type: Array})
-  public arrayPropertyWithInitializer: any[] = [0, 0, 0];
+  @Prop({
+    type: Array
+  })
+  arrayPropertyWithInitializer = [0, 0, 0];
+
+  @Prop({
+    reflectAsAttribute: false,
+    type: String
+  })
+  stringPropertyWithNoReflection = '';
+
+  @Prop({
+    reflectAsAttribute: false,
+    type: Number
+  })
+  numberPropertyWithNoReflection = 0;
+
+  @Prop({
+    reflectAsAttribute: false,
+    type: Boolean
+  })
+  booleanPropertyWithNoReflection = false;
+
+  @Prop({
+    reflectAsAttribute: true,
+    type: Object
+  })
+  objectPropertyWithReflection = {};
+
+  @Prop({
+    reflectAsAttribute: true,
+    type: Array
+  })
+  arrayPropertyWithReflection = [];
 
   @Event('change')
-  public changeEvent: EventEmitter<string>;
+  changeEvent;
 
-  @Event()
-  public test: EventEmitter<string>;
+  @Event('test')
+  test;
+
+  @State()
+  shouldHaveClass = false;
+
+  internalPropertyString = '';
+  internalPropertyString2 = '';
+
+  internalPropertyBoolean = false;
+  internalPropertyBoolean2 = false;
+
+  internalPropertyObject = {};
+  internalPropertyObject2 = {};
 
   @Watch('stringProperty')
-  public stringWatcher(oldValue: string, newValue: string): void {
+  stringWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('numberProperty')
-  public numberWatcher(oldValue: number, newValue: number): void {
+  numberWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('booleanProperty')
-  public booleanWatcher(oldValue: boolean, newValue: boolean): void {
+  booleanWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('objectProperty')
-  public objectWatcher(oldValue: object, newValue: object): void {
+  objectWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('arrayProperty')
-  public arrayWatcher(oldValue: Array<any>, newValue: Array<any>): void {
+  arrayWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
-  public watchGuard(_oldValue: any, _newValue: any): void {
-  }
+  watchGuard(_oldValue, _newValue) {}
 
-  protected render(): TemplateResult {
-    return html`<div>${this.stringPropertyWithDefault}</div>
+  render() {
+    return html `<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.stringPropertyWithDefault}</div>
                      <div>${this.numberPropertyWithDefault}</div>
                      <div>${this.booleanPropertyWithDefault}</div>
                      <div>${JSON.stringify(this.objectPropertyWithDefault)}</div>

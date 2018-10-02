@@ -17,12 +17,12 @@
 
 import { ServiceTest } from "./services/ServiceObject";
 import { ServiceTestWithType } from './services/ServiceObjectWithType';
-declare var BABEL_COMPILE:boolean;
+declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): ServiceTest | ServiceTestWithType }) => {
-  if(BABEL_COMPILE && constructorInstance === ServiceTest ) return;
-  describe('service tests', function () {
+export default (constructorInstance: { new(): ServiceTest | ServiceTestWithType }, name: string) => {
+  if (BABEL_COMPILE && constructorInstance === ServiceTest) return;
+  describe('service tests (' + name + ')', function () {
     it('singleton service test', function () {
       const service1: ServiceTest = new constructorInstance();
       const service2: ServiceTest = new constructorInstance();
@@ -30,14 +30,14 @@ export default (constructorInstance: { new(): ServiceTest | ServiceTestWithType 
       expect(service1.singletonService).toBe(service2.singletonService);
     });
 
-    it('instance service test', function () {
+    it('instance service test (' + name + ')', function () {
       const service1: ServiceTest = new constructorInstance();
       const service2: ServiceTest = new constructorInstance();
 
       expect(service1.instanceService).not.toBe(service2.instanceService);
     });
 
-    it('nested singleton service test', function () {
+    it('nested singleton service test (' + name + ')', function () {
       const service1: ServiceTest = new constructorInstance();
       const service2: ServiceTest = new constructorInstance();
 
@@ -45,7 +45,7 @@ export default (constructorInstance: { new(): ServiceTest | ServiceTestWithType 
       expect(service1.instanceService.nestedSingletonService).toBe(service2.instanceService.nestedSingletonService);
     });
 
-    it('nested instance service test', function () {
+    it('nested instance service test (' + name + ')', function () {
       const service1: ServiceTest = new constructorInstance();
       const service2: ServiceTest = new constructorInstance();
 

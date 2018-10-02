@@ -45,7 +45,8 @@ If you use the decorators with babel you have to specify the typ for Prop and In
 
 # Sample
 ```typescript
-import { Component, CutomElement, Prop, Watch Event, EventEmitter } from 'ce-decorators'
+import { Component, CutomElement, Prop, Watch Event, EventEmitter, State } from 'ce-decorators'
+import { html } from 'lit-html'
 
 @Component({
     tag: 'my-custom-element'
@@ -58,12 +59,15 @@ import { Component, CutomElement, Prop, Watch Event, EventEmitter } from 'ce-dec
 export class MyCustomElement extends CustomElement {
 
   @Prop()
-  propertyOne: string = "default value";
+  propertyOne: string = "default value"; // register a property propertyOne with a reflection to attribute property-one
 
   @Event()
-  change: EventEmitter<string>; // will trigger a custom event of type "change"
+  change: EventEmitter<string>; // will trigger a custom event with name "change" (name can be overriden by decorator argument)
 
-  @Watch('propertyOne')
+  @State()
+  private myState:boolean = false; // only visible to the instance, but will trigger a re-render
+
+  @Watch('propertyOne') // watches for changes in propertyOne
   propertyOneChanged(oldValue:string, newValue:string) {
     console.log('propertyOne Changed');
   }
@@ -72,10 +76,25 @@ export class MyCustomElement extends CustomElement {
   myService: MyService;
 
   render() {
-    renderToDom`<div>${this.propertyOne}</div>`
+    return html`<div>${this.propertyOne}</div>`;
   }
 }
 ```
+
+# Lifecycle
+## Construction/rendering
+* constructor
+* \<append to dom\>
+* connectedCallback()
+* render()
+* \<remove/detach from dom\>
+* disconnectedCallback()
+
+## Property udpates
+* set property myProperty
+* if reflectToAttribute set property my-property and call attributeChangedCallback
+* notify watchers
+* deffer render() to microtask (so if multiple attributes/properties are set in the same task, render is only called once)
 
 # Usage with Angular
 For angular you need to activate the `CUSTOM_ELEMENTS_SCHEMA` after that custom elements can be used like angfular components

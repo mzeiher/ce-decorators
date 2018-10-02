@@ -17,47 +17,49 @@
 
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
+import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
 
-declare var BABEL_COMPILE:boolean;
+declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType }) => {
-  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
-  describe('watcher tests', function () {
-    it('string watcher test', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name: string) => {
+  if (BABEL_COMPILE && constructorInstance === TestWithMultipleProperties) return;
+  describe('watcher tests (' + name + ')', function () {
+    it('string watcher test (' + name + ')', function () {
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.stringProperty = "test";
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, 'test');
       element.setAttribute('string-property', "test2");
       expect((<any>element).watchGuard).toHaveBeenCalledWith('test', 'test2');
     });
-    it('boolean watcher test', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
+    it('boolean watcher test (' + name + ')', function () {
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.booleanProperty = true;
       expect((<any>element).watchGuard).toHaveBeenCalledWith(false, true);
       element.removeAttribute('boolean-property');
       expect((<any>element).watchGuard).toHaveBeenCalledWith(true, false);
     });
-    it('number watcher test', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
+    it('number watcher test (' + name + ')', function () {
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.numberProperty = 0;
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, 0);
       element.setAttribute('number-property', "1");
       expect((<any>element).watchGuard).toHaveBeenCalledWith(0, 1);
     });
-    it('object watcher test', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
+    it('object watcher test (' + name + ')', function () {
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.objectProperty = { test: "test" };
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, { test: "test" });
       element.setAttribute('object-property', '{"test" : "test2"}');
       expect((<any>element).watchGuard).toHaveBeenCalledWith({ test: "test" }, { test: "test2" });
     });
-    it('array watcher test', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType = new constructorInstance();
+    it('array watcher test (' + name + ')', function () {
+      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.arrayProperty = [0, 1];
       expect((<any>element).watchGuard).toHaveBeenCalledWith(null, [0, 1]);

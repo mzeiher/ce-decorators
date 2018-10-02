@@ -15,10 +15,10 @@
  */
 
 import { CustomElement } from './element';
-import { STATE } from './state';
+import { COMPONENT_STATE } from './componentstate';
 
 export type ValueMapType = {
-  state: STATE | null;
+  state: COMPONENT_STATE | null;
   dirty: boolean;
   properties: {
     [prop: string]: string | number | boolean | object | null;
@@ -30,7 +30,7 @@ export function getValue(element: CustomElement): ValueMapType | undefined {
     (<any>element)['__valueMap'] = {
       dirty: true,
       properties: {},
-      state: STATE.INIT
+      state: COMPONENT_STATE.INIT
     };
   }
 

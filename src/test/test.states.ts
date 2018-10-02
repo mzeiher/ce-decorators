@@ -20,27 +20,30 @@ import { TestWithMultiplePropertiesWithType } from './components/TestWithMultipl
 import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
 import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
 
-declare var BABEL_COMPILE:boolean;
+declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name: string) => {
-  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
-  describe('event tests (' + name + ')', function () {
-    it('event emitter (' + name + ')', function (done) {
-      const element = new constructorInstance();
-      element.addEventListener('change', (event: CustomEvent) => {
-        expect(event.detail).toEqual('test');
-        done();
-      });
-      element.changeEvent.emit("test");
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS  }, name: string) => {
+  if (BABEL_COMPILE && constructorInstance === TestWithMultipleProperties) return;
+  describe('state tests (' + name + ')', function () {
+    let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = null;
+    beforeEach(function () {
+      element = new constructorInstance();
     });
-    it('event emitter without name (' + name + ')', function (done) {
-      const element = new constructorInstance();
-      element.addEventListener('test', (event: CustomEvent) => {
-        expect(event.detail).toEqual('test');
-        done();
-      });
-      element.test.emit("test");
+    afterEach(function () {
+      if (element) {
+        element = null;
+      }
+    });
+    it('state change tests (' + name + ')', async function (done) {
+      document.querySelector('body').appendChild(element);
+      await Promise.resolve();
+      expect(element.shadowRoot.querySelector('div').classList.contains('hasclass')).toBeFalsy();
+      element.shouldHaveClass = true;
+      await Promise.resolve();
+      expect(element.shadowRoot.querySelector('div').classList.contains('hasclass')).toBeTruthy();
+      document.querySelector('body').removeChild(element);
+      done();
     });
   });
 }

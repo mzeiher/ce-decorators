@@ -21,8 +21,11 @@ import testRender from './test.render';
 import testWatcher from './test.watcher';
 import testEvents from './test.events';
 import testService from './test.service';
+import testStates from './test.states';
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
+import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
+import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
 import { ServiceTest } from './services/ServiceObject';
 import { ServiceTestWithType } from './services/ServiceObjectWithType';
 
@@ -37,9 +40,17 @@ describe('root', function () {
       })
     }
   });
-  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testProperties(value));
-  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testRender(value));
-  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testWatcher(value));
-  [TestWithMultipleProperties, TestWithMultiplePropertiesWithType].forEach((value) => testEvents(value));
-  [ServiceTest, ServiceTestWithType].forEach(value=>testService(value));
+  [{class: TestWithMultipleProperties, name: 'TestWithMultipleProperties'}, 
+  {class: TestWithMultiplePropertiesWithTypeTS, name: 'TestWithMultiplePropertiesWithTypeTS'},
+  {class: TestWithMultiplePropertiesWithType, name: 'TestWithMultiplePropertiesWithType'},
+  {class: TestWithMultiplePropertiesWithTypeStage2, name: 'TestWithMultiplePropertiesWithTypeStage2'}].forEach((value) =>  {
+    testProperties(value.class, value.name)
+    testRender(value.class, value.name);
+    testRender(value.class, value.name);
+    testWatcher(value.class, value.name);
+    testStates(value.class, value.name);
+    testEvents(value.class, value.name);
+  });
+  [{class: ServiceTest, name: 'ServiceTest'},
+  {class: ServiceTestWithType, name: 'ServiceTestWithType'} ].forEach(value=>testService(value.class, value.name));
 });
