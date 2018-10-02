@@ -42,13 +42,7 @@ export class CustomElement extends HTMLElement {
     if (_oldValue !== _newValue) {
       const classProperty: PropertyOptions = getClassProperties(this).get(name);
       if (classProperty.reflectAsAttribute || classProperty.reflectAsAttribute === undefined) {
-
-        if ((classProperty.type === String || classProperty.type === Number)) {
-          if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
-            this._propertyState = PROPERTY_STATE.REFLECTING;
-            _instance.setAttribute(camelToKebapCase(name), serializeValue(_newValue, classProperty.type));
-          }
-        } else if (classProperty.type === Boolean) {
+        if (classProperty.type === Boolean) {
           if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
             this._propertyState = PROPERTY_STATE.REFLECTING;
             if (_newValue) {
@@ -56,6 +50,11 @@ export class CustomElement extends HTMLElement {
             } else {
               _instance.removeAttribute(camelToKebapCase(name));
             }
+          }
+        } else if (classProperty.type === String || classProperty.type === Number || classProperty.reflectAsAttribute === true) {
+          if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
+            this._propertyState = PROPERTY_STATE.REFLECTING;
+            _instance.setAttribute(camelToKebapCase(name), serializeValue(_newValue, classProperty.type));
           }
         }
       }
