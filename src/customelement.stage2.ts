@@ -30,6 +30,9 @@ export class CustomElement extends HTMLElement {
     if (this._propertyState !== PROPERTY_STATE.REFLECTING) {
       const propertyName = kebapToCamelCase(name);
       const classProperty: PropertyOptions = getClassProperties(this).get(propertyName);
+
+      if (classProperty.reflectAsAttribute === false) return;
+
       this._propertyState = PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE;
       this._fromProperty(propertyName, deserializeValue(_oldValue, classProperty.type), deserializeValue(_newValue, classProperty.type), _instance);
     }
@@ -38,31 +41,28 @@ export class CustomElement extends HTMLElement {
   static _fromProperty(this: typeof CustomElement, name: string, _oldValue: any, _newValue: any, _instance: CustomElement) {
     if (_oldValue !== _newValue) {
       const classProperty: PropertyOptions = getClassProperties(this).get(name);
-      if (classProperty.type === String || classProperty.type === Number) {
-        if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
-          this._propertyState = PROPERTY_STATE.REFLECTING;
-          _instance.setAttribute(camelToKebapCase(name), serializeValue(_newValue, classProperty.type));
-        }
-        this._propertyState = PROPERTY_STATE.UPDATE_PROPERTY;
-        _instance[name] = _newValue;
-        this._propertyState = PROPERTY_STATE.DIRTY;
-      } else if (classProperty.type === Boolean) {
-        if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
-          this._propertyState = PROPERTY_STATE.REFLECTING;
-          if (_newValue) {
+      if (classProperty.reflectAsAttribute || classProperty.reflectAsAttribute === undefined) {
+
+        if ((classProperty.type === String || classProperty.type === Number)) {
+          if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
+            this._propertyState = PROPERTY_STATE.REFLECTING;
             _instance.setAttribute(camelToKebapCase(name), serializeValue(_newValue, classProperty.type));
-          } else {
-            _instance.removeAttribute(camelToKebapCase(name));
+          }
+        } else if (classProperty.type === Boolean) {
+          if (this._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
+            this._propertyState = PROPERTY_STATE.REFLECTING;
+            if (_newValue) {
+              _instance.setAttribute(camelToKebapCase(name), serializeValue(_newValue, classProperty.type));
+            } else {
+              _instance.removeAttribute(camelToKebapCase(name));
+            }
           }
         }
-        this._propertyState = PROPERTY_STATE.UPDATE_PROPERTY;
-        _instance[name] = _newValue;
-        this._propertyState = PROPERTY_STATE.DIRTY;
-      } else {
-        this._propertyState = PROPERTY_STATE.UPDATE_PROPERTY;
-        _instance[name] = _newValue;
-        this._propertyState = PROPERTY_STATE.DIRTY;
       }
+      this._propertyState = PROPERTY_STATE.UPDATE_PROPERTY;
+      _instance[name] = _newValue;
+      this._propertyState = PROPERTY_STATE.DIRTY;
+
       _instance.scheduleRender();
     }
   }

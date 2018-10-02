@@ -26,6 +26,10 @@ export interface PropertyOptions {
   reflectAsAttribute?:boolean;
 }
 
+export function stateS2(): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+  return propS2({reflectAsAttribute: false, type: undefined});
+}
+
 export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
 
