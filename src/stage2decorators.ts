@@ -26,7 +26,7 @@ export interface MethodDecoratorDesciptor {
   kind: 'method';
   key: string | symbol;
   placement: 'static' | 'prototype' | 'own';
-  descriptor: PropertyDecorator;
+  descriptor: PropertyDescriptor;
 }
 
 export interface ClassDecoratorDescriptor {
@@ -63,3 +63,27 @@ export interface ClassDecoratorResult<T> {
 export type Stage2FieldDecorator<T, C> = (descriptor: FieldDecoratorDescriptor) => FieldDecoratorResult<T, C> | MethodDecoratorResult<T, C>;
 export type Stage2MethodDecorator<T, C> = (descriptor: MethodDecoratorDesciptor) => MethodDecoratorResult<T, C>;
 export type Stage2ClassDecorator<T> = (descriptor: ClassDecoratorDescriptor) => ClassDecoratorResult<T>;
+
+export function isStage2ClassDecorator(element: any) {
+  return element!.kind === 'class';
+}
+
+export function isStage2FieldDecorator(element: any) {
+  return element!.kind === 'field' || element!.kind === 'method';
+}
+
+export function isStage2Methodecorator(element: any) {
+  return element!.kind === 'method';
+}
+
+export function applyLegacyToStage2ClassDecorator<C>(_target: C, _decorator: Stage2ClassDecorator<C>): C | null {
+  return null;
+}
+
+export function applyLegacyToStage2FieldDecorator<T, C>(_target: C, _propertyKey: string | symbol, _descriptor: PropertyDescriptor, _decorator: Stage2FieldDecorator<T, C>): PropertyDescriptor {
+  return null;
+}
+
+export function applyLegacyToStage2MethodDecorator<T, C>(_target: C, _propertyKey: string | symbol, _descriptor: TypedPropertyDescriptor<any>, _decorator: Stage2MethodDecorator<T, C>): TypedPropertyDescriptor<any> | void {
+  return null;
+}

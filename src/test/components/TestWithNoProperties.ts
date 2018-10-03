@@ -15,10 +15,14 @@
  */
 
 import { Component, CustomElement } from './../../index';
+import { html } from 'lit-html';
 
 @Component({
   tag: 'test-no-properties'
 })
 export class TestNoProperties extends CustomElement {
 
+  render() {
+    return html``;
+  }
 }

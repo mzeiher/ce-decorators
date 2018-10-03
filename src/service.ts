@@ -14,43 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { getInstance, getSingleton } from './servicemap';
+import { InjectOptions, injectS2 } from './inject.stage2';
+import { CustomElement } from './customelement.stage2';
+import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
 
 export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
 
-export type ObjectConstructor = {
-  new(): any;
-};
-
-export interface InjectOptions {
-  singleton: boolean;
-  type?: ObjectConstructor;
-}
 /**
  * Simple dependency injection decorator
  *
  * @param newInstance (boolean) determines if a new instance should be created
  */
-export function Inject(options: InjectOptions = { singleton: true }): FixedPropertyDecorator {
-  return ((scopedOptions: InjectOptions): FixedPropertyDecorator => (target: Object, propertyKey: string | symbol): PropertyDescriptor => {
-
-    const type = (<any>Reflect).getMetadata('design:type', target, propertyKey.toString()) || scopedOptions!.type; // tslint:disable-line
-    if (!type) {
-      // throw new Error('No type specified, injection not possible');
-      return null;
+export function Inject(options: InjectOptions = { singleton: true, type: Object }): FixedPropertyDecorator {
+  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
+    if (isStage2FieldDecorator(target)) {
+      return injectS2(options);
+    } else {
+      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, injectS2(options));
     }
-
-    return {
-      configurable: true,
-      enumerable: false,
-      // tslint:disable-next-line:no-function-expression
-      get: function (this: Object): any {
-        if (scopedOptions.singleton) {
-          return getSingleton(type);
-        } else {
-          return getInstance(this, propertyKey, type);
-        }
-      }
-    };
-  })(options);
+  };
 }

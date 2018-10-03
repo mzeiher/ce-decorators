@@ -14,25 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import {
-  Component,
-  CustomElement,
-  Event,
-  EventEmitter,
-  Prop,
-  Watch,
-  State
-} from './../../index';
+import { CustomElement } from '../../customelement.stage2';
+import { Component } from './../../component';
+import { Prop, State } from './../../prop';
+import { Watch } from './../../watch'
+import { Event } from './../../event';
+
 import {
   html,
-  TemplateResult
+  // TemplateResult
 } from 'lit-html';
 import {
   classMap
 } from 'lit-html/directives/classMap';
 
 @Component({
-  tag: 'test-with-multiple-properties-with-type',
+  tag: 'test-with-multiple-properties-with-type-base',
   style: `
   :host {
     background-color: #ababab;
@@ -41,16 +38,41 @@ import {
     box-sizing: border-box;
   }
 
+  :host > div {
+    line-height: 20px;
+  }
+
   :host > div:nth-of-type(1) {
-    background-color: #fff;
+    background-color: #00f;
+  }`
+})
+export class TestWithMultiplePropertiesWithTypeBase extends CustomElement {
+
+  @Prop({type: String})
+  baseProperty = 'test';
+
+  render() {
+    return html `<div>${this.baseProperty}</div>`
+  }
+}
+
+@Component({
+  tag: 'test-with-multiple-properties-with-type',
+  inheritStyle: true,
+  style: `
+  :host {
+    background-color: #ababab;
+    padding: 10px;
+    display: block;
+    box-sizing: border-box;
   }
 
   :host > div:nth-of-type(2) {
-    background-color: #ff0;
+    background-color: #0f0;
   }
 
   :host > div:nth-of-type(3) {
-    background-color: #f0f;
+    background-color: #0ff;
   }
 
   :host > div:nth-of-type(4) {
@@ -58,11 +80,15 @@ import {
   }
 
   :host > div:nth-of-type(5) {
-    background-color: #0ff;
+    background-color: #f0f;
+  }
+
+  :host > div:nth-of-type(6) {
+    background-color: #ff0;
   }
   `
 })
-export class TestWithMultiplePropertiesWithType extends CustomElement {
+export class TestWithMultiplePropertiesWithType extends TestWithMultiplePropertiesWithTypeBase {
 
   @Prop({
     type: String
@@ -136,12 +162,6 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
   stringProperty;
 
   @Prop({
-    defaultValue: 'test',
-    type: String
-  })
-  stringPropertyWithDefault;
-
-  @Prop({
     type: String
   })
   stringPropertyWithInitializer = 'test';
@@ -150,12 +170,6 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
     type: Boolean
   })
   booleanProperty;
-
-  @Prop({
-    defaultValue: true,
-    type: Boolean
-  })
-  booleanPropertyWithDefault;
 
   @Prop({
     type: Boolean
@@ -168,12 +182,6 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
   numberProperty;
 
   @Prop({
-    defaultValue: 0,
-    type: Number
-  })
-  numberPropertyWithDefault;
-
-  @Prop({
     type: Number
   })
   numberPropertyWithInitializer = 0;
@@ -182,14 +190,6 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
     type: Object
   })
   objectProperty;
-
-  @Prop({
-    defaultValue: {
-      test: 'default'
-    },
-    type: Object
-  })
-  objectPropertyWithDefault;
 
   @Prop({
     type: Object
@@ -202,12 +202,6 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
     type: Array
   })
   arrayProperty;
-
-  @Prop({
-    defaultValue: [0, 0, 0],
-    type: Array
-  })
-  arrayPropertyWithDefault;
 
   @Prop({
     type: Array
@@ -287,13 +281,16 @@ export class TestWithMultiplePropertiesWithType extends CustomElement {
     this.watchGuard(oldValue, newValue);
   }
 
-  watchGuard(_oldValue, _newValue) {}
+  watchGuard(_oldValue, _newValue) {
+    console.log(`${_oldValue} - ${_newValue}`);
+  }
 
   render() {
-    return html `<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.stringPropertyWithDefault}</div>
-                     <div>${this.numberPropertyWithDefault}</div>
-                     <div>${this.booleanPropertyWithDefault}</div>
-                     <div>${JSON.stringify(this.objectPropertyWithDefault)}</div>
-                     <div>${JSON.stringify(this.arrayPropertyWithDefault)}</div>`;
+    return html `<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
+                <div>${this.stringPropertyWithDefault}</div>
+                <div>${this.numberPropertyWithDefault}</div>
+                <div>${this.booleanPropertyWithDefault}</div>
+                <div>${JSON.stringify(this.objectPropertyWithDefault)}</div>
+                <div>${JSON.stringify(this.arrayPropertyWithDefault)}</div>`;
   }
 }

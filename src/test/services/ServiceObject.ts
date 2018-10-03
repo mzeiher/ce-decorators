@@ -20,9 +20,9 @@ import { SingletonService } from './SingletonService';
 
 export class ServiceTest {
 
-  @Inject({singleton: false})
+  @Inject({singleton: false, type: InstanceService})
   public instanceService: InstanceService;
 
-  @Inject()
+  @Inject({singleton: true, type: SingletonService})
   public singletonService: SingletonService;
 }

@@ -19,9 +19,9 @@ import { NestedService } from './NestedService';
 
 export class SingletonService {
 
-  @Inject()
+  @Inject({singleton: true, type:NestedService})
   public nestedSingletonService: NestedService;
 
-  @Inject({singleton: false})
+  @Inject({singleton: false, type :NestedService})
   public nestedInstanceService: NestedService;
 }

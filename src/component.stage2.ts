@@ -2,14 +2,17 @@ import { Stage2ClassDecorator, ClassDecoratorDescriptor, ClassDecoratorResult } 
 import { CustomElement } from './customelement.stage2';
 import { getClassProperties } from './classproperties.stage2';
 import { PropertyOptions } from './prop.stage2';
+import { setComponentOptions, getComponentOptions } from './componentoptions.stage2';
+import { getAllPropertyWatcher, getPropertyWatcher } from './watchmap.stage2';
 // import { CustomElement } from './element';
 
 export interface ComponentOptions {
   tag: string;
   style?: string;
+  inheritStyle?: boolean;
 }
 
-export function componentS2(_options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> {
+export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> {
   return (descriptor: ClassDecoratorDescriptor): ClassDecoratorResult<typeof CustomElement> => {
     return {
       elements: descriptor.elements,
@@ -17,14 +20,24 @@ export function componentS2(_options: ComponentOptions): Stage2ClassDecorator<ty
       kind: 'class',
       finisher: (target) => {
         const prototype: any = Object.getPrototypeOf(target) as typeof CustomElement;
-        const classProperties = getClassProperties(prototype);
-        if (classProperties) {
+        const prototypeClassProperties = getClassProperties(prototype);
+        if (prototypeClassProperties) {
           const targetClassProperties = getClassProperties(target);
-          classProperties.forEach((value: PropertyOptions, key: string | symbol) => {
+          prototypeClassProperties.forEach((value: PropertyOptions, key: string | symbol) => {
             targetClassProperties.set(key, value);
           })
         }
-        window.customElements.define(_options.tag, target);
+        if(options.inheritStyle) {
+          options.style = getComponentOptions(prototype).style || '' + options.style;
+        }
+        const prototypeWatcher = getAllPropertyWatcher(prototype);
+        if(prototypeWatcher.size > 0) {
+          Array.from(prototypeWatcher.entries()).forEach(value => {
+            getPropertyWatcher(target, value["0"]).push(...value["1"]);
+          });
+        }
+        setComponentOptions(target, options);
+        window.customElements.define(options.tag, target);
       }
     }
   }

@@ -1,4 +1,3 @@
-import { PropertyType } from './prop';
 
 /**
  * Copyright (c) 2018 Mathis Zeiher
@@ -15,6 +14,7 @@ import { PropertyType } from './prop';
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import { PropertyType } from './prop.stage2';
 
 /**
  * deserializes a string to a typed value

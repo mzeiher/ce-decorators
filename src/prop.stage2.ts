@@ -22,7 +22,7 @@ import { PROPERTY_STATE } from './propertystate.stage2';
 export type PropertyType = Boolean | Number | String | Object | Array<any>;
 
 export interface PropertyOptions {
-  type: PropertyType;
+  type?: PropertyType;
   reflectAsAttribute?:boolean;
 }
 
@@ -45,7 +45,7 @@ export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomEl
             return (<any>this)[key];
           },
           set: function (this: CustomElement, value: any) {
-            if ((this.constructor as typeof CustomElement)._propertyState === PROPERTY_STATE.UPDATE_PROPERTY) {
+            if (this._propertyState === PROPERTY_STATE.UPDATE_PROPERTY) {
               (<any>this)[key] = value;
             } else {
               (this.constructor as typeof CustomElement)._fromProperty(descriptor.key.toString(), this[descriptor.key.toString()], value, this);
@@ -79,7 +79,11 @@ export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomEl
             return descriptor.descriptor.get.apply(this);
           },
           set: function (this: CustomElement, value: any) {
-            descriptor.descriptor.set.apply(this, [value]);
+            if (this._propertyState === PROPERTY_STATE.UPDATE_PROPERTY) {
+              descriptor.descriptor.set.apply(this, [value]);
+            } else {
+              (this.constructor as typeof CustomElement)._fromProperty(descriptor.key.toString(), this[descriptor.key.toString()], value, this);
+            }
           },
         },
         key: descriptor.key,

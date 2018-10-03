@@ -408,7 +408,7 @@ const webpackConfigDevServer = {
   ]
 }
 
-if(env.devserver) {
+if(env && env.devserver) {
   return webpackConfigDevServer;
 } else {
   return [webpackConfigDevelop, webpackConfigProduction, webpackConfigTest, webpackConfigTestCoverage];

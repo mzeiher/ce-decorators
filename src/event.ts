@@ -14,19 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './element';
+import { CustomElement } from './customelement.stage2';
+import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
+import { eventS2 } from './event.stage2';
 
 export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
-/**
- * base interface for event emitter
- */
-export interface EventEmitter<T> {
-  emit(payload: T): void;
-}
-
-export interface EventOptions {
-  name?: string;
-}
 
 /**
  * Event decorator for an event emitter
@@ -34,23 +26,11 @@ export interface EventOptions {
  * @param name (string) optional: name of the event, if no state, property name will be used
  */
 export function Event(name?: string): FixedPropertyDecorator { // tslint:disable-line:function-name
-  return ((scopedOptions?: string): FixedPropertyDecorator => {
-    return <Clazz extends CustomElement>(_target: Clazz, propertyKey: string | symbol): PropertyDescriptor => {
-
-      const getter = function (this: CustomElement): EventEmitter<any> { // tslint:disable-line
-        return {
-          emit: (value: any): void => {
-            const customEvent: CustomEvent = new CustomEvent(scopedOptions || propertyKey.toString().toLowerCase(),
-                                                             { bubbles: true, detail: value });
-            this.dispatchEvent(customEvent);
-          }
-        };
-      };
-
-      return {
-        enumerable: false,
-        get: getter
-      };
-    };
-  })(name);
+  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
+    if (isStage2FieldDecorator(target)) {
+      return eventS2(name);
+    } else {
+      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, eventS2(name));
+    }
+  };
 }

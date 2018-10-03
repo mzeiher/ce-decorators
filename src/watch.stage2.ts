@@ -14,9 +14,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-export enum COMPONENT_STATE {
-  CONNECTED,
-  DISCONNECTED,
-  INIT,
-  CONSTRUCTED
+import { Stage2MethodDecorator, MethodDecoratorDesciptor, MethodDecoratorResult } from './stage2decorators';
+import { CustomElement } from './customelement.stage2';
+import { getPropertyWatcher } from './watchmap.stage2';
+
+export function watchS2(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
+  return (descriptor: MethodDecoratorDesciptor): MethodDecoratorResult<CustomElement, typeof CustomElement> => {
+    return {
+      ...descriptor,
+      finisher: (target: typeof CustomElement) => {
+        getPropertyWatcher(target, propertyKey).push(descriptor.descriptor.value);
+      }
+    }
+  }
+
 }

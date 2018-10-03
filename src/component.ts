@@ -14,157 +14,21 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { html, TemplateResult } from 'lit-html';
-import { render as shadyRender } from 'lit-html/lib/shady-render';
-import { CustomElement } from './element';
-import { getPropertyOptions, PropDescriptor } from './propertymap';
-import { needShadyDOM } from './shadycss';
-import { COMPONENT_STATE } from './componentstate';
-import { camelToKebapCase, deserializeValue, kebapToCamelCase, makeTemplateString } from './utils';
-import { getValue, ValueMapType } from './valuemap';
-import { getWatcher } from './watchmap';
-
-export type CustomElementClassType = { new(...args: any[]): CustomElement, prototype: CustomElement, observedAttributes: string[] };// tslint:disable-line
-export type PropertyDecorator = <Clazz extends CustomElement>(target: Clazz, propertyKey: string | symbol) => void;
-export type CustomElementClassDecorator = <Clazz extends CustomElementClassType>(target: Clazz) => Clazz; // tslint:disable-line
-
-export interface ComponentOptions {
-  tag: string;
-  style?: string;
-}
+import { CustomElement } from './customelement.stage2';
+import { isStage2ClassDecorator, applyLegacyToStage2ClassDecorator } from './stage2decorators';
+import { componentS2, ComponentOptions } from './component.stage2';
 
 /**
  * Component decorator, defines a new component to be used as a custom element
  *
  * @param options (ComponentOptions) options to initialize the component
  */
-export function Component(options: ComponentOptions): CustomElementClassDecorator { // tslint:disable-line:function-name
-  return ((scopedOptions: ComponentOptions): CustomElementClassDecorator => {
-    return <Clazz extends CustomElementClassType>(target: Clazz): Clazz => {
-      const observedAttributes: string[] = target.observedAttributes;
-
-      // tslint:disable-next-line
-      const propMap: Map<string, PropDescriptor> = getPropertyOptions(target.prototype);
-      if (propMap) {
-        const attributes: string[] = Array.from(propMap.keys()).map((camelToKebapCase));
-        observedAttributes.push(...attributes);
+export function Component(options: ComponentOptions): ClassDecorator { // tslint:disable-line:function-name
+    return (target: any): any => {
+      if(isStage2ClassDecorator(target)) {
+        return componentS2(options);
+      } else {
+        return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, componentS2(options));
       }
-      Object.defineProperty(target, 'observedAttributes', {
-        writable: false,
-        value: observedAttributes,
-      });
-
-      const decoratedTarget: Clazz = class DecoratedClass extends target {
-
-        // tslint:disable-next-line:no-any
-        [idx: string]: any;
-        private _promiseWaiting: boolean = false;
-
-        // tslint:disable-next-line:no-any
-        constructor(...args: any[]) {
-          super(...args);
-          const value: ValueMapType | undefined = getValue(this);
-
-          if (!this.shadowRoot) {
-            this.attachShadow({ mode: 'open' });
-
-            let cache: TemplateStringsArray | null = null;
-            let cachedLiterals: TemplateStringsArray | null = null;
-
-            // tslint:disable-next-line:no-any
-            this.renderToDom = (literals: TemplateStringsArray, ...placeholder: any[]): void => {
-              if (cachedLiterals !== literals) {
-                cache = null; // invalidate cache for complete re-render
-                cachedLiterals = literals;
-              }
-              if (cache === null) {
-                if (options.style) {
-                  const firstLiteral: string = literals.raw[0];
-                  const newLiterals: string[] = literals.raw.map((currentValue: string) => currentValue);
-                  newLiterals[0] = `<style>${options.style}</style>${firstLiteral}`;
-                  cache = makeTemplateString(newLiterals, newLiterals);
-                } else {
-                  cache = literals;
-                }
-              }
-              shadyRender(html(cache, ...placeholder), this.shadowRoot!, scopedOptions.tag);
-            };
-          }
-          value!.state = COMPONENT_STATE.CONSTRUCTED;
-        }
-
-        protected connectedCallback(): void {
-          const value: ValueMapType | undefined = getValue(this);
-          value!.state = COMPONENT_STATE.CONNECTED;
-          super.connectedCallback();
-          this.render();
-          if (needShadyDOM()) {
-            (<any>window).ShadyCSS.styleElement(this);
-          }
-        }
-
-        protected disconnectedCallback(): void {
-          getValue(this)!.state = COMPONENT_STATE.DISCONNECTED;
-          super.disconnectedCallback();
-        }
-
-        protected render(): TemplateResult {
-          const valMap: ValueMapType | undefined = getValue(this);
-          if (valMap!.dirty && valMap!.state === COMPONENT_STATE.CONNECTED) {
-            if (!this._promiseWaiting) {
-              this._promiseWaiting = true;
-              Promise.resolve().then(() => { // execute repaint in microtask
-                this.renderToDom`${super.render()}`;
-                valMap!.dirty = false;
-                this._promiseWaiting = false;
-              });
-            }
-          }
-
-          return null;
-        }
-        protected attributeChangedCallback(attrName: string, oldVal: string, newVal: string): void {
-          if (oldVal === newVal) {
-            return;
-          }
-          const properties: Map<string, PropDescriptor> = getPropertyOptions(target.prototype) || null;
-          if (properties) {
-            const propertyKey: string = kebapToCamelCase(attrName);
-            const prop: PropDescriptor | undefined = properties.get(propertyKey);
-            if (prop) {
-              if (prop.options.readonly) {
-                throw new Error('property is readonly');
-              }
-              if ((prop.type === Number || prop.type === String || prop.type === Boolean) &&
-                  (prop.options.reflectAsAttribute === undefined || prop.options.reflectAsAttribute === true)) {
-                if (prop.type === Boolean) { // indicate that a boolean property is set so don't return default value
-                  getValue(this)!.properties[propertyKey] = true;
-                }
-                const watcher: (() => void)[] | undefined = getWatcher(target.prototype, propertyKey);
-                watcher!.forEach((callback: (oldValue: any, newValue: any) => void) => {
-                  callback.apply(this, [deserializeValue(oldVal, prop.type), deserializeValue(newVal, prop.type)]);
-                });
-
-                getValue(this)!.dirty = true;
-                if (prop.originalSetter) {
-                  prop.originalSetter.apply(this, [deserializeValue(newVal, prop.type)]);
-                }
-
-                this.render();
-              } else {
-                this[propertyKey] = deserializeValue(newVal, prop.type);
-              }
-            }
-          } else {
-            super.attributeChangedCallback(attrName, oldVal, newVal);
-          }
-        }
-
-      };
-
-      window.customElements.define(scopedOptions.tag, decoratedTarget);
-
-      return decoratedTarget;
     };
-  })(options);
 }

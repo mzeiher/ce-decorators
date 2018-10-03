@@ -1,3 +1,7 @@
+import { CustomElement } from './customelement.stage2';
+import { isStage2Methodecorator, applyLegacyToStage2MethodDecorator } from './stage2decorators';
+import { watchS2 } from './watch.stage2';
+
 /**
  * Copyright (c) 2018 Mathis Zeiher
  *
@@ -14,23 +18,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './element';
-import { getWatcher } from './watchmap';
-
-export interface WatchOptions {
-  property: string;
-}
-
 /**
  * Registers a watcher for property changes
  *
  * @param property property to watch
  */
 export function Watch(property: string): MethodDecorator {
-  return <Clazz extends CustomElement>(target: Clazz, _propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | void => {
-    const value: (() => void)[] = getWatcher(target, property);
-    value.push(descriptor.value);
-
-    return descriptor;
+  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
+    if(isStage2Methodecorator(target)) {
+      return watchS2(property);
+    } else {
+      applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, watchS2(property));
+    }
   };
 }
