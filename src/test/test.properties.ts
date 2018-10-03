@@ -27,6 +27,18 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
     describe('property-tests (' + name + ')', function () {
       const element = new constructorInstance();
       const elementWithInitializer = new constructorInstance();
+      beforeAll(function(done) {
+        document.querySelector('body').appendChild(element);
+        document.querySelector('body').appendChild(elementWithInitializer);
+        window.setTimeout(() => {
+          done();
+        },0);
+      })
+      afterAll(function() {
+        document.querySelector('body').removeChild(element);
+        document.querySelector('body').removeChild(elementWithInitializer);
+      })
+      
     it('string-property (' + name + ')', function () {
       element.stringProperty = "test";
       expect(element.stringProperty).toEqual("test", "stringProperty set/get property");

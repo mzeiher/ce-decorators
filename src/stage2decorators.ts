@@ -39,7 +39,7 @@ export interface FieldDecoratorResult<T, C> {
   key: string | symbol;
   placement: 'static' | 'prototype' | 'own';
   descriptor: PropertyDescriptor;
-  initializer: () => any;
+  initializer?: () => any;
   extras?: Array<FieldDecoratorResult<T, C>>;
   finisher?: (target: C) => void;
 }
@@ -72,7 +72,7 @@ export function isStage2FieldDecorator(element: any) {
   return element!.kind === 'field' || element!.kind === 'method';
 }
 
-export function isStage2Methodecorator(element: any) {
+export function isStage2MethodDecorator(element: any) {
   return element!.kind === 'method';
 }
 
@@ -98,7 +98,7 @@ export function applyLegacyToStage2FieldDecorator<T, C>(target: C, propertyKey: 
   const fieldDecoratorDescriptor: FieldDecoratorDescriptor = {
     key: propertyKey,
     initializer: descriptor ? (<any>descriptor)['initializer'] : undefined, // in babel case there is an initializer
-    kind: descriptor ? descriptor.get || descriptor.set ? 'method' : 'field' : 'field',
+    kind: descriptor ? descriptor.get || descriptor.set || typeof descriptor.value === 'function' ? 'method' : 'field' : 'field',
     descriptor: descriptor ? descriptor : { configurable: true, enumerable: false, value: null },
     placement: 'own'
   }

@@ -27,6 +27,10 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
  */
 export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
+    if(!options || !options.type) {
+      if(!options) { options = {}}
+      options.type = (<any>Reflect).getMetadata('design:type', target, propertyKey.toString()); // tslint:disable-line
+    }
     if (isStage2FieldDecorator(target)) {
       return propS2(options)(<any>target);
     } else {

@@ -19,6 +19,7 @@ import { Component } from './../../component';
 import { Prop, State } from './../../prop';
 import { Watch } from './../../watch'
 import { Event } from './../../event';
+import { Log } from '../../log';
 
 import {
   html,
@@ -93,6 +94,7 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   @Prop({
     type: String
   })
+  @Log()
   get getPropertyStringTest() {
     return this.internalPropertyString;
   }
@@ -105,6 +107,7 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
     return this.internalPropertyString2;
   }
 
+  @Log()
   @Prop({
     type: String
   })
@@ -159,8 +162,10 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   @Prop({
     type: String
   })
+  @Log()
   stringProperty;
 
+  @Log()
   @Prop({
     type: String
   })
@@ -257,10 +262,12 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   internalPropertyObject2 = {};
 
   @Watch('stringProperty')
+  @Log()
   stringWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
+  @Log()
   @Watch('numberProperty')
   numberWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);

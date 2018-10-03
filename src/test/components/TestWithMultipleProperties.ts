@@ -91,9 +91,7 @@ export class TestWithMultiplePropertiesBase extends CustomElement {
 })
 export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
 
-  @Prop({
-    type: String
-  })
+  @Prop()
   get getPropertyStringTest(): string {
     return this.internalPropertyString;
   }
@@ -106,16 +104,12 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
     return this.internalPropertyString2;
   }
 
-  @Prop({
-    type: String
-  })
+  @Prop()
   set setPropertyStringTest(value: string) {
     this.internalPropertyString2 = value;
   }
 
-  @Prop({
-    type: Boolean
-  })
+  @Prop()
   get getPropertyBooleanTest(): boolean {
     return this.internalPropertyBoolean;
   }
@@ -128,16 +122,12 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
     return this.internalPropertyBoolean2;
   }
 
-  @Prop({
-    type: Boolean
-  })
+  @Prop()
   set setPropertyBooleanTest(value: boolean) {
     this.internalPropertyBoolean2 = value;
   }
 
-  @Prop({
-    type: Object
-  })
+  @Prop()
   get getPropertyObjectTest(): object {
     return this.internalPropertyObject;
   }
@@ -150,93 +140,56 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
     return this.internalPropertyObject2;
   }
 
-  @Prop({
-    type: Object
-  })
+  @Prop()
   set setPropertyObjectTest(value: object) {
     this.internalPropertyObject2 = value;
   }
 
-  @Prop({
-    type: String
-  })
+  @Prop()
   stringProperty: string;
 
-  @Prop({
-    type: String
-  })
+  @Prop()
   stringPropertyWithInitializer:string = 'test';
 
-  @Prop({
-    type: Boolean
-  })
+  @Prop()
   booleanProperty: boolean;
 
-  @Prop({
-    type: Boolean
-  })
+  @Prop()
   booleanPropertyWithInitializer:boolean = true;
 
-  @Prop({
-    type: Number
-  })
+  @Prop()
   numberProperty: number;
 
-  @Prop({
-    type: Number
-  })
+  @Prop()
   numberPropertyWithInitializer:number = 0;
 
-  @Prop({
-    type: Object
-  })
+  @Prop()
   objectProperty: object;
 
-  @Prop({
-    type: Object
-  })
+  @Prop()
   objectPropertyWithInitializer:object = {
     test: 'default'
   };
 
-  @Prop({
-    type: Array
-  })
+  @Prop()
   arrayProperty: Array<any>;
 
-  @Prop({
-    type: Array
-  })
+  @Prop()
   arrayPropertyWithInitializer:Array<any> = [0, 0, 0];
 
-  @Prop({
-    reflectAsAttribute: false,
-    type: String
-  })
+  @Prop({reflectAsAttribute: false})
   stringPropertyWithNoReflection:string = '';
 
-  @Prop({
-    reflectAsAttribute: false,
-    type: Number
-  })
+  @Prop({reflectAsAttribute: false})
   numberPropertyWithNoReflection:number = 0;
 
-  @Prop({
-    reflectAsAttribute: false,
-    type: Boolean
-  })
+  @Prop({reflectAsAttribute: false})
   booleanPropertyWithNoReflection:boolean = false;
 
-  @Prop({
-    reflectAsAttribute: true,
-    type: Object
-  })
+  @Prop({reflectAsAttribute: true})
   objectPropertyWithReflection:object = {};
 
-  @Prop({
-    reflectAsAttribute: true,
-    type: Array
-  })
+  @Prop({reflectAsAttribute: true})
   arrayPropertyWithReflection: Array<any> = [];
 
   @Event('change')
