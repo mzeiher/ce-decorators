@@ -43,7 +43,7 @@ export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typ
           })
         }
         if(options.inheritStyle) {
-          options.style = getComponentOptions(prototype).style || '' + options.style;
+          options.style = (getComponentOptions(prototype).style || '') + options.style;
         }
         const prototypeWatcher = getAllPropertyWatcher(prototype);
         if(prototypeWatcher.size > 0) {

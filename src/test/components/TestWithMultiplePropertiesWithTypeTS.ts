@@ -288,10 +288,10 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
 
   render() {
     return html`<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
-                <div>${this.stringPropertyWithDefault}</div>
-                <div>${this.numberPropertyWithDefault}</div>
-                <div>${this.booleanPropertyWithDefault}</div>
-                <div>${JSON.stringify(this.objectPropertyWithDefault)}</div>
-                <div>${JSON.stringify(this.arrayPropertyWithDefault)}</div>`;
+                <div>${this.stringPropertyWithInitializer}</div>
+                <div>${this.numberPropertyWithInitializer}</div>
+                <div>${this.booleanPropertyWithInitializer}</div>
+                <div>${JSON.stringify(this.objectPropertyWithInitializer)}</div>
+                <div>${JSON.stringify(this.arrayPropertyWithInitializer)}</div>`;
   }
 }

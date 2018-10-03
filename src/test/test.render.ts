@@ -47,12 +47,20 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
     });
     it('dom rendering tests (' + name + ')', function (done) {
       document.querySelector('body').appendChild(element);
-      element.stringPropertyWithDefault = "foobar";
-      element.numberPropertyWithDefault = 1;
+      element.baseProperty = 'test';
+      element.stringPropertyWithInitializer = "foobar";
+      element.numberPropertyWithInitializer = 1;
+      element.booleanPropertyWithInitializer = true;
+      element.objectPropertyWithInitializer = {};
+      element.arrayPropertyWithInitializer = [];
       window.setTimeout(() => { //we have to wait for the microtask of render to be done
         const divs = element.shadowRoot.querySelectorAll('div');
+        expect(divs[0].innerText).toEqual('test');
         expect(divs[1].innerText).toEqual('foobar');
         expect(divs[2].innerText).toEqual('1');
+        expect(divs[3].innerText).toEqual('true');
+        expect(divs[4].innerText).toEqual('{}');
+        expect(divs[5].innerText).toEqual('[]');
         if (needShadyDOM()) {
           expect(divs[0].getAttribute('class')).toContain('style-scope');
           // expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
@@ -66,11 +74,11 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       window.setTimeout(() => { //we have to wait for the microtask of render to be done
         const divs = element.shadowRoot.querySelectorAll('div');
 
-        element.stringPropertyWithDefault = "foo";
-        element.numberPropertyWithDefault = 1;
-        element.booleanProperty = true;
-        element.objectPropertyWithDefault = {};
-        element.arrayPropertyWithDefault = [];
+        element.stringPropertyWithInitializer = "foobar";
+        element.numberPropertyWithInitializer = 1;
+        element.booleanPropertyWithInitializer = true;
+        element.objectPropertyWithInitializer = {};
+        element.arrayPropertyWithInitializer = [];
         window.setTimeout(() => {
           const newDivs = element.shadowRoot.querySelectorAll('div');
           newDivs.forEach((value:any, key:any) => {
