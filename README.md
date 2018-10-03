@@ -36,10 +36,12 @@ for babel you need the following dependencies (at the moment only stage-0 propos
 in the babel config you just have to enable the two plugins:
 ```javascript
 plugins: [
-  ["@babel/plugin-proposal-decorators", { legacy: true}],
+  ["@babel/plugin-proposal-decorators", { legacy: true/false}],
   ["@babel/plugin-proposal-class-properties", { "loose" : true }]
 ]
 ```
+
+Both decorator specification (Stage-0 and Stage-2 are supported)
 
 If you use the decorators with babel you have to specify the typ for Prop and Inject otherwise it won't work 🙁
 
