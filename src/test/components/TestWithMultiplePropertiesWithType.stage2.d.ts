@@ -35,31 +35,21 @@ export declare class TestWithMultiplePropertiesWithTypeStage2 extends CustomElem
 
   stringProperty: string;
 
-  stringPropertyWithDefault: string;
-
   stringPropertyWithInitializer: string;
 
   booleanProperty: boolean;
-
-  booleanPropertyWithDefault: boolean;
 
   booleanPropertyWithInitializer: boolean;
 
   numberProperty: number;
 
-  numberPropertyWithDefault: number;
-
   numberPropertyWithInitializer: number ;
 
   objectProperty: {};
 
-  objectPropertyWithDefault: {};
-
   objectPropertyWithInitializer: {};
 
   arrayProperty: any[];
-
-  arrayPropertyWithDefault: any[];
 
   arrayPropertyWithInitializer: any[];
 
@@ -100,5 +90,5 @@ export declare class TestWithMultiplePropertiesWithTypeStage2 extends CustomElem
 
   watchGuard(_oldValue: any, _newValue: any): void;
 
-  protected render(): TemplateResult;
+  render(): TemplateResult;
 }

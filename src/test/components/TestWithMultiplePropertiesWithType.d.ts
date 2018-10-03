@@ -35,31 +35,21 @@ export declare class TestWithMultiplePropertiesWithType extends CustomElement {
 
   stringProperty: string;
 
-  stringPropertyWithDefault: string;
-
   stringPropertyWithInitializer: string;
 
   booleanProperty: boolean;
-
-  booleanPropertyWithDefault: boolean;
 
   booleanPropertyWithInitializer: boolean;
 
   numberProperty: number;
 
-  numberPropertyWithDefault: number;
-
   numberPropertyWithInitializer: number ;
 
   objectProperty: {};
 
-  objectPropertyWithDefault: {};
-
   objectPropertyWithInitializer: {};
 
   arrayProperty: any[];
-
-  arrayPropertyWithDefault: any[];
 
   arrayPropertyWithInitializer: any[];
 
@@ -100,5 +90,5 @@ export declare class TestWithMultiplePropertiesWithType extends CustomElement {
 
   watchGuard(_oldValue: any, _newValue: any): void;
 
-  protected render(): TemplateResult;
+  render(): TemplateResult;
 }

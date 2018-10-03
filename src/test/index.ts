@@ -31,26 +31,27 @@ import { ServiceTestWithType } from './services/ServiceObjectWithType';
 
 /* istanbul ignore next */
 describe('root', function () {
-  beforeAll(function(done) {
-    if((<any>window).WebComponents.ready) {
+  beforeAll(function (done) {
+    if ((<any>window).WebComponents.ready) {
       done();
     } else {
-      window.addEventListener('WebComponentsReady', function(_e) {
+      window.addEventListener('WebComponentsReady', function (_e) {
         done();
       })
     }
   });
-  [{class: TestWithMultipleProperties, name: 'TestWithMultipleProperties'}, 
-  {class: TestWithMultiplePropertiesWithTypeTS, name: 'TestWithMultiplePropertiesWithTypeTS'},
-  {class: TestWithMultiplePropertiesWithType, name: 'TestWithMultiplePropertiesWithType'},
-  {class: TestWithMultiplePropertiesWithTypeStage2, name: 'TestWithMultiplePropertiesWithTypeStage2'}].forEach((value) =>  {
+  [
+    { class: TestWithMultipleProperties, name: 'TestWithMultipleProperties' },
+    { class: TestWithMultiplePropertiesWithTypeTS, name: 'TestWithMultiplePropertiesWithTypeTS' },
+    { class: TestWithMultiplePropertiesWithType, name: 'TestWithMultiplePropertiesWithType' },
+    { class: TestWithMultiplePropertiesWithTypeStage2, name: 'TestWithMultiplePropertiesWithTypeStage2' }
+  ].forEach((value) => {
+    testEvents(value.class, value.name);
     testProperties(value.class, value.name)
     testRender(value.class, value.name);
-    testRender(value.class, value.name);
-    testWatcher(value.class, value.name);
     testStates(value.class, value.name);
-    testEvents(value.class, value.name);
+    testWatcher(value.class, value.name);
   });
-  [{class: ServiceTest, name: 'ServiceTest'},
-  {class: ServiceTestWithType, name: 'ServiceTestWithType'} ].forEach(value=>testService(value.class, value.name));
+  [{ class: ServiceTest, name: 'ServiceTest' },
+  { class: ServiceTestWithType, name: 'ServiceTestWithType' }].forEach(value => testService(value.class, value.name));
 });

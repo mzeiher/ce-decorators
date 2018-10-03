@@ -26,7 +26,7 @@ import { watchS2 } from './watch.stage2';
 export function Watch(property: string): MethodDecorator {
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
     if(isStage2Methodecorator(target)) {
-      return watchS2(property);
+      return watchS2(property)(<any>target);
     } else {
       applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, watchS2(property));
     }

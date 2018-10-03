@@ -32,10 +32,8 @@ export abstract class CustomElement extends HTMLElement {
       const propertyName = kebapToCamelCase(name);
       const classProperty: PropertyOptions = getClassProperties(this).get(propertyName);
 
-      if (classProperty.reflectAsAttribute === false) return;
-
       _instance._propertyState = PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE;
-      this._fromProperty(propertyName, deserializeValue(_oldValue, classProperty.type), deserializeValue(_newValue, classProperty.type), _instance);
+      this._fromProperty(propertyName, _instance[propertyName], deserializeValue(_newValue, classProperty.type), _instance);
     }
   }
 
@@ -44,7 +42,7 @@ export abstract class CustomElement extends HTMLElement {
       const classProperty: PropertyOptions = getClassProperties(this).get(propertyKey);
       const watcher = getPropertyWatcher(this, propertyKey);
       watcher.forEach(value => value.apply(_instance, [_oldValue, _newValue]));
-      if (classProperty.reflectAsAttribute || classProperty.reflectAsAttribute === undefined) {
+      if ((classProperty.reflectAsAttribute || classProperty.reflectAsAttribute === undefined) && _instance._componentState !== COMPONENT_STATE.INIT) {
         if (classProperty.type === Boolean) {
           if (_instance._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
             _instance._propertyState = PROPERTY_STATE.REFLECTING;
@@ -74,8 +72,12 @@ export abstract class CustomElement extends HTMLElement {
 
   constructor() {
     super();
-    this._componentState = COMPONENT_STATE.CONSTRUCTED;
     this.attachShadow({ mode: 'open' });
+    Promise.resolve().then(() => {
+      if(this._componentState === COMPONENT_STATE.INIT) {
+        this._componentState = COMPONENT_STATE.CONSTRUCTED;
+      }
+    });
   }
 
   protected _componentState: COMPONENT_STATE = COMPONENT_STATE.INIT;

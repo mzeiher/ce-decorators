@@ -28,7 +28,7 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
 export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
     if (isStage2FieldDecorator(target)) {
-      return propS2(name);
+      return propS2(options)(<any>target);
     } else {
       return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, propS2(options));
     }
@@ -38,7 +38,7 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
 export function State(): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
     if (isStage2FieldDecorator(target)) {
-      return stateS2();
+      return stateS2()(<any>target);
     } else {
       return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, stateS2());
     }

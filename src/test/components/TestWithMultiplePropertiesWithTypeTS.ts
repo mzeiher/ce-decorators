@@ -49,11 +49,11 @@ import { EventEmitter } from '../../event.stage2';
 })
 export class TestWithMultiplePropertiesWithTypeTSBase extends CustomElement {
 
-  @Prop({type: String})
-  baseProperty = 'test';
+  @Prop({ type: String })
+  baseProperty: string = 'test';
 
   render() {
-    return html `<div>${this.baseProperty}</div>`
+    return html`<div>${this.baseProperty}</div>`
   }
 }
 
@@ -94,66 +94,66 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: String
   })
-  get getPropertyStringTest() {
+  get getPropertyStringTest(): string {
     return this.internalPropertyString;
   }
 
-  set getPropertyStringTest(value) {
+  set getPropertyStringTest(value: string) {
     this.internalPropertyString = value;
   }
 
-  get setPropertyStringTest() {
+  get setPropertyStringTest(): string {
     return this.internalPropertyString2;
   }
 
   @Prop({
     type: String
   })
-  set setPropertyStringTest(value) {
+  set setPropertyStringTest(value: string) {
     this.internalPropertyString2 = value;
   }
 
   @Prop({
     type: Boolean
   })
-  get getPropertyBooleanTest() {
+  get getPropertyBooleanTest(): boolean {
     return this.internalPropertyBoolean;
   }
 
-  set getPropertyBooleanTest(value) {
+  set getPropertyBooleanTest(value: boolean) {
     this.internalPropertyBoolean = value;
   }
 
-  get setPropertyBooleanTest() {
+  get setPropertyBooleanTest(): boolean {
     return this.internalPropertyBoolean2;
   }
 
   @Prop({
     type: Boolean
   })
-  set setPropertyBooleanTest(value) {
+  set setPropertyBooleanTest(value: boolean) {
     this.internalPropertyBoolean2 = value;
   }
 
   @Prop({
     type: Object
   })
-  get getPropertyObjectTest() {
+  get getPropertyObjectTest(): object {
     return this.internalPropertyObject;
   }
 
-  set getPropertyObjectTest(value) {
+  set getPropertyObjectTest(value: object) {
     this.internalPropertyObject = value;
   }
 
-  get setPropertyObjectTest() {
+  get setPropertyObjectTest(): object {
     return this.internalPropertyObject2;
   }
 
   @Prop({
     type: Object
   })
-  set setPropertyObjectTest(value) {
+  set setPropertyObjectTest(value: object) {
     this.internalPropertyObject2 = value;
   }
 
@@ -165,17 +165,17 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: String
   })
-  stringPropertyWithInitializer = 'test';
+  stringPropertyWithInitializer:string = 'test';
 
   @Prop({
     type: Boolean
   })
-  booleanProperty:boolean;
+  booleanProperty: boolean;
 
   @Prop({
     type: Boolean
   })
-  booleanPropertyWithInitializer = true;
+  booleanPropertyWithInitializer:boolean = true;
 
   @Prop({
     type: Number
@@ -185,7 +185,7 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Number
   })
-  numberPropertyWithInitializer = 0;
+  numberPropertyWithInitializer:number = 0;
 
   @Prop({
     type: Object
@@ -195,7 +195,7 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Object
   })
-  objectPropertyWithInitializer = {
+  objectPropertyWithInitializer:object = {
     test: 'default'
   };
 
@@ -207,37 +207,37 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Array
   })
-  arrayPropertyWithInitializer = [0, 0, 0];
+  arrayPropertyWithInitializer:Array<any> = [0, 0, 0];
 
   @Prop({
     reflectAsAttribute: false,
     type: String
   })
-  stringPropertyWithNoReflection = '';
+  stringPropertyWithNoReflection:string = '';
 
   @Prop({
     reflectAsAttribute: false,
     type: Number
   })
-  numberPropertyWithNoReflection = 0;
+  numberPropertyWithNoReflection:number = 0;
 
   @Prop({
     reflectAsAttribute: false,
     type: Boolean
   })
-  booleanPropertyWithNoReflection = false;
+  booleanPropertyWithNoReflection:boolean = false;
 
   @Prop({
     reflectAsAttribute: true,
     type: Object
   })
-  objectPropertyWithReflection = {};
+  objectPropertyWithReflection:object = {};
 
   @Prop({
     reflectAsAttribute: true,
     type: Array
   })
-  arrayPropertyWithReflection:Array<any> = [];
+  arrayPropertyWithReflection: Array<any> = [];
 
   @Event('change')
   changeEvent: EventEmitter<string>;
@@ -246,48 +246,48 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   test: EventEmitter<string>;
 
   @State()
-  shouldHaveClass = false;
+  shouldHaveClass:boolean = false;
 
-  internalPropertyString = '';
-  internalPropertyString2 = '';
+  internalPropertyString:string = '';
+  internalPropertyString2:string = '';
 
-  internalPropertyBoolean = false;
-  internalPropertyBoolean2 = false;
+  internalPropertyBoolean:boolean = false;
+  internalPropertyBoolean2:boolean = false;
 
-  internalPropertyObject = {};
-  internalPropertyObject2 = {};
+  internalPropertyObject:object = {};
+  internalPropertyObject2:object = {};
 
   @Watch('stringProperty')
-  stringWatcher(oldValue:string, newValue:string) {
+  stringWatcher(oldValue: string, newValue: string) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('numberProperty')
-  numberWatcher(oldValue:number, newValue:number) {
+  numberWatcher(oldValue: number, newValue: number) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('booleanProperty')
-  booleanWatcher(oldValue:number, newValue:number) {
+  booleanWatcher(oldValue: number, newValue: number) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('objectProperty')
-  objectWatcher(oldValue:number, newValue:number) {
+  objectWatcher(oldValue: number, newValue: number) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('arrayProperty')
-  arrayWatcher(oldValue:number, newValue:number) {
+  arrayWatcher(oldValue: number, newValue: number) {
     this.watchGuard(oldValue, newValue);
   }
 
-  watchGuard(_oldValue:any, _newValue:any) {
+  watchGuard(_oldValue: any, _newValue: any) {
     console.log(`${_oldValue} - ${_newValue}`);
   }
 
   render() {
-    return html `<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
+    return html`<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
                 <div>${this.stringPropertyWithDefault}</div>
                 <div>${this.numberPropertyWithDefault}</div>
                 <div>${this.booleanPropertyWithDefault}</div>

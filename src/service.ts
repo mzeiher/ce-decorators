@@ -28,7 +28,7 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
 export function Inject(options: InjectOptions = { singleton: true, type: Object }): FixedPropertyDecorator {
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
     if (isStage2FieldDecorator(target)) {
-      return injectS2(options);
+      return injectS2(options)(<any>target);
     } else {
       return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, injectS2(options));
     }

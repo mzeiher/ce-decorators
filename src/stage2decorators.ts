@@ -76,14 +76,63 @@ export function isStage2Methodecorator(element: any) {
   return element!.kind === 'method';
 }
 
-export function applyLegacyToStage2ClassDecorator<C>(_target: C, _decorator: Stage2ClassDecorator<C>): C | null {
-  return null;
+export function applyLegacyToStage2ClassDecorator<C>(target: C, decorator: Stage2ClassDecorator<C>): C | null {
+  const classDescriptor: ClassDecoratorDescriptor = {
+    kind: 'class',
+    elements: []
+  }
+  const result = decorator(classDescriptor);
+  if (result.finisher) {
+    if (result.constructor) {
+      result.finisher((<any>result.constructor));
+    }
+    else {
+      result.finisher(<any>target);
+    }
+  }
+
+  return result.constructor || target;
 }
 
-export function applyLegacyToStage2FieldDecorator<T, C>(_target: C, _propertyKey: string | symbol, _descriptor: PropertyDescriptor, _decorator: Stage2FieldDecorator<T, C>): PropertyDescriptor {
-  return null;
+export function applyLegacyToStage2FieldDecorator<T, C>(target: C, propertyKey: string | symbol, descriptor: PropertyDescriptor, decorator: Stage2FieldDecorator<T, C>): PropertyDescriptor {
+  const fieldDecoratorDescriptor: FieldDecoratorDescriptor = {
+    key: propertyKey,
+    initializer: descriptor ? (<any>descriptor)['initializer'] : undefined, // in babel case there is an initializer
+    kind: descriptor ? descriptor.get || descriptor.set ? 'method' : 'field' : 'field',
+    descriptor: descriptor ? descriptor : { configurable: true, enumerable: false, value: null },
+    placement: 'own'
+  }
+  const result = decorator(fieldDecoratorDescriptor);
+
+  if (result.extras && result.extras.length > 0) {
+    result.extras.forEach(value => Object.defineProperty((<any>target).constructor.prototype, value.key, {
+      configurable: true,
+      enumerable: false,
+      value: fieldDecoratorDescriptor.initializer ? fieldDecoratorDescriptor.initializer() : undefined,
+      writable: true
+    }));
+  }
+  if (result.finisher) {
+    result.finisher(<any>target.constructor);
+  }
+  return result.descriptor;
 }
 
-export function applyLegacyToStage2MethodDecorator<T, C>(_target: C, _propertyKey: string | symbol, _descriptor: TypedPropertyDescriptor<any>, _decorator: Stage2MethodDecorator<T, C>): TypedPropertyDescriptor<any> | void {
-  return null;
+export function applyLegacyToStage2MethodDecorator<T, C>(target: C, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>, decorator: Stage2MethodDecorator<T, C>): TypedPropertyDescriptor<any> | void {
+  const methodDecoratorDescriptor: MethodDecoratorDesciptor = {
+    descriptor: <any>descriptor,
+    key: propertyKey,
+    kind: 'method',
+    placement: 'prototype'
+  }
+  const result = decorator(methodDecoratorDescriptor);
+
+  if (result.extras && result.extras.length > 0) {
+    result.extras.forEach(value => Object.defineProperty((<any>target).constructor.prototype, value.key, value.descriptor));
+  }
+
+  if (result.finisher) {
+    result.finisher(<any>target.constructor);
+  }
+  return result.descriptor;
 }

@@ -28,7 +28,7 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
 export function Event(name?: string): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
     if (isStage2FieldDecorator(target)) {
-      return eventS2(name);
+      return eventS2(name)(<any>target);
     } else {
       return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, eventS2(name));
     }

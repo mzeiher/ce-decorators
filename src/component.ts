@@ -26,7 +26,7 @@ import { componentS2, ComponentOptions } from './component.stage2';
 export function Component(options: ComponentOptions): ClassDecorator { // tslint:disable-line:function-name
     return (target: any): any => {
       if(isStage2ClassDecorator(target)) {
-        return componentS2(options);
+        return componentS2(options)(<any>target);
       } else {
         return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, componentS2(options));
       }

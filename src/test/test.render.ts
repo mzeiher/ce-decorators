@@ -37,10 +37,10 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       }
     });
     it('render on connected (' + name + ')', function (done) {
-      spyOn(<any>element, 'renderToDom').and.callThrough();
+      spyOn(<any>element, 'scheduleRender').and.callThrough();
       document.querySelector('body').appendChild(element);
       window.setTimeout(() => { //we have to wait for the microtask of render to be done
-        expect((<any>element).renderToDom).toHaveBeenCalled();
+        expect((<any>element).scheduleRender).toHaveBeenCalled();
         document.querySelector('body').removeChild(element);
         done();
       }, 0)
@@ -51,11 +51,11 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.numberPropertyWithDefault = 1;
       window.setTimeout(() => { //we have to wait for the microtask of render to be done
         const divs = element.shadowRoot.querySelectorAll('div');
-        expect(divs[0].innerText).toEqual('foobar');
-        expect(divs[1].innerText).toEqual('1');
+        expect(divs[1].innerText).toEqual('foobar');
+        expect(divs[2].innerText).toEqual('1');
         if (needShadyDOM()) {
           expect(divs[0].getAttribute('class')).toContain('style-scope');
-          expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
+          // expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
         }
         document.querySelector('body').removeChild(element);
         done();
