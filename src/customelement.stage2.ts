@@ -138,7 +138,7 @@ export abstract class CustomElement extends HTMLElement {
           const style = getComponentOptions(this.constructor as typeof CustomElement)!.style || '';
           this._templateCache = makeTemplateString([`<style>${style}</style>`, ''], [`<style>${style}</style>`, '']);
         }
-        render(html(this._templateCache, this.render()), this.renderToElement(), getComponentOptions(this.constructor as typeof CustomElement)!.tag);
+        render(html(this._templateCache, this.render()), this.renderToElement(), {scopeName: getComponentOptions(this.constructor as typeof CustomElement)!.tag, eventContext: this});
         this.componentDidRender();
         this._propertyState = PROPERTY_STATE.RENDERED
         this._renderCompletedCallbacks.forEach((value) => value());
