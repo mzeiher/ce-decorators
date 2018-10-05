@@ -32,7 +32,7 @@ export function stateS2(): Stage2FieldDecorator<CustomElement, typeof CustomElem
 
 export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
-
+    
     const key = typeof descriptor.key === 'symbol' ? Symbol() : `__${descriptor.key}`;
     if (descriptor.kind === 'field') {
 

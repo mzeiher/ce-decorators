@@ -37,10 +37,10 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
     });
     it('state change tests (' + name + ')', async function (done) {
       document.querySelector('body').appendChild(element);
-      await Promise.resolve();
+      await element.waitForRender();
       expect(element.shadowRoot.querySelector('div').classList.contains('hasclass')).toBeFalsy();
       element.shouldHaveClass = true;
-      await Promise.resolve();
+      await element.waitForRender();
       expect(element.shadowRoot.querySelector('div').classList.contains('hasclass')).toBeTruthy();
       document.querySelector('body').removeChild(element);
       done();

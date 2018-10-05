@@ -70,23 +70,61 @@ export abstract class CustomElement extends HTMLElement {
     return Array.from(getClassProperties(this).keys()).map(value => camelToKebapCase(value.toString()));
   }
 
+  protected _componentState: COMPONENT_STATE = COMPONENT_STATE.INIT;
+  protected _propertyState: PROPERTY_STATE = PROPERTY_STATE.DIRTY
+  
+  protected _renderScheduled: boolean = false;
+  protected _templateCache: TemplateStringsArray = null;
+
+  private _renderCompletedCallbacks: Array<()=> void> = [];
+  private _constructedCompletedCallbacks: Array<()=> void> = [];
+
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
     Promise.resolve().then(() => {
       if(this._componentState === COMPONENT_STATE.INIT) {
         this._componentState = COMPONENT_STATE.CONSTRUCTED;
+        this._constructedCompletedCallbacks.forEach((value) => value());
+        this._constructedCompletedCallbacks = [];
       }
     });
   }
 
-  protected _componentState: COMPONENT_STATE = COMPONENT_STATE.INIT;
-  protected _propertyState: PROPERTY_STATE = PROPERTY_STATE.DIRTY
-
-  protected _renderScheduled: boolean = false;
-  protected _templateCache: TemplateStringsArray = null;
-
   abstract render(): TemplateResult;
+
+  componentConnected() {
+    
+  }
+  componentDisconnected() {
+
+  }
+
+  componentWillRender() {
+
+  }
+
+  componentDidRender() {
+    
+  }
+
+  renderToElement(): Element | ShadowRoot {
+    if(!this.shadowRoot) {
+      this.attachShadow({ mode: 'open' });
+    }
+    return this.shadowRoot;
+  }
+
+  waitForConstruction():Promise<void> {
+    return new Promise((resolve) => {
+      this._constructedCompletedCallbacks.push(resolve);
+    });
+  }
+
+  waitForRender():Promise<void> {
+    return new Promise((resolve) => {
+      this._renderCompletedCallbacks.push(resolve);
+    });
+  }
 
   scheduleRender() {
     if (this._componentState === COMPONENT_STATE.CONNECTED &&
@@ -94,24 +132,30 @@ export abstract class CustomElement extends HTMLElement {
       !this._renderScheduled) {
       this._renderScheduled = true;
       Promise.resolve().then(() => {
+        this.componentWillRender();
         this._renderScheduled = false;
         if(this._templateCache === null) {
           const style = getComponentOptions(this.constructor as typeof CustomElement)!.style || '';
           this._templateCache = makeTemplateString([`<style>${style}</style>`, ''], [`<style>${style}</style>`, '']);
         }
-        render(html(this._templateCache, this.render()), this.shadowRoot, '');
+        render(html(this._templateCache, this.render()), this.renderToElement(), getComponentOptions(this.constructor as typeof CustomElement)!.tag);
+        this.componentDidRender();
         this._propertyState = PROPERTY_STATE.RENDERED
+        this._renderCompletedCallbacks.forEach((value) => value());
+        this._renderCompletedCallbacks = [];
       })
     }
   }
 
   connectedCallback() {
     this._componentState = COMPONENT_STATE.CONNECTED;
+    this.componentConnected();
     this.scheduleRender();
   }
 
   disconnectedCallback() {
     this._componentState = COMPONENT_STATE.DISCONNECTED;
+    this.componentConnected();
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {

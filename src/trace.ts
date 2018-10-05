@@ -14,19 +14,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 import { isStage2MethodDecorator, isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
-import { logS2 } from './log.stage2';
+import { traceS2 } from './trace.stage2';
 
 /**
  * Registers a watcher for property changes
  *
  * @param property property to watch
  */
-export function Log(): any {
+export function Trace(): any {
   return (target: typeof Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
     if(isStage2MethodDecorator(target) || isStage2FieldDecorator(target)) {
-      return logS2()(<any>target);
+      return traceS2()(<any>target);
     } else {
-      return applyLegacyToStage2FieldDecorator(target, propertyKey, descriptor, logS2());
+      return applyLegacyToStage2FieldDecorator(target, propertyKey, descriptor, traceS2());
     }
   };
 }

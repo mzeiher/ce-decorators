@@ -1,6 +1,6 @@
 import { Stage2FieldDecorator, FieldDecoratorDescriptor } from './stage2decorators';
 
-export function logS2(): Stage2FieldDecorator<Object, typeof Object> {
+export function traceS2(): Stage2FieldDecorator<Object, typeof Object> {
   return (descriptor: FieldDecoratorDescriptor) => {
     if (descriptor.kind === 'field') {
       const key = `___${descriptor.key.toString()}`;

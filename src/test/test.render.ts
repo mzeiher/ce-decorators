@@ -24,7 +24,7 @@ import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithM
 declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name:string) => {
+export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name: string) => {
   if (BABEL_COMPILE && constructorInstance === TestWithMultipleProperties) return;
   describe('render tests (' + name + ')', function () {
     let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = null;
@@ -36,16 +36,15 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
         element = null;
       }
     });
-    it('render on connected (' + name + ')', function (done) {
+    it('render on connected (' + name + ')', async function (done) {
       spyOn(<any>element, 'scheduleRender').and.callThrough();
       document.querySelector('body').appendChild(element);
-      window.setTimeout(() => { //we have to wait for the microtask of render to be done
-        expect((<any>element).scheduleRender).toHaveBeenCalled();
-        document.querySelector('body').removeChild(element);
-        done();
-      }, 0)
+      await element.waitForRender();
+      expect((<any>element).scheduleRender).toHaveBeenCalled();
+      document.querySelector('body').removeChild(element);
+      done();
     });
-    it('dom rendering tests (' + name + ')', function (done) {
+    it('dom rendering tests (' + name + ')', async function (done) {
       document.querySelector('body').appendChild(element);
       element.baseProperty = 'test';
       element.stringPropertyWithInitializer = "foobar";
@@ -53,41 +52,41 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       element.booleanPropertyWithInitializer = true;
       element.objectPropertyWithInitializer = {};
       element.arrayPropertyWithInitializer = [];
-      window.setTimeout(() => { //we have to wait for the microtask of render to be done
-        const divs = element.shadowRoot.querySelectorAll('div');
-        expect(divs[0].innerText).toEqual('test');
-        expect(divs[1].innerText).toEqual('foobar');
-        expect(divs[2].innerText).toEqual('1');
-        expect(divs[3].innerText).toEqual('true');
-        expect(divs[4].innerText).toEqual('{}');
-        expect(divs[5].innerText).toEqual('[]');
-        if (needShadyDOM()) {
-          expect(divs[0].getAttribute('class')).toContain('style-scope');
-          // expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
-        }
-        document.querySelector('body').removeChild(element);
-        done();
-      }, 0);
-    });
-    it('effective dom rendering (' + name + ')', function (done) {
-      document.querySelector('body').appendChild(element);
-      window.setTimeout(() => { //we have to wait for the microtask of render to be done
-        const divs = element.shadowRoot.querySelectorAll('div');
+      await element.waitForRender();
+      const divs = element.shadowRoot.querySelectorAll('div');
+      expect(divs[0].innerText).toEqual('test');
+      expect(divs[1].innerText).toEqual('foobar');
+      expect(divs[2].innerText).toEqual('1');
+      expect(divs[3].innerText).toEqual('true');
+      expect(divs[4].innerText).toEqual('{}');
+      expect(divs[5].innerText).toEqual('[]');
+      if (needShadyDOM()) {
+        expect(divs[0].getAttribute('class')).toContain('style-scope');
+        // expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
+      }
+      document.querySelector('body').removeChild(element);
+      done();
 
-        element.stringPropertyWithInitializer = "foobar";
-        element.numberPropertyWithInitializer = 1;
-        element.booleanPropertyWithInitializer = true;
-        element.objectPropertyWithInitializer = {};
-        element.arrayPropertyWithInitializer = [];
-        window.setTimeout(() => {
-          const newDivs = element.shadowRoot.querySelectorAll('div');
-          newDivs.forEach((value:any, key:any) => {
-            expect(value).toBe(divs[key]);
-          });
-          document.querySelector('body').removeChild(element);
-          done();
-        }, 0);
-      }, 0);
+    });
+    it('effective dom rendering (' + name + ')', async function (done) {
+      document.querySelector('body').appendChild(element);
+      await element.waitForRender();
+      const divs = element.shadowRoot.querySelectorAll('div');
+
+      element.stringPropertyWithInitializer = "foobar";
+      element.numberPropertyWithInitializer = 1;
+      element.booleanPropertyWithInitializer = true;
+      element.objectPropertyWithInitializer = {};
+      element.arrayPropertyWithInitializer = [];
+      await element.waitForRender();
+      const newDivs = element.shadowRoot.querySelectorAll('div');
+      newDivs.forEach((value: any, key: any) => {
+        expect(value).toBe(divs[key]);
+      });
+      document.querySelector('body').removeChild(element);
+      done();
+
+
     });
   });
 }

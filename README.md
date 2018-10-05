@@ -86,11 +86,35 @@ export class MyCustomElement extends CustomElement {
 # Lifecycle
 ## Construction/rendering
 * constructor
+* resolve promise returned by waitForConstruction() on custom element (awaitable)
 * \<append to dom\>
-* connectedCallback()
-* render()
+* componentConnected()
+* \<if property changed or first connect (deffered in microtask)\>
+* componentWillRender() property changes within this function will be taken into account in the rendering step
+* render() 
+* componentDidRender()
+* resolve promise returned by waitForRender() on custom element (awaitable)
+* \<if property or attribute changed (deffered in microtask)\>
+* render() deffered in microtask
 * \<remove/detach from dom\>
-* disconnectedCallback()
+* componentDisconnected()
+
+```typescript
+const element = new MyCustomElement();
+await element.waitForForConstruction();
+
+element.propertyOne = 'test'; // will be reflected as property-one attribute
+document.querySelector('body').appenChild(element);
+    // element.componentConnected() called
+await element.waitForRender();
+    // element.componentWilRender() called
+    // element.render() called
+    // element.componentDidRender() called
+document.querySelector('body').removeChild(element);
+    // element.componentDisconnected() called
+```
+
+because render calls are deffered in a microtask setting multiple attributes/properties within one task will result in just one render.
 
 ## Property udpates
 * set property myProperty

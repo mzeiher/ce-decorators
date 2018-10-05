@@ -57,7 +57,7 @@ export interface ClassDecoratorResult<T> {
   elements: Array<FieldDecoratorDescriptor | MethodDecoratorDesciptor>;
   constructor?: T;
   kind: 'class',
-  finisher?: (target: T) => void;
+  finisher?: (target: T) => void | { new ():any};
 }
 
 export type Stage2FieldDecorator<T, C> = (descriptor: FieldDecoratorDescriptor) => FieldDecoratorResult<T, C> | MethodDecoratorResult<T, C>;
@@ -82,16 +82,17 @@ export function applyLegacyToStage2ClassDecorator<C>(target: C, decorator: Stage
     elements: []
   }
   const result = decorator(classDescriptor);
+  let newConstructor: any = undefined;
   if (result.finisher) {
     if (result.constructor) {
-      result.finisher((<any>result.constructor));
+      newConstructor = result.finisher((<any>result.constructor));
     }
     else {
-      result.finisher(<any>target);
+      newConstructor = result.finisher(<any>target);
     }
   }
 
-  return result.constructor || target;
+  return newConstructor || result.constructor || target;
 }
 
 export function applyLegacyToStage2FieldDecorator<T, C>(target: C, propertyKey: string | symbol, descriptor: PropertyDescriptor, decorator: Stage2FieldDecorator<T, C>): PropertyDescriptor {
