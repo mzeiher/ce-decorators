@@ -90,6 +90,9 @@ export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomEl
         placement: 'own',
         initializer: descriptor.initializer,
         finisher: (target: typeof CustomElement) => {
+          if(!CustomElement.isPrototypeOf(target)) {
+            throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
+          }
           getClassProperties(target).set(descriptor.key, _options);
         }
       }

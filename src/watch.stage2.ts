@@ -23,6 +23,9 @@ export function watchS2(propertyKey: string): Stage2MethodDecorator<CustomElemen
     return {
       ...descriptor,
       finisher: (target: typeof CustomElement) => {
+        if(!CustomElement.isPrototypeOf(target)) {
+          throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
+        }
         getPropertyWatcher(target, propertyKey).push(descriptor.descriptor.value);
       }
     }

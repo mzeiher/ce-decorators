@@ -34,6 +34,9 @@ export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typ
       constructor: undefined,
       kind: 'class',
       finisher: (target) => {
+        if(!CustomElement.isPrototypeOf(target)) {
+          throw new Error(`${target.name} must extend CustomElement`);
+        }
         const prototype: any = Object.getPrototypeOf(target) as typeof CustomElement;
         const prototypeClassProperties = getClassProperties(prototype);
         if (prototypeClassProperties) {

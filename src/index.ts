@@ -17,10 +17,12 @@
 export { Component } from './component';
 export { ComponentOptions } from './component.stage2';
 export { CustomElement } from './customelement.stage2';
-export { Event} from './event';
 export { EventEmitter } from './event.stage2';
-export { Prop } from './prop';
 export { PropertyOptions } from './prop.stage2';
+
+export { Event} from './event';
+export { Prop } from './prop';
 export { Inject } from './service';
 export { Watch } from './watch';
 export { State } from './prop';
+export { Trace } from './trace';
