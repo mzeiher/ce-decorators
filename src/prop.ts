@@ -20,6 +20,7 @@ import { PropertyOptions, propS2, stateS2 } from './prop.stage2';
 import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
 
 export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
+
 /**
  * Property decorator, handles attribute reflection and type checking
  *
@@ -39,6 +40,9 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
   };
 }
 
+/**
+ * State decorator, handles re-rendering but without attribute reflection
+ */
 export function State(): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
     if (isStage2FieldDecorator(target)) {

@@ -20,6 +20,7 @@ import { getClassProperties } from './classproperties.stage2';
 import { PropertyOptions } from './prop.stage2';
 import { setComponentOptions, getComponentOptions } from './componentoptions.stage2';
 import { getAllPropertyWatcher, getPropertyWatcher } from './watchmap.stage2';
+import { getPropertyInterceptor, getAllPropertyInterceptors } from './interceptormap.stage2';
 
 export interface ComponentOptions {
   tag: string;
@@ -52,6 +53,12 @@ export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typ
         if(prototypeWatcher.size > 0) {
           Array.from(prototypeWatcher.entries()).forEach(value => {
             getPropertyWatcher(target, value["0"]).push(...value["1"]);
+          });
+        }
+        const prototypeInterceptor = getAllPropertyInterceptors(prototype);
+        if(prototypeInterceptor.size > 0) {
+          Array.from(prototypeInterceptor.entries()).forEach(value => {
+            getPropertyInterceptor(target, value["0"]).push(...value["1"]);
           });
         }
         setComponentOptions(target, options);

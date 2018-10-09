@@ -32,7 +32,7 @@ export function eventS2(name: string): Stage2FieldDecorator<CustomElement, typeo
           get: function (this: CustomElement): EventEmitter<any> {
             return {
               emit: (value: any): void => {
-                const customEvent: CustomEvent = new CustomEvent(name, { bubbles: true, detail: value });
+                const customEvent: CustomEvent = new CustomEvent(name || descriptor.key.toString(), { bubbles: true, detail: value });
                 this.dispatchEvent(customEvent);
               }
             };

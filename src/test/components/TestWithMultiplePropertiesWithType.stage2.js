@@ -14,13 +14,28 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from '../../customelement.stage2';
-import { Component } from './../../component';
-import { Prop, State } from './../../prop';
-import { Watch } from './../../watch'
-import { Event } from './../../event';
-import { Trace } from '../../trace';
-
+import {
+  CustomElement
+} from '../../customelement.stage2';
+import {
+  Component
+} from './../../component';
+import {
+  Prop,
+  State
+} from './../../prop';
+import {
+  Watch
+} from './../../watch'
+import {
+  Event
+} from './../../event';
+import {
+  Trace
+} from '../../trace';
+import {
+  Interceptor
+} from '../../interceptor';
 import {
   html,
   // TemplateResult
@@ -49,7 +64,9 @@ import {
 })
 export class TestWithMultiplePropertiesWithTypeStage2Base extends CustomElement {
 
-  @Prop({type: String})
+  @Prop({
+    type: String
+  })
   baseProperty = 'test';
 
   render() {
@@ -243,6 +260,11 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   })
   arrayPropertyWithReflection = [];
 
+  @Prop({
+    type: String
+  })
+  interceptableProperty = '';
+
   @Event('change')
   changeEvent;
 
@@ -260,6 +282,11 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
 
   internalPropertyObject = {};
   internalPropertyObject2 = {};
+
+  @Interceptor('interceptableProperty')
+  propertyInterceptor(_oldValue, newValue) {
+    return newValue + newValue;
+  }
 
   @Watch('stringProperty')
   @Trace()
@@ -293,7 +320,7 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   }
 
   render() {
-    return html`<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
+    return html `<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
                 <div>${this.stringPropertyWithInitializer}</div>
                 <div>${this.numberPropertyWithInitializer}</div>
                 <div>${this.booleanPropertyWithInitializer}</div>

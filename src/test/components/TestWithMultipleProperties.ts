@@ -28,6 +28,7 @@ import {
   classMap
 } from 'lit-html/directives/classMap';
 import { EventEmitter } from '../../event.stage2';
+import { Interceptor } from '../../interceptor';
 
 @Component({
   tag: 'test-with-multiple-properties-base',
@@ -192,6 +193,9 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
   @Prop({reflectAsAttribute: true})
   arrayPropertyWithReflection: Array<any> = [];
 
+  @Prop()
+  interceptableProperty: string = '';
+
   @Event('change')
   changeEvent: EventEmitter<string>;
 
@@ -209,6 +213,11 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
 
   internalPropertyObject:object = {};
   internalPropertyObject2:object = {};
+
+  @Interceptor('interceptableProperty')
+  propertyInterceptor(_oldValue:string, newValue:string) {
+    return newValue + newValue;
+  }
 
   @Watch('stringProperty')
   stringWatcher(oldValue: string, newValue: string) {

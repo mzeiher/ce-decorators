@@ -13,17 +13,21 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import { CustomElement } from './customelement.stage2';
+import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2decorators';
+import { interceptS2 } from './interceptor.stage2';
 
-export { Component } from './component';
-export { ComponentOptions } from './component.stage2';
-export { CustomElement } from './customelement.stage2';
-export { EventEmitter } from './event.stage2';
-export { PropertyOptions } from './prop.stage2';
-
-export { Event} from './event';
-export { Prop } from './prop';
-export { Inject } from './service';
-export { Watch } from './watch';
-export { State } from './prop';
-export { Trace } from './trace';
-export { Interceptor } from './interceptor';
+/**
+ * Registers a interceptor for property changes
+ *
+ * @param property property to intercept
+ */
+export function Interceptor(property: string): MethodDecorator {
+  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
+    if(isStage2MethodDecorator(target)) {
+      return interceptS2(property)(<any>target);
+    } else {
+      return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, interceptS2(property));
+    }
+  };
+}

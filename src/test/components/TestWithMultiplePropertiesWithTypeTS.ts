@@ -28,6 +28,7 @@ import {
   classMap
 } from 'lit-html/directives/classMap';
 import { EventEmitter } from '../../event.stage2';
+import { Interceptor } from '../../interceptor';
 
 @Component({
   tag: 'test-with-multiple-properties-with-type-ts-base',
@@ -165,7 +166,7 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: String
   })
-  stringPropertyWithInitializer:string = 'test';
+  stringPropertyWithInitializer: string = 'test';
 
   @Prop({
     type: Boolean
@@ -175,7 +176,7 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Boolean
   })
-  booleanPropertyWithInitializer:boolean = true;
+  booleanPropertyWithInitializer: boolean = true;
 
   @Prop({
     type: Number
@@ -185,7 +186,7 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Number
   })
-  numberPropertyWithInitializer:number = 0;
+  numberPropertyWithInitializer: number = 0;
 
   @Prop({
     type: Object
@@ -195,7 +196,7 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Object
   })
-  objectPropertyWithInitializer:object = {
+  objectPropertyWithInitializer: object = {
     test: 'default'
   };
 
@@ -207,37 +208,42 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   @Prop({
     type: Array
   })
-  arrayPropertyWithInitializer:Array<any> = [0, 0, 0];
+  arrayPropertyWithInitializer: Array<any> = [0, 0, 0];
 
   @Prop({
     reflectAsAttribute: false,
     type: String
   })
-  stringPropertyWithNoReflection:string = '';
+  stringPropertyWithNoReflection: string = '';
 
   @Prop({
     reflectAsAttribute: false,
     type: Number
   })
-  numberPropertyWithNoReflection:number = 0;
+  numberPropertyWithNoReflection: number = 0;
 
   @Prop({
     reflectAsAttribute: false,
     type: Boolean
   })
-  booleanPropertyWithNoReflection:boolean = false;
+  booleanPropertyWithNoReflection: boolean = false;
 
   @Prop({
     reflectAsAttribute: true,
     type: Object
   })
-  objectPropertyWithReflection:object = {};
+  objectPropertyWithReflection: object = {};
 
   @Prop({
     reflectAsAttribute: true,
     type: Array
   })
   arrayPropertyWithReflection: Array<any> = [];
+
+  @Prop({
+    type: String
+  })
+  interceptableProperty: string = '';
 
   @Event('change')
   changeEvent: EventEmitter<string>;
@@ -246,16 +252,21 @@ export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultipleProper
   test: EventEmitter<string>;
 
   @State()
-  shouldHaveClass:boolean = false;
+  shouldHaveClass: boolean = false;
 
-  internalPropertyString:string = '';
-  internalPropertyString2:string = '';
+  internalPropertyString: string = '';
+  internalPropertyString2: string = '';
 
-  internalPropertyBoolean:boolean = false;
-  internalPropertyBoolean2:boolean = false;
+  internalPropertyBoolean: boolean = false;
+  internalPropertyBoolean2: boolean = false;
 
-  internalPropertyObject:object = {};
-  internalPropertyObject2:object = {};
+  internalPropertyObject: object = {};
+  internalPropertyObject2: object = {};
+
+  @Interceptor('interceptableProperty')
+  propertyInterceptor(_oldValue: string, newValue: string) {
+    return newValue + newValue;
+  }
 
   @Watch('stringProperty')
   stringWatcher(oldValue: string, newValue: string) {

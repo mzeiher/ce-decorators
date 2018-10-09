@@ -67,18 +67,39 @@ export class MyCustomElement extends CustomElement {
   change: EventEmitter<string>; // will trigger a custom event with name "change" (name can be overriden by decorator argument)
 
   @State()
-  private myState:boolean = false; // only visible to the instance, but will trigger a re-render
+  private myState:boolean = false; // only visible to the instance, will not reflect but trigger a re-render
 
-  @Watch('propertyOne') // watches for changes in propertyOne
+  @Watch('propertyOne') // watches for changes in propertyOne (changes withing this method to properties will not be reflected, please use intercept)
   propertyOneChanged(oldValue:string, newValue:string) {
     console.log('propertyOne Changed');
   }
 
-  @Inject()
+  @Interceptor('propertyOne') // watches for changes of propertyOne and change the value, the changed value will be reflected
+  propertyOneInterceptor(oldValue:string, newValue:string) {
+      return newValue + "test";
+  }
+
+  @Inject() // will inject a object from type MyService
   myService: MyService;
 
   render() {
     return html`<div>${this.propertyOne}</div>`;
+  }
+
+  componentConnected() {
+      console.log('element attached to the DOM');
+  }
+
+  componentDisconnected() {
+      console.log('element dettached from the DOM');
+  }
+
+  componentWillRender() {
+      console.log('render will be called')
+  }
+
+  componentDidRender() {
+      console.log('render was called')
   }
 }
 ```

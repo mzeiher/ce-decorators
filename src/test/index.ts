@@ -28,6 +28,7 @@ import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMulti
 import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
 import { ServiceTest } from './services/ServiceObject';
 import { ServiceTestWithType } from './services/ServiceObjectWithType';
+import testInterceptors from './test.interceptors';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -51,6 +52,7 @@ describe('root', function () {
     testRender(value.class, value.name);
     testStates(value.class, value.name);
     testWatcher(value.class, value.name);
+    testInterceptors(value.class, value.name);
   });
   [{ class: ServiceTest, name: 'ServiceTest' },
   { class: ServiceTestWithType, name: 'ServiceTestWithType' }].forEach(value => testService(value.class, value.name));
