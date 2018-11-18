@@ -15,40 +15,53 @@
  */
 
 import { Stage2FieldDecorator, MethodDecoratorResult, FieldDecoratorDescriptor, FieldDecoratorResult } from './stage2decorators';
-import { CustomElement } from './customelement.stage2';
+import { CustomElement, IndexableElement } from './customelement.stage2';
 import { getClassProperties } from './classproperties.stage2';
 import { PROPERTY_STATE } from './propertystate.stage2';
 
-export type PropertyType = Boolean | Number | String | Object | Array<any>;
+/**
+ * PropertyType
+ */
+export type PropertyType = Boolean | Number | String | Object | Array<any>; // tslint:disable-line:no-any
 
+/**
+ * PropertyOptions
+ */
 export interface PropertyOptions {
   type?: PropertyType;
-  reflectAsAttribute?:boolean;
+  reflectAsAttribute?: boolean;
 }
 
+/**
+ * stage-2 state decorators
+ */
 export function stateS2(): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
-  return propS2({reflectAsAttribute: false, type: undefined});
+  return propS2({ reflectAsAttribute: false, type: undefined });
 }
 
+/**
+ * stage-2 prop decorator
+ * @param _options 
+ */
 export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
-    
+
     const key = typeof descriptor.key === 'symbol' ? Symbol() : `__${descriptor.key}`;
     if (descriptor.kind === 'field') {
 
       return {
-        kind: "method",
+        kind: 'method',
         descriptor: {
           configurable: true,
           enumerable: false,
-          get: function (this: CustomElement) {
-            return (<any>this)[key];
+          get(this: CustomElement) {
+            return (<any>this)[key]; // tslint:disable-line:no-any
           },
-          set: function (this: CustomElement, value: any) {
+          set(this: CustomElement, value: any) { // tslint:disable-line:no-any
             if (this._propertyState === PROPERTY_STATE.UPDATE_PROPERTY) {
-              (<any>this)[key] = value;
+              (<any>this)[key] = value; // tslint:disable-line:no-any
             } else {
-              (this.constructor as typeof CustomElement)._fromProperty(descriptor.key.toString(), this[descriptor.key.toString()], value, this);
+              (this.constructor as typeof CustomElement)._fromProperty(descriptor.key.toString(), (<IndexableElement>this)[descriptor.key.toString()], value, this);
             }
           },
         },
@@ -61,28 +74,37 @@ export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomEl
           descriptor: {
             enumerable: false,
             configurable: true,
-            writable: true
+            writable: true,
           },
-          kind: "field"
+          kind: 'field',
         }],
         finisher: (target: typeof CustomElement) => {
+          if (!CustomElement.isPrototypeOf(target)) {
+            throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
+          }
+          if (!_options) {
+            _options = {};
+          }
+          if (!_options.type) {
+            _options.type = (<any>Reflect).getMetadata('design:type', target.prototype, descriptor.key.toString()); // tslint:disable-line
+          }
           getClassProperties(target).set(descriptor.key, _options);
-        }
-      }
+        },
+      };
     } else {
       return {
-        kind: "method",
+        kind: 'method',
         descriptor: {
           configurable: true,
           enumerable: false,
-          get: function (this: CustomElement) {
+          get(this: CustomElement) {
             return descriptor.descriptor.get.apply(this);
           },
-          set: function (this: CustomElement, value: any) {
+          set(this: CustomElement, value: any) { // tslint:disable-line:no-any
             if (this._propertyState === PROPERTY_STATE.UPDATE_PROPERTY) {
               descriptor.descriptor.set.apply(this, [value]);
             } else {
-              (this.constructor as typeof CustomElement)._fromProperty(descriptor.key.toString(), this[descriptor.key.toString()], value, this);
+              (this.constructor as typeof CustomElement)._fromProperty(descriptor.key.toString(), (<IndexableElement>this)[descriptor.key.toString()], value, this);
             }
           },
         },
@@ -90,13 +112,15 @@ export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomEl
         placement: 'own',
         initializer: descriptor.initializer,
         finisher: (target: typeof CustomElement) => {
-          if(!CustomElement.isPrototypeOf(target)) {
+          if (!CustomElement.isPrototypeOf(target)) {
             throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
           }
+          if (!_options) {
+            _options = {};
+          }
           getClassProperties(target).set(descriptor.key, _options);
-        }
-      }
+        },
+      };
     }
-  }
+  };
 }
-

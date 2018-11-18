@@ -18,17 +18,20 @@ import { CustomElement } from './customelement.stage2';
 import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
 import { eventS2 } from './event.stage2';
 
-export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
+/**
+ * PropertyDecorator -> fixed for babel initializer
+ */
+export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any; // tslint:disable-line:no-any
 
 /**
- * Event decorator for an event emitter
+ * Event decorator for an event emitter, compatible with stage-0, TS and stage-2 decorators
  *
  * @param name (string) optional: name of the event, if no state, property name will be used
  */
 export function Event(name?: string): FixedPropertyDecorator { // tslint:disable-line:function-name
-  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
+  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => { // tslint:disable-line:no-any
     if (isStage2FieldDecorator(target)) {
-      return eventS2(name)(<any>target);
+      return eventS2(name)(<any>target); // tslint:disable-line:no-any
     } else {
       return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, eventS2(name));
     }

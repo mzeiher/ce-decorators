@@ -14,15 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { Component, CustomElement, Event, EventEmitter, Prop, Watch, State } from './../../index';
+import { LazyCustomElement, CustomElement, Event, EventEmitter, Prop, Watch, State } from './../../index';
 import { html, TemplateResult } from 'lit-html';
 import { classMap } from 'lit-html/directives/classMap';
 
-export declare class TestWithMultiplePropertiesWithTypeBase extends CustomElement {
+
+export declare class TestWithMultiplePropertiesWithTypeStage2BaseLazy extends LazyCustomElement {
   baseProperty:string;
   render():TemplateResult;
 }
-export declare class TestWithMultiplePropertiesWithType extends TestWithMultiplePropertiesWithTypeBase {
+
+export declare class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWithMultiplePropertiesWithTypeStage2BaseLazy {
 
   getPropertyStringTest: string;
 

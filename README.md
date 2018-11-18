@@ -1,31 +1,51 @@
 # CE-DECORATORS
-ce-decorators is a typescript library for custom element development. It's powered by the great [lit-html](https://polymer.github.io/lit-html/guide/writing-templates.html) for effective DOM updates. The decorator API is similar to stenciljs but without the need of a special compiler, just the ts-compiler is needed.
+ce-decorators is a typescript library for custom element development. It is powered by [lit-html](https://polymer.github.io/lit-html/guide/writing-templates.html) for effective DOM updates. The decorator API is similar to stenciljs but without the need of a special compiler, just the ts-compiler is needed.
 
-I just created the small ibrary for my own needs but I'd like to invite everyone to use it if it suits.
-The decorators are compatible with IE11 (needs babel transpile), Chrome, FF, Edge, Safari and the mobile Safari and Chrome Browser.
+The decorators will take care of style registering if the ShadyCSS scoping shim is needed, attribute-property reflection with type transformation from attribute to property and vice versa. All in just 14kb (26kb with lit-html bundled).
 
-For IE11, Firefox, Safari Browsers you need the `@webcomponents/webcomponentjs` polyfill (for ShadowDOM and ShadyCSS), if you taget ES5 you also need either babel or the `custom-elements-es5-adapter.js` from the webcomponentjs project. If you target IE11 you also need `core-js` for the `Map` and `WeakMap` polyfill. Unfortunatelly, lit-html is ES6 so you need @babel/preset-env to compile it down to ES5.
+## Custom elements
+Custom elements are user defined HTML elements, which offer customized functionalities and styling. When used inide an HTML template it looks like this:
+````html  
+<custom-button primary>
+ Click this Button
+</custom-button>
+````
+In this example `custom-button` is the tag-name of the element, _primary_ is a specific attribute and _Click this button_ is a slot element passed in the element for further processing.
 
-The decorators will take care of style registering if the ShadyCSS scoping shim is needed, attribute-property reflection with type transformation from attribute to property and vice versa and there is a small cheap "dependecy injection" functionality built in via the @Inject decorator. All in just 10kb (22kb with lit-html bundled)
 
-# But why???
-I'm lazy and I don't like to write much boilerplate code, furthermore you have intellisense since all properties are named and have type.
+For detailed information about custom elements see
+> https://developers.google.com/web/fundamentals/web-components/
 
-# Install/Compability
+
+## Compatibility
+The library is compatible with IE11 (needs babel transpile), Chrome, FF, Edge, Safari and the mobile Safari and Chrome Browser.
+
+For IE11 you need: `@webcomponents/webcomponentsjs` polyfills and Polyfills for `Symbol`, `Map`, `WeakMap` and Promises
+For Edge you need: `@webcomponents/webcomponentsjs`
+in FF, Safari and Chrome everything should just work.
+
+If you compile all down to ES5 you need for all Brwosers the `custom-elements-es5-adapter.js`.
+
+
+
+## Benefits
+- No boilerplate code
+- Code completion since all properties are named and have types
+
+# Installation
 `npm install ce-decorators`
 important! you need the following compiler settings in your tsconfig.json
 ```json
 "emitDecoratorMetadata": true,
 "experimentalDecorators": true
 ```
-after that you can import the decorators
+
+# Usage
 ```javascript
 import { Component, Prop ..} from 'ce-decorators'
 ```
-If you want to target ES5 Browser you have to let babel do the heavy lifting.
 
-## with babel
-for babel you need the following dependencies (at the moment only stage-0 proposal decorators are supported)
+babel dependencies (for ES5):
 ```json
 "@babel/plugin-proposal-class-properties": "^7.0.0",
 "@babel/plugin-proposal-decorators": "^7.0.0",
@@ -33,7 +53,7 @@ for babel you need the following dependencies (at the moment only stage-0 propos
 "@babel/preset-typescript": "^7.0.0", (optional only when using typescript)
 ```
 
-in the babel config you just have to enable the two plugins:
+babel config:
 ```javascript
 plugins: [
   ["@babel/plugin-proposal-decorators", { legacy: true/false}],
@@ -41,9 +61,9 @@ plugins: [
 ]
 ```
 
-Both decorator specification (Stage-0 and Stage-2 are supported)
+Both decorator specification (Stage-0 and Stage-2 are supported).
 
-If you use the decorators with babel you have to specify the typ for Prop and Inject otherwise it won't work 🙁
+If decorators are used with babel the data type for the Prop decorator has to be specified, otherwise attribute reflection won't work.
 
 # Sample
 ```typescript
@@ -67,20 +87,17 @@ export class MyCustomElement extends CustomElement {
   change: EventEmitter<string>; // will trigger a custom event with name "change" (name can be overriden by decorator argument)
 
   @State()
-  private myState:boolean = false; // only visible to the instance, will not reflect but trigger a re-render
+  private myState: boolean = false; // only visible to the instance, will not reflect but trigger a re-render
 
-  @Watch('propertyOne') // watches for changes in propertyOne (changes withing this method to properties will not be reflected, please use intercept)
+  @Watch('propertyOne') // watches for changes in propertyOne (changes to properties within this method will not be reflected, please use intercept for that case)
   propertyOneChanged(oldValue:string, newValue:string) {
     console.log('propertyOne Changed');
   }
 
-  @Interceptor('propertyOne') // watches for changes of propertyOne and change the value, the changed value will be reflected
+  @Interceptor('propertyOne') // watches for changes of propertyOne and change the value, the changed value will be reflected and written
   propertyOneInterceptor(oldValue:string, newValue:string) {
       return newValue + "test";
   }
-
-  @Inject() // will inject a object from type MyService
-  myService: MyService;
 
   render() {
     return html`<div>${this.propertyOne}</div>`;
@@ -106,20 +123,21 @@ export class MyCustomElement extends CustomElement {
 
 # Lifecycle
 ## Construction/rendering
-* constructor
-* resolve promise returned by waitForConstruction() on custom element (awaitable)
-* \<append to dom\>
-* componentConnected()
-* \<if property changed or first connect (deffered in microtask)\>
-* componentWillRender() property changes within this function will be taken into account in the rendering step
-* render() 
-* componentDidRender()
-* resolve promise returned by waitForRender() on custom element (awaitable)
-* \<if property or attribute changed (deffered in microtask)\>
-* render() deffered in microtask
-* \<remove/detach from dom\>
-* componentDisconnected()
+1. constructor call
+1. resolve promise returned by waitForConstruction() on custom element (awaitable)
+1. \<append to dom\>
+1. componentConnected()
+1. \<if a property changed or first connect deferred in microtask (in asnyc task if you use `LazyCustomElement`)\>
+1. componentWillRender(): property changes within this function will be taken into account in the rendering step
+1. render() 
+1. componentDidRender(): can be used for post-processing runs in the same asnyctask/microtask as render
+1. resolve promise returned by waitForRender() on custom element (awaitable)
+1. \<if property or attribute changed (deferred in microtask)\>
+1. render() deferred in microtask or in asnyc task if you use `LazyCustomElement`
+1. \<remove/detach from dom\>
+1. componentDisconnected()
 
+## In code
 ```typescript
 const element = new MyCustomElement();
 await element.waitForForConstruction();
@@ -128,34 +146,37 @@ element.propertyOne = 'test'; // will be reflected as property-one attribute
 document.querySelector('body').appenChild(element);
     // element.componentConnected() called
 await element.waitForRender();
-    // element.componentWilRender() called
+    // element.componentWillRender() called
     // element.render() called
     // element.componentDidRender() called
 document.querySelector('body').removeChild(element);
     // element.componentDisconnected() called
 ```
 
-because render calls are deffered in a microtask setting multiple attributes/properties within one task will result in just one render.
+Because render calls are deferred into a microtask or async task, setting multiple attributes/properties consecutively will result in just one render call.
 
-## Property udpates
-* set property myProperty
-* if reflectToAttribute set property my-property and call attributeChangedCallback
-* notify watchers
-* deffer render() to microtask (so if multiple attributes/properties are set in the same task, render is only called once)
+## Property updates
+1. set property myProperty
+1. run interceptors
+1. if reflectToAttribute is set for _myProperty_ (or undefined, which is the default case), the property will be reflected as attribute _my-property_
+1. notify watchers
+1. deffer render() to microtask (so if multiple attributes/properties are set in the same task, render is only called once)
 
-# Usage with Angular
-For angular you need to activate the `CUSTOM_ELEMENTS_SCHEMA` after that custom elements can be used like angfular components
+# Usage
 
-in the component
+## Use with Angular
+For angular `CUSTOM_ELEMENTS_SCHEMA` needs to be activated. Now custom elements can be used like angular components.
+
+in the component:
 ```javascript
 import './my-custom-element'
 ```
-in the template
+in the template:
 ```html
 <my-custom-element [propertyOne]="this.propertyOne" attribute-one="this.attributeOne" (change)="$evt => handleEvent($evt)">
 </my-custom-element>
 ```
-# Usage with react
+## Use with react
 In react you need to pass everything as attributes
 ```jsx
 import 'my-custom-element';

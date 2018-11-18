@@ -19,7 +19,12 @@ import { html, TemplateResult } from 'lit-html';
 import { classMap } from 'lit-html/directives/classMap';
 
 
-export declare class TestWithMultiplePropertiesWithTypeStage2 extends CustomElement {
+export declare class TestWithMultiplePropertiesWithTypeStage2Base extends CustomElement {
+  baseProperty:string;
+  render():TemplateResult;
+}
+
+export declare class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePropertiesWithTypeStage2Base {
 
   getPropertyStringTest: string;
 
@@ -63,6 +68,8 @@ export declare class TestWithMultiplePropertiesWithTypeStage2 extends CustomElem
 
   arrayPropertyWithReflection: Array<number>;
 
+  interceptableProperty:string;
+  
   changeEvent: EventEmitter<string>;
 
   test: EventEmitter<string>;

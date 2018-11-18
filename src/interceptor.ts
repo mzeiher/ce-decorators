@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 import { CustomElement } from './customelement.stage2';
 import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2decorators';
 import { interceptS2 } from './interceptor.stage2';
@@ -22,10 +23,11 @@ import { interceptS2 } from './interceptor.stage2';
  *
  * @param property property to intercept
  */
-export function Interceptor(property: string): MethodDecorator {
+export function Interceptor(property: string): MethodDecorator { // tslint:disable-line
+  // tslint:disable-next-line
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
-    if(isStage2MethodDecorator(target)) {
-      return interceptS2(property)(<any>target);
+    if (isStage2MethodDecorator(target)) {
+      return interceptS2(property)(<any>target); // tslint:disable-line
     } else {
       return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, interceptS2(property));
     }

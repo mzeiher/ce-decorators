@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from '../../customelement.stage2';
+import { LazyCustomElement } from '../../customelement.stage2';
 import { Component } from './../../component';
 import { Prop, State } from './../../prop';
 import { Watch } from './../../watch';
@@ -34,7 +34,7 @@ import { Interceptor } from '../../interceptor';
  * test-with-multiple-properties-with-type-ts-base
  */
 @Component({
-  tag: 'test-with-multiple-properties-with-type-ts-base',
+  tag: 'test-with-multiple-properties-with-type-ts-base-lazy',
   style: `
   :host {
     background-color: #ababab;
@@ -51,7 +51,7 @@ import { Interceptor } from '../../interceptor';
     background-color: #00f;
   }`,
 })
-export class TestWithMultiplePropertiesWithTypeTSBase extends CustomElement {
+export class TestWithMultiplePropertiesWithTypeTSBaseLazy extends LazyCustomElement {
 
   @Prop({ type: String })
   baseProperty: string = 'test';
@@ -65,7 +65,7 @@ export class TestWithMultiplePropertiesWithTypeTSBase extends CustomElement {
  * test-with-multiple-properties-with-type-ts
  */
 @Component({
-  tag: 'test-with-multiple-properties-with-type-ts',
+  tag: 'test-with-multiple-properties-with-type-ts-lazy',
   inheritStyle: true,
   style: `
   :host {
@@ -96,7 +96,7 @@ export class TestWithMultiplePropertiesWithTypeTSBase extends CustomElement {
   }
   `,
 })
-export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultiplePropertiesWithTypeTSBase {
+export class TestWithMultiplePropertiesWithTypeTSLazy extends TestWithMultiplePropertiesWithTypeTSBaseLazy {
 
   @Prop({
     type: String,

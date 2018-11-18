@@ -16,14 +16,16 @@
 
 export { Component } from './component';
 export { ComponentOptions } from './component.stage2';
-export { CustomElement } from './customelement.stage2';
+export { CustomElement, LazyCustomElement } from './customelement.stage2';
 export { EventEmitter } from './event.stage2';
 export { PropertyOptions } from './prop.stage2';
 
 export { Event} from './event';
 export { Prop } from './prop';
-export { Inject } from './service';
 export { Watch } from './watch';
 export { State } from './prop';
 export { Trace } from './trace';
 export { Interceptor } from './interceptor';
+export { COMPONENT_STATE } from './componentstate.stage2';
+
+export { getComponentCatalog} from './componentcatalog';

@@ -15,20 +15,24 @@
  */
 
 import { CustomElement } from './customelement.stage2';
-import { isStage2ClassDecorator, applyLegacyToStage2ClassDecorator } from './stage2decorators';
-import { componentS2, ComponentOptions } from './component.stage2';
+
+const map: Map<typeof CustomElement, ClassEvents> = new Map();
 
 /**
- * Component decorator, defines a new component to be used as a custom element compatible with stage-0, TS and stage-2 decorator implementations
- *
- * @param options (ComponentOptions) options to initialize the component
+ * CLassEvent type
  */
-export function Component(options: ComponentOptions): ClassDecorator { // tslint:disable-line:function-name
-  return (target: any): any => { // tslint:disable-line:no-any
-    if (isStage2ClassDecorator(target)) {
-      return componentS2(options)(<any>target); // tslint:disable-line:no-any
-    } else {
-      return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, componentS2(options)); // tslint:disable-line:no-unsafe-any
-    }
-  };
+export type ClassEvents = Map<string | symbol, string>;
+
+/**
+ * return events registered for the given class
+ * 
+ * @param target Class to get ClassEvents from 
+ */
+export function getClassEvents(target: typeof CustomElement): ClassEvents {
+  let properties: ClassEvents | undefined = map.get(target);
+  if (!properties) {
+    properties = new Map();
+    map.set(target, properties);
+  }
+  return properties;
 }

@@ -17,8 +17,11 @@
 import { Component, CustomElement } from './../../index';
 import { html } from 'lit-html';
 
+/**
+ * test-no-properties
+ */
 @Component({
-  tag: 'test-no-properties'
+  tag: 'test-no-properties',
 })
 export class TestNoProperties extends CustomElement {
 

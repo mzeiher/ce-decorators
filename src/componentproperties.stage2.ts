@@ -15,20 +15,30 @@
  */
 
 import { CustomElement } from './customelement.stage2';
-import { isStage2ClassDecorator, applyLegacyToStage2ClassDecorator } from './stage2decorators';
-import { componentS2, ComponentOptions } from './component.stage2';
+import { ComponentOptions } from './component.stage2';
+
+const map: Map<typeof CustomElement, ComponentOptions> = new Map();
 
 /**
- * Component decorator, defines a new component to be used as a custom element compatible with stage-0, TS and stage-2 decorator implementations
- *
- * @param options (ComponentOptions) options to initialize the component
+ * return componentproperties
+ * @param target 
  */
-export function Component(options: ComponentOptions): ClassDecorator { // tslint:disable-line:function-name
-  return (target: any): any => { // tslint:disable-line:no-any
-    if (isStage2ClassDecorator(target)) {
-      return componentS2(options)(<any>target); // tslint:disable-line:no-any
-    } else {
-      return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, componentS2(options)); // tslint:disable-line:no-unsafe-any
-    }
-  };
+export function getComponentProperties(target: typeof CustomElement): ComponentOptions {
+  return map.get(target);
+}
+
+/**
+ * set component properties
+ * @param target 
+ * @param options 
+ */
+export function setComponentProperties(target: typeof CustomElement, options: ComponentOptions): void {
+  map.set(target, options);
+}
+
+/**
+ * return all components defined with ce-decorators
+ */
+export function getAllComponents(): Array<typeof CustomElement> {
+  return Array.from(map.keys());
 }

@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2018 Mathis Zeiher
  *
@@ -14,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 import { PropertyType } from './prop.stage2';
 
 /**
@@ -31,7 +31,7 @@ export function deserializeValue(value: string, type: PropertyType): null | stri
   } else if (type === String) {
     return value;
   } else if (type instanceof Object) {
-    return JSON.parse(value);
+    return JSON.parse(value); // tslint:disable-line
   } else {
     return value;
   }
@@ -46,7 +46,7 @@ export function serializeValue(value: any, type: PropertyType): string | null { 
   if (value === null || value === undefined) {
     return null;
   } else if (type === String) {
-    return value;
+    return value; // tslint:disable-line
   } else if (type instanceof Object) {
     return JSON.stringify(value);
   } else {
@@ -67,7 +67,7 @@ export function camelToKebapCase(str: string): string {
  * @param str input string
  */
 export function kebapToCamelCase(str: string): string {
-  return str.toLowerCase().replace(/-([a-zA-Z])/g, (...args: string[]): string => {
+  return str.toLowerCase().replace(/-([a-zA-Z])/g, (...args: Array<string>): string => {
     return args[1].toUpperCase();
   });
 }
@@ -75,8 +75,8 @@ export function kebapToCamelCase(str: string): string {
 /**
  * create a template string array
  */
-export function makeTemplateString(template: string[], raw: string[]): TemplateStringsArray {
+export function makeTemplateString(template: Array<string>, raw: Array<string>): TemplateStringsArray {
   Object.defineProperty(template, 'raw', { value: raw });
 
-  return <any>template;
+  return <any>template; // tslint:disable-line:no-any
 }

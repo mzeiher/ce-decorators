@@ -3,7 +3,7 @@
     "module": "es6",
     "target": "es2017",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./lib",
     "importHelpers": true,
     "moduleResolution": "node",
     "lib": [

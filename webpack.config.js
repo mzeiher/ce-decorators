@@ -48,8 +48,8 @@ const webpackConfigProduction = webpackMerge(webpackConfigDevelop, {
 
 const webpackConfigTest = {
   mode: 'development',
-  devtool: 'none',
-  entry: ['@babel/polyfill', './src/test/index.ts'],
+  devtool: 'inline-source-map',
+  entry: [/*'@babel/polyfill',*/ './src/test/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -165,7 +165,7 @@ const webpackConfigTest = {
 const webpackConfigTestCoverage = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: ['@babel/polyfill', './src/test/index.ts'],
+  entry: [/*'@babel/polyfill',*/ './src/test/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -284,7 +284,7 @@ const webpackConfigTestCoverage = {
 const webpackConfigDevServer = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: ['@babel/polyfill', 
+  entry: [/*'@babel/polyfill',*/ 
           './src/test/components/TestWithMultipleProperties.ts',
           './src/test/components/TestWithMultiplePropertiesWithType.js',
           './src/test/components/TestWithMultiplePropertiesWithType.stage2.js',

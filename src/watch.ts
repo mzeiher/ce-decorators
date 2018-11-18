@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 import { CustomElement } from './customelement.stage2';
 import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2decorators';
 import { watchS2 } from './watch.stage2';
@@ -22,10 +23,12 @@ import { watchS2 } from './watch.stage2';
  *
  * @param property property to watch
  */
-export function Watch(property: string): MethodDecorator {
-  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
-    if(isStage2MethodDecorator(target)) {
-      return watchS2(property)(<any>target);
+export function Watch(property: string): MethodDecorator { // tslint:disable-line
+  return (target: typeof CustomElement,
+          propertyKey: string | symbol,
+          descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => { // tslint:disable-line:no-any
+    if (isStage2MethodDecorator(target)) {
+      return watchS2(property)(<any>target); // tslint:disable-line:no-any
     } else {
       return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, watchS2(property));
     }

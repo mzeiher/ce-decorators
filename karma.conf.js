@@ -4,6 +4,7 @@ module.exports = function (config) {
   config.set({
     frameworks: ['detectBrowsers', 'jasmine', 'source-map-support'],
     files: [
+      'node_modules/@babel/polyfill/dist/polyfill.min.js',
       'node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
       'node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js',
       'test/test-istanbul.js'
@@ -22,7 +23,9 @@ module.exports = function (config) {
         flags: ['--headless', '--disable-gpu', '--no-sandbox']
       }
     },
-
+    preprocessors: {
+      'test/test-istanbul.js' : ['sourcemap']
+    },
     detectBrowsers: {
       // enable/disable, default is true
       enabled: true,
@@ -47,7 +50,7 @@ module.exports = function (config) {
     // any of these options are valid: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-api/lib/config.js#L33-L39
     coverageIstanbulReporter: {
       // reports can be any that are listed here: https://github.com/istanbuljs/istanbuljs/tree/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib
-      reports: ['html', 'lcovonly', 'text-summary'],
+      reports: ['html', 'lcovonly', 'text-summary', 'cobertura'],
 
       // base output directory. If you include %browser% in the path it will be replaced with the karma browser name
       dir: path.join(__dirname, 'reports', 'coverage'),

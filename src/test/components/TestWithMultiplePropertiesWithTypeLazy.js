@@ -14,27 +14,38 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from '../../customelement.stage2';
-import { Component } from './../../component';
-import { Prop, State } from './../../prop';
-import { Watch } from './../../watch';
-import { Event } from './../../event';
-
+import {
+  LazyCustomElement
+} from '../../customelement.stage2';
+import {
+  Component
+} from './../../component';
+import {
+  Prop,
+  State
+} from './../../prop';
+import {
+  Watch
+} from './../../watch'
+import {
+  Event
+} from './../../event';
+import {
+  Trace
+} from '../../trace';
+import {
+  Interceptor
+} from '../../interceptor';
 import {
   html,
   // TemplateResult
 } from 'lit-html';
 import {
-  classMap,
+  classMap
 } from 'lit-html/directives/classMap';
-import { EventEmitter } from '../../event.stage2';
-import { Interceptor } from '../../interceptor';
 
-/**
- * test-with-multiple-properties-with-type-ts-base
- */
 @Component({
-  tag: 'test-with-multiple-properties-with-type-ts-base',
+  tag: 'test-with-multiple-properties-with-type-base-lazy',
   style: `
   :host {
     background-color: #ababab;
@@ -49,23 +60,22 @@ import { Interceptor } from '../../interceptor';
 
   :host > div:nth-of-type(1) {
     background-color: #00f;
-  }`,
+  }`
 })
-export class TestWithMultiplePropertiesWithTypeTSBase extends CustomElement {
+export class TestWithMultiplePropertiesWithTypeBaseLazy extends LazyCustomElement {
 
-  @Prop({ type: String })
-  baseProperty: string = 'test';
+  @Prop({
+    type: String
+  })
+  baseProperty = 'test';
 
   render() {
-    return html`<div>${this.baseProperty}</div>`;
+    return html `<div>${this.baseProperty}</div>`
   }
 }
 
-/**
- * test-with-multiple-properties-with-type-ts
- */
 @Component({
-  tag: 'test-with-multiple-properties-with-type-ts',
+  tag: 'test-with-multiple-properties-with-type-lazy',
   inheritStyle: true,
   style: `
   :host {
@@ -94,217 +104,223 @@ export class TestWithMultiplePropertiesWithTypeTSBase extends CustomElement {
   :host > div:nth-of-type(6) {
     background-color: #ff0;
   }
-  `,
+  `
 })
-export class TestWithMultiplePropertiesWithTypeTS extends TestWithMultiplePropertiesWithTypeTSBase {
+export class TestWithMultiplePropertiesWithTypeLazy extends TestWithMultiplePropertiesWithTypeBaseLazy {
 
   @Prop({
-    type: String,
+    type: String
   })
-  get getPropertyStringTest(): string {
+  @Trace()
+  get getPropertyStringTest() {
     return this.internalPropertyString;
   }
 
-  set getPropertyStringTest(value: string) {
+  set getPropertyStringTest(value) {
     this.internalPropertyString = value;
   }
 
-  get setPropertyStringTest(): string {
+  get setPropertyStringTest() {
     return this.internalPropertyString2;
   }
 
+  @Trace()
   @Prop({
-    type: String,
+    type: String
   })
-  set setPropertyStringTest(value: string) {
+  set setPropertyStringTest(value) {
     this.internalPropertyString2 = value;
   }
 
   @Prop({
-    type: Boolean,
+    type: Boolean
   })
-  get getPropertyBooleanTest(): boolean {
+  get getPropertyBooleanTest() {
     return this.internalPropertyBoolean;
   }
 
-  set getPropertyBooleanTest(value: boolean) {
+  set getPropertyBooleanTest(value) {
     this.internalPropertyBoolean = value;
   }
 
-  get setPropertyBooleanTest(): boolean {
+  get setPropertyBooleanTest() {
     return this.internalPropertyBoolean2;
   }
 
   @Prop({
-    type: Boolean,
+    type: Boolean
   })
-  set setPropertyBooleanTest(value: boolean) {
+  set setPropertyBooleanTest(value) {
     this.internalPropertyBoolean2 = value;
   }
 
   @Prop({
-    type: Object,
+    type: Object
   })
-  get getPropertyObjectTest(): object {
+  get getPropertyObjectTest() {
     return this.internalPropertyObject;
   }
 
-  set getPropertyObjectTest(value: object) {
+  set getPropertyObjectTest(value) {
     this.internalPropertyObject = value;
   }
 
-  get setPropertyObjectTest(): object {
+  get setPropertyObjectTest() {
     return this.internalPropertyObject2;
   }
 
   @Prop({
-    type: Object,
+    type: Object
   })
-  set setPropertyObjectTest(value: object) {
+  set setPropertyObjectTest(value) {
     this.internalPropertyObject2 = value;
   }
 
   @Prop({
-    type: String,
+    type: String
   })
-  stringProperty: string;
+  @Trace()
+  stringProperty;
+
+  @Trace()
+  @Prop({
+    type: String
+  })
+  stringPropertyWithInitializer = 'test';
 
   @Prop({
-    type: String,
+    type: Boolean
   })
-  stringPropertyWithInitializer: string = 'test';
+  booleanProperty;
 
   @Prop({
-    type: Boolean,
+    type: Boolean
   })
-  booleanProperty: boolean;
+  booleanPropertyWithInitializer = true;
 
   @Prop({
-    type: Boolean,
+    type: Number
   })
-  booleanPropertyWithInitializer: boolean = true;
+  numberProperty;
 
   @Prop({
-    type: Number,
+    type: Number
   })
-  numberProperty: number;
+  numberPropertyWithInitializer = 0;
 
   @Prop({
-    type: Number,
+    type: Object
   })
-  numberPropertyWithInitializer: number = 0;
+  objectProperty;
 
   @Prop({
-    type: Object,
+    type: Object
   })
-  objectProperty: object;
-
-  @Prop({
-    type: Object,
-  })
-  objectPropertyWithInitializer: object = {
-    test: 'default',
+  objectPropertyWithInitializer = {
+    test: 'default'
   };
 
   @Prop({
-    type: Array,
+    type: Array
   })
-  arrayProperty: Array<any>; // tslint:disable-line
+  arrayProperty;
 
   @Prop({
-    type: Array,
+    type: Array
   })
-  arrayPropertyWithInitializer: Array<any> = [0, 0, 0]; // tslint:disable-line
-
-  @Prop({
-    reflectAsAttribute: false,
-    type: String,
-  })
-  stringPropertyWithNoReflection: string = '';
+  arrayPropertyWithInitializer = [0, 0, 0];
 
   @Prop({
     reflectAsAttribute: false,
-    type: Number,
+    type: String
   })
-  numberPropertyWithNoReflection: number = 0;
+  stringPropertyWithNoReflection = '';
 
   @Prop({
     reflectAsAttribute: false,
-    type: Boolean,
+    type: Number
   })
-  booleanPropertyWithNoReflection: boolean = false;
+  numberPropertyWithNoReflection = 0;
+
+  @Prop({
+    reflectAsAttribute: false,
+    type: Boolean
+  })
+  booleanPropertyWithNoReflection = false;
 
   @Prop({
     reflectAsAttribute: true,
-    type: Object,
+    type: Object
   })
-  objectPropertyWithReflection: object = {};
+  objectPropertyWithReflection = {};
 
   @Prop({
     reflectAsAttribute: true,
-    type: Array,
+    type: Array
   })
-  arrayPropertyWithReflection: Array<any> = []; // tslint:disable-line
+  arrayPropertyWithReflection = [];
 
   @Prop({
-    type: String,
+    type: String
   })
-  interceptableProperty: string = '';
+  interceptableProperty = '';
 
   @Event('change')
-  changeEvent: EventEmitter<string>;
+  changeEvent;
 
   @Event('test')
-  test: EventEmitter<string>;
+  test;
 
   @State()
-  shouldHaveClass: boolean = false;
+  shouldHaveClass = false;
 
-  internalPropertyString: string = '';
-  internalPropertyString2: string = '';
+  internalPropertyString = '';
+  internalPropertyString2 = '';
 
-  internalPropertyBoolean: boolean = false;
-  internalPropertyBoolean2: boolean = false;
+  internalPropertyBoolean = false;
+  internalPropertyBoolean2 = false;
 
-  internalPropertyObject: object = {};
-  internalPropertyObject2: object = {};
+  internalPropertyObject = {};
+  internalPropertyObject2 = {};
 
   @Interceptor('interceptableProperty')
-  propertyInterceptor(_oldValue: string, newValue: string) {
+  propertyInterceptor(_oldValue, newValue) {
     return newValue + newValue;
   }
 
   @Watch('stringProperty')
-  stringWatcher(oldValue: string, newValue: string) {
+  @Trace()
+  stringWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
+  @Trace()
   @Watch('numberProperty')
-  numberWatcher(oldValue: number, newValue: number) {
+  numberWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('booleanProperty')
-  booleanWatcher(oldValue: number, newValue: number) {
+  booleanWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('objectProperty')
-  objectWatcher(oldValue: number, newValue: number) {
+  objectWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
   @Watch('arrayProperty')
-  arrayWatcher(oldValue: number, newValue: number) {
+  arrayWatcher(oldValue, newValue) {
     this.watchGuard(oldValue, newValue);
   }
 
-  watchGuard(_oldValue: any, _newValue: any) {// tslint:disable-line
-    console.log(`${_oldValue} - ${_newValue}`); // tslint:disable-line
+  watchGuard(_oldValue, _newValue) {
+    console.log(`${_oldValue} - ${_newValue}`);
   }
 
   render() {
-    return html`<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
+    return html `<div class=${classMap({ hasclass: this.shouldHaveClass })}>${this.baseProperty}</div>
                 <div>${this.stringPropertyWithInitializer}</div>
                 <div>${this.numberPropertyWithInitializer}</div>
                 <div>${this.booleanPropertyWithInitializer}</div>

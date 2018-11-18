@@ -19,17 +19,21 @@ import { Component } from './../../component';
 import { Prop, State } from './../../prop';
 import { Watch } from './../../watch';
 import { Event } from './../../event';
+import { Trace } from '../../trace';
 
 import {
   html,
   // TemplateResult
 } from 'lit-html';
 import {
-  classMap
+  classMap,
 } from 'lit-html/directives/classMap';
 import { EventEmitter } from '../../event.stage2';
 import { Interceptor } from '../../interceptor';
 
+/**
+ * test-with-multiple-properties-base
+ */
 @Component({
   tag: 'test-with-multiple-properties-base',
   style: `
@@ -46,7 +50,7 @@ import { Interceptor } from '../../interceptor';
 
   :host > div:nth-of-type(1) {
     background-color: #00f;
-  }`
+  }`,
 })
 export class TestWithMultiplePropertiesBase extends CustomElement {
 
@@ -54,10 +58,13 @@ export class TestWithMultiplePropertiesBase extends CustomElement {
   baseProperty: string = 'test';
 
   render() {
-    return html`<div>${this.baseProperty}</div>`
+    return html`<div>${this.baseProperty}</div>`;
   }
 }
 
+/**
+ * test-with-multiple-properties
+ */
 @Component({
   tag: 'test-with-multiple-properties',
   inheritStyle: true,
@@ -88,11 +95,12 @@ export class TestWithMultiplePropertiesBase extends CustomElement {
   :host > div:nth-of-type(6) {
     background-color: #ff0;
   }
-  `
+  `,
 })
 export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
 
   @Prop()
+  @Trace()
   get getPropertyStringTest(): string {
     return this.internalPropertyString;
   }
@@ -105,6 +113,7 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
     return this.internalPropertyString2;
   }
 
+  @Trace()
   @Prop()
   set setPropertyStringTest(value: string) {
     this.internalPropertyString2 = value;
@@ -147,51 +156,53 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
   }
 
   @Prop()
+  @Trace()
   stringProperty: string;
 
+  @Trace()
   @Prop()
-  stringPropertyWithInitializer:string = 'test';
+  stringPropertyWithInitializer: string = 'test';
 
   @Prop()
   booleanProperty: boolean;
 
   @Prop()
-  booleanPropertyWithInitializer:boolean = true;
+  booleanPropertyWithInitializer: boolean = true;
 
   @Prop()
   numberProperty: number;
 
   @Prop()
-  numberPropertyWithInitializer:number = 0;
+  numberPropertyWithInitializer: number = 0;
 
   @Prop()
   objectProperty: object;
 
   @Prop()
-  objectPropertyWithInitializer:object = {
-    test: 'default'
+  objectPropertyWithInitializer: object = {
+    test: 'default',
   };
 
   @Prop()
-  arrayProperty: Array<any>;
+  arrayProperty: Array<any>; // tslint:disable-line
 
   @Prop()
-  arrayPropertyWithInitializer:Array<any> = [0, 0, 0];
+  arrayPropertyWithInitializer: Array<any> = [0, 0, 0]; // tslint:disable-line
 
-  @Prop({reflectAsAttribute: false})
-  stringPropertyWithNoReflection:string = '';
+  @Prop({ reflectAsAttribute: false })
+  stringPropertyWithNoReflection: string = '';
 
-  @Prop({reflectAsAttribute: false})
-  numberPropertyWithNoReflection:number = 0;
+  @Prop({ reflectAsAttribute: false })
+  numberPropertyWithNoReflection: number = 0;
 
-  @Prop({reflectAsAttribute: false})
-  booleanPropertyWithNoReflection:boolean = false;
+  @Prop({ reflectAsAttribute: false })
+  booleanPropertyWithNoReflection: boolean = false;
 
-  @Prop({reflectAsAttribute: true})
-  objectPropertyWithReflection:object = {};
+  @Prop({ reflectAsAttribute: true })
+  objectPropertyWithReflection: object = {};
 
-  @Prop({reflectAsAttribute: true})
-  arrayPropertyWithReflection: Array<any> = [];
+  @Prop({ reflectAsAttribute: true })
+  arrayPropertyWithReflection: Array<any> = []; // tslint:disable-line
 
   @Prop()
   interceptableProperty: string = '';
@@ -203,27 +214,29 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
   test: EventEmitter<string>;
 
   @State()
-  shouldHaveClass:boolean = false;
+  shouldHaveClass: boolean = false;
 
-  internalPropertyString:string = '';
-  internalPropertyString2:string = '';
+  internalPropertyString: string = '';
+  internalPropertyString2: string = '';
 
-  internalPropertyBoolean:boolean = false;
-  internalPropertyBoolean2:boolean = false;
+  internalPropertyBoolean: boolean = false;
+  internalPropertyBoolean2: boolean = false;
 
-  internalPropertyObject:object = {};
-  internalPropertyObject2:object = {};
+  internalPropertyObject: object = {};
+  internalPropertyObject2: object = {};
 
   @Interceptor('interceptableProperty')
-  propertyInterceptor(_oldValue:string, newValue:string) {
+  propertyInterceptor(_oldValue: string, newValue: string) {
     return newValue + newValue;
   }
 
   @Watch('stringProperty')
+  @Trace()
   stringWatcher(oldValue: string, newValue: string) {
     this.watchGuard(oldValue, newValue);
   }
 
+  @Trace()
   @Watch('numberProperty')
   numberWatcher(oldValue: number, newValue: number) {
     this.watchGuard(oldValue, newValue);
@@ -244,8 +257,8 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
     this.watchGuard(oldValue, newValue);
   }
 
-  watchGuard(_oldValue: any, _newValue: any) {
-    console.log(`${_oldValue} - ${_newValue}`);
+  watchGuard(_oldValue: any, _newValue: any) { // tslint:disable-line
+    console.log(`${_oldValue} - ${_newValue}`); // tslint:disable-line
   }
 
   render() {

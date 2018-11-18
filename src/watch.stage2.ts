@@ -16,19 +16,23 @@
 
 import { Stage2MethodDecorator, MethodDecoratorDesciptor, MethodDecoratorResult } from './stage2decorators';
 import { CustomElement } from './customelement.stage2';
-import { getPropertyWatcher } from './watchmap.stage2';
+import { getClassPropertyWatcher } from './classpropertywatcher.stage2';
 
+/**
+ * stage 2 property watch decorator
+ * @param propertyKey 
+ */
 export function watchS2(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: MethodDecoratorDesciptor): MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     return {
       ...descriptor,
       finisher: (target: typeof CustomElement) => {
-        if(!CustomElement.isPrototypeOf(target)) {
+        if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
         }
-        getPropertyWatcher(target, propertyKey).push(descriptor.descriptor.value);
-      }
-    }
-  }
+        getClassPropertyWatcher(target, propertyKey).push(descriptor.descriptor.value); // tslint:disable-line
+      },
+    };
+  };
 
 }

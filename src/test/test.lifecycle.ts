@@ -14,26 +14,38 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { TESTABLECLASSES } from './test.events';
-import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
-import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
-
 /* tslint:disable */
 
+import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
+import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
+import { TESTABLECLASSES } from './test.events';
 
 declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
   if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
-  describe('interceptor tests (' + name + ')', function () {
-    it('string watcher test (' + name + ')', async function (done) {
+  describe('lifecycle tests (' + name + ')', function () {
+    it('lifecycle of (' + name + ')', async function (done) {
       let element: TESTABLECLASSES = new constructorInstance();
+      const componentConnectedSpy = spyOn(element, 'componentConnected').and.callThrough();
+      const componentDisconnectedSpy = spyOn(element, 'componentDisconnected').and.callThrough();
+      const componentWillRenderSpy = spyOn(element, 'componentWillRender').and.callThrough();
+      const componentDidRenderSpy = spyOn(element, 'componentDidRender').and.callThrough();
+
       await element.waitForConstruction();
-      element.interceptableProperty = 'test';
-      expect(element.interceptableProperty).toEqual('testtest');
-      expect(element.getAttribute('interceptable-property')).toEqual('testtest');
-      done();
+      document.querySelector('body').appendChild(element);
+      await element.waitForRender();
+      document.querySelector('body').removeChild(element);
+      window.setTimeout(() => {
+
+        expect(componentConnectedSpy).toHaveBeenCalled()
+        expect(componentDisconnectedSpy).toHaveBeenCalled()
+        expect(componentWillRenderSpy).toHaveBeenCalled()
+        expect(componentDidRenderSpy).toHaveBeenCalled()
+
+        done();
+      },100);
     });
   });
 }

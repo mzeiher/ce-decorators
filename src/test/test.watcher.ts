@@ -13,21 +13,21 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /* tslint:disable */
 
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
-import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
-import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
-import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
+import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
+import { TESTABLECLASSES } from './test.events';
 
 declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name: string) => {
-  if (BABEL_COMPILE && constructorInstance === TestWithMultipleProperties) return;
+export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
+  if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
   describe('watcher tests (' + name + ')', function () {
     it('string watcher test (' + name + ')', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
+      let element: TESTABLECLASSES = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.stringProperty = "test";
       expect((<any>element).watchGuard).toHaveBeenCalledWith(undefined, 'test');
@@ -35,7 +35,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       expect((<any>element).watchGuard).toHaveBeenCalledWith('test', 'test2');
     });
     it('boolean watcher test (' + name + ')', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
+      let element: TESTABLECLASSES = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.booleanProperty = true;
       expect((<any>element).watchGuard).toHaveBeenCalledWith(undefined, true);
@@ -47,7 +47,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       expect((<any>element).watchGuard).toHaveBeenCalledWith(true, false);
     });
     it('number watcher test (' + name + ')', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
+      let element: TESTABLECLASSES = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.numberProperty = 0;
       expect((<any>element).watchGuard).toHaveBeenCalledWith(undefined, 0);
@@ -55,7 +55,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       expect((<any>element).watchGuard).toHaveBeenCalledWith(0, 1);
     });
     it('object watcher test (' + name + ')', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
+      let element: TESTABLECLASSES = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.objectProperty = { test: "test" };
       expect((<any>element).watchGuard).toHaveBeenCalledWith(undefined, { test: "test" });
@@ -63,7 +63,7 @@ export default (constructorInstance: { new(): TestWithMultipleProperties | TestW
       expect((<any>element).watchGuard).toHaveBeenCalledWith({ test: "test" }, { test: "test2" });
     });
     it('array watcher test (' + name + ')', function () {
-      let element: TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS = new constructorInstance();
+      let element: TESTABLECLASSES = new constructorInstance();
       spyOn(<any>element, 'watchGuard').and.callThrough();
       element.arrayProperty = [0, 1];
       expect((<any>element).watchGuard).toHaveBeenCalledWith(undefined, [0, 1]);

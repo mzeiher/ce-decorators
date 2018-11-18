@@ -16,19 +16,23 @@
 
 import { Stage2MethodDecorator, MethodDecoratorDesciptor, MethodDecoratorResult } from './stage2decorators';
 import { CustomElement } from './customelement.stage2';
-import { getPropertyInterceptor } from './interceptormap.stage2';
+import { getClassPropertyInterceptor } from './classpropertyinterceptors.stage2';
 
+/**
+ * stage-2 decorator for intercept
+ * @param propertyKey 
+ */
 export function interceptS2(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: MethodDecoratorDesciptor): MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     return {
       ...descriptor,
       finisher: (target: typeof CustomElement) => {
-        if(!CustomElement.isPrototypeOf(target)) {
+        if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
         }
-        getPropertyInterceptor(target, propertyKey).push(descriptor.descriptor.value);
-      }
-    }
-  }
+        getClassPropertyInterceptor(target, propertyKey).push(descriptor.descriptor.value); // tslint:disable-line:no-unsafe-any
+      },
+    };
+  };
 
 }

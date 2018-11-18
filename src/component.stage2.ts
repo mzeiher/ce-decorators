@@ -18,16 +18,26 @@ import { Stage2ClassDecorator, ClassDecoratorDescriptor, ClassDecoratorResult } 
 import { CustomElement } from './customelement.stage2';
 import { getClassProperties } from './classproperties.stage2';
 import { PropertyOptions } from './prop.stage2';
-import { setComponentOptions, getComponentOptions } from './componentoptions.stage2';
-import { getAllPropertyWatcher, getPropertyWatcher } from './watchmap.stage2';
-import { getPropertyInterceptor, getAllPropertyInterceptors } from './interceptormap.stage2';
+import { setComponentProperties, getComponentProperties } from './componentproperties.stage2';
+import { getAllClassPropertyWatcher, getClassPropertyWatcher } from './classpropertywatcher.stage2';
+import { getClassPropertyInterceptor, getAllClassPropertyInterceptors } from './classpropertyinterceptors.stage2';
+import { getClassEvents } from './classevents.stage2';
 
+/**
+ * ComponentOptions
+ */
 export interface ComponentOptions {
   tag: string;
   style?: string;
   inheritStyle?: boolean;
+  dependencies?: Array<typeof CustomElement>; // tslint:disable-line:no-any
 }
 
+/**
+ * stage-2 implementation of the component decorator
+ *
+ * @param options ComponentOptions
+ */
 export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> {
   return (descriptor: ClassDecoratorDescriptor): ClassDecoratorResult<typeof CustomElement> => {
     return {
@@ -35,35 +45,42 @@ export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typ
       constructor: undefined,
       kind: 'class',
       finisher: (target) => {
-        if(!CustomElement.isPrototypeOf(target)) {
+        if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} must extend CustomElement`);
         }
-        const prototype: any = Object.getPrototypeOf(target) as typeof CustomElement;
+        const prototype: typeof CustomElement = Object.getPrototypeOf(target) as typeof CustomElement;
         const prototypeClassProperties = getClassProperties(prototype);
         if (prototypeClassProperties) {
           const targetClassProperties = getClassProperties(target);
           prototypeClassProperties.forEach((value: PropertyOptions, key: string | symbol) => {
             targetClassProperties.set(key, value);
-          })
-        }
-        if(options.inheritStyle) {
-          options.style = (getComponentOptions(prototype).style || '') + options.style;
-        }
-        const prototypeWatcher = getAllPropertyWatcher(prototype);
-        if(prototypeWatcher.size > 0) {
-          Array.from(prototypeWatcher.entries()).forEach(value => {
-            getPropertyWatcher(target, value["0"]).push(...value["1"]);
           });
         }
-        const prototypeInterceptor = getAllPropertyInterceptors(prototype);
-        if(prototypeInterceptor.size > 0) {
-          Array.from(prototypeInterceptor.entries()).forEach(value => {
-            getPropertyInterceptor(target, value["0"]).push(...value["1"]);
+        if (options.inheritStyle) {
+          options.style = (getComponentProperties(prototype).style || '') + options.style;
+        }
+        const prototypeWatcher = getAllClassPropertyWatcher(prototype);
+        if (prototypeWatcher.size > 0) {
+          Array.from(prototypeWatcher.entries()).forEach(([property, watcher]) => {
+            getClassPropertyWatcher(target, property).push(...watcher);
           });
         }
-        setComponentOptions(target, options);
+        const prototypeInterceptor = getAllClassPropertyInterceptors(prototype);
+        if (prototypeInterceptor.size > 0) {
+          Array.from(prototypeInterceptor.entries()).forEach(([property, interceptor]) => {
+            getClassPropertyInterceptor(target, property).push(...interceptor);
+          });
+        }
+        const events = getClassEvents(prototype);
+        if (events.size > 0) {
+          Array.from(events.entries()).forEach(([event, option]) => {
+            getClassEvents(target).set(event, option);
+          });
+        }
+
+        setComponentProperties(target, options);
         window.customElements.define(options.tag, target);
-      }
-    }
-  }
+      },
+    };
+  };
 }

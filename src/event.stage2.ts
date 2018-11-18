@@ -16,34 +16,44 @@
 
 import { Stage2FieldDecorator, FieldDecoratorDescriptor, FieldDecoratorResult, MethodDecoratorResult } from './stage2decorators';
 import { CustomElement } from './customelement.stage2';
+import { getClassEvents } from './classevents.stage2';
 
+/**
+ * interface for EventEmitter
+ */
 export interface EventEmitter<T> {
   emit(payload: T): void;
 }
 
+/**
+ * stage-2 decorator for events
+ * @param name 
+ */
 export function eventS2(name: string): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     if (descriptor.kind === 'field') {
       return {
-        kind: "method",
+        kind: 'method',
         descriptor: {
           configurable: true,
           enumerable: false,
-          get: function (this: CustomElement): EventEmitter<any> {
+          get(this: CustomElement): EventEmitter<any> { // tslint:disable-line:no-any
             return {
-              emit: (value: any): void => {
+              emit: (value: any): void => { // tslint:disable-line:no-any
                 const customEvent: CustomEvent = new CustomEvent(name || descriptor.key.toString(), { bubbles: true, detail: value });
                 this.dispatchEvent(customEvent);
-              }
+              },
             };
           },
         },
         key: descriptor.key,
-        placement: 'own'
-      }
+        placement: 'own',
+        finisher: (target) => {
+          getClassEvents(target).set(descriptor.key.toString(), name || descriptor.key.toString());
+        },
+      };
     } else {
       throw new Error('only fields can be decorated with event');
     }
-  }
+  };
 }
-

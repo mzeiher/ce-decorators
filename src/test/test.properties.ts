@@ -13,17 +13,17 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /* tslint:disable */
+import { TESTABLECLASSES } from './test.events';
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
-import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
-import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
-import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
+import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
 
 declare var BABEL_COMPILE:boolean;
 
 /* istanbul ignore next */
-export default (constructorInstance: { new(): TestWithMultipleProperties | TestWithMultiplePropertiesWithType | TestWithMultiplePropertiesWithTypeStage2 | TestWithMultiplePropertiesWithTypeTS }, name:string) => {
-  if(BABEL_COMPILE && constructorInstance === TestWithMultipleProperties ) return;
+export default (constructorInstance: { new(): TESTABLECLASSES }, name:string) => {
+  if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
     describe('property-tests (' + name + ')', function () {
       const element = new constructorInstance();
       const elementWithInitializer = new constructorInstance();

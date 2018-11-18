@@ -15,12 +15,12 @@
  */
 
 // reflect polyfill in case reflect-metadata package not installed
-const origReflect: any = Reflect;
+const origReflect: any = Reflect; // tslint:disable-line:no-any
 
-type MetadataMap = Map<string, any>;
+type MetadataMap = Map<string, any>; // tslint:disable-line:no-any
 type PropMap = Map<string | symbol, MetadataMap>;
 type TargetMap = Map<Object, PropMap>;
-type DecoratorFunc = (target: Object, propertyKey: string | symbol, more: any) => void;
+type DecoratorFunc = (target: Object, propertyKey: string | symbol, more: any) => any | PropertyDescriptor; // tslint:disable-line:no-any
 
 const reflectMap: TargetMap = new Map();
 
@@ -44,20 +44,18 @@ function getOrCreatePropMap(map: TargetMap, target: Object): PropMap {
   return propMap;
 }
 
-export function decorate(decorators: DecoratorFunc[], target: Object, propertyKey: string | symbol, description: any): any | void {
-  if (typeof origReflect === 'object' && typeof origReflect.decorate === 'function' && origReflect.decorate !== decorate) {
-    origReflect.decorate(decorators, target, propertyKey, description);
+function decorate(decorators: Array<DecoratorFunc>, target: Object, propertyKey: string | symbol, description: any): any | void { // tslint:disable-line:no-any
+  if (typeof origReflect === 'object' && typeof origReflect.decorate === 'function' && origReflect.decorate !== decorate) { // tslint:disable-line:no-unsafe-any
+    origReflect.decorate(decorators, target, propertyKey, description); // tslint:disable-line:no-unsafe-any
   }
-  const desciptor: any = decorators.reverse()
-    .map((value: DecoratorFunc) => value(target, propertyKey, description))
-    .reduce((_prevValue: any, currentValue: any) => currentValue ? currentValue : null);
-
+  const desciptor: any = decorators.reverse() // tslint:disable-line:no-any
+    .reduce<PropertyDescriptor>((prevValue, currentValue) => { return currentValue(target, propertyKey, prevValue) || prevValue }, description);
   return desciptor || description;
 }
 
-export function metadata(metadataKey: string, metaDataValue: any): (target: Object, property: string | symbol) => void {
-  if (typeof origReflect === 'object' && typeof origReflect.metadata === 'function' && origReflect.metadata !== metadata) {
-    return origReflect.metadata(metadataKey, metaDataValue);
+function metadata(metadataKey: string, metaDataValue: any): (target: Object, property: string | symbol) => void { // tslint:disable-line:no-any
+  if (typeof origReflect === 'object' && typeof origReflect.metadata === 'function' && origReflect.metadata !== metadata) { // tslint:disable-line:no-unsafe-any
+    return origReflect.metadata(metadataKey, metaDataValue); // tslint:disable-line:no-unsafe-any
   } else {
 
     return (target: Object, property: string | symbol): void => {
@@ -70,19 +68,27 @@ export function metadata(metadataKey: string, metaDataValue: any): (target: Obje
   }
 }
 
-export function getMetadata(metadataKey: string, target: Object, propertyKey?: string | symbol): any {
-  if (typeof origReflect === 'object' && typeof origReflect.getMetadata === 'function' && origReflect.getMetadata !== getMetadata) {
-    return origReflect.getMetadata(metadataKey, target, propertyKey);
+function getMetadata(metadataKey: string, target: Object, propertyKey?: string | symbol): any { // tslint:disable-line:no-any
+  if (typeof origReflect === 'object' && typeof origReflect.getMetadata === 'function' && origReflect.getMetadata !== getMetadata) { // tslint:disable-line:no-unsafe-any
+    return origReflect.getMetadata(metadataKey, target, propertyKey); // tslint:disable-line:no-unsafe-any
   } else {
 
     return getOrCreateMetadataMap(getOrCreatePropMap(reflectMap, target), propertyKey).get(metadataKey);
   }
 }
 
-if (!(<any>window).Reflect) {
-  (<any>window).Reflect = { decorate, getMetadata, metadata };
-  (<any>window).ReflectPoorlyFill = { decorate, getMetadata, metadata };
-} else if (!(<any>window).Reflect.decorate) {
-  Object.assign((<any>window).Reflect, { decorate, getMetadata, metadata });
-  (<any>window).ReflectPoorlyFill = { decorate, getMetadata, metadata };
+if (!(<any>window).Reflect) { // tslint:disable-line:no-any
+  (<any>window).Reflect = { decorate, getMetadata, metadata }; // tslint:disable-line:no-any
+  (<any>window).ReflectPoorlyFill = { decorate, getMetadata, metadata }; // tslint:disable-line:no-any
+} else {
+  if (!(<any>window).Reflect.decorate) { // tslint:disable-line
+    (<any>window).Reflect.decorate = decorate; // tslint:disable-line
+  }
+  if (!(<any>window).Reflect.getMetadata) { // tslint:disable-line
+    (<any>window).Reflect.getMetadata = getMetadata; // tslint:disable-line
+  }
+  if (!(<any>window).Reflect.metadata) { // tslint:disable-line
+    (<any>window).Reflect.metadata = metadata; // tslint:disable-line
+  }
+  (<any>window).ReflectPoorlyFill = { decorate, getMetadata, metadata }; // tslint:disable-line
 }

@@ -22,13 +22,18 @@ import testWatcher from './test.watcher';
 import testEvents from './test.events';
 import testService from './test.service';
 import testStates from './test.states';
+import { ServiceTest } from './services/ServiceObject';
+import { ServiceTestWithType } from './services/ServiceObjectWithType';
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { TestWithMultiplePropertiesWithType } from './components/TestWithMultiplePropertiesWithType';
 import { TestWithMultiplePropertiesWithTypeTS } from './components/TestWithMultiplePropertiesWithTypeTS';
 import { TestWithMultiplePropertiesWithTypeStage2 } from './components/TestWithMultiplePropertiesWithType.stage2';
-import { ServiceTest } from './services/ServiceObject';
-import { ServiceTestWithType } from './services/ServiceObjectWithType';
+import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
+import { TestWithMultiplePropertiesWithTypeLazy } from './components/TestWithMultiplePropertiesWithTypeLazy';
+import { TestWithMultiplePropertiesWithTypeTSLazy } from './components/TestWithMultiplePropertiesWithTypeTSLazy';
+import { TestWithMultiplePropertiesWithTypeStage2Lazy } from './components/TestWithMultiplePropertiesWithTypeLazy.stage2';
 import testInterceptors from './test.interceptors';
+import testLifecycle from './test.lifecycle';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -45,7 +50,11 @@ describe('root', function () {
     { class: TestWithMultipleProperties, name: 'TestWithMultipleProperties' },
     { class: TestWithMultiplePropertiesWithTypeTS, name: 'TestWithMultiplePropertiesWithTypeTS' },
     { class: TestWithMultiplePropertiesWithType, name: 'TestWithMultiplePropertiesWithType' },
-    { class: TestWithMultiplePropertiesWithTypeStage2, name: 'TestWithMultiplePropertiesWithTypeStage2' }
+    { class: TestWithMultiplePropertiesWithTypeStage2, name: 'TestWithMultiplePropertiesWithTypeStage2' },
+    { class: TestWithMultiplePropertiesLazy, name: 'TestWithMultiplePropertiesLazy' },
+    { class: TestWithMultiplePropertiesWithTypeTSLazy, name: 'TestWithMultiplePropertiesWithTypeTSLazy' },
+    { class: TestWithMultiplePropertiesWithTypeLazy, name: 'TestWithMultiplePropertiesWithTypeLazy' },
+    { class: TestWithMultiplePropertiesWithTypeStage2Lazy, name: 'TestWithMultiplePropertiesWithTypeStage2Lazy' }
   ].forEach((value) => {
     testEvents(value.class, value.name);
     testProperties(value.class, value.name)
@@ -53,6 +62,7 @@ describe('root', function () {
     testStates(value.class, value.name);
     testWatcher(value.class, value.name);
     testInterceptors(value.class, value.name);
+    testLifecycle(value.class, value.name);
   });
   [{ class: ServiceTest, name: 'ServiceTest' },
   { class: ServiceTestWithType, name: 'ServiceTestWithType' }].forEach(value => testService(value.class, value.name));
