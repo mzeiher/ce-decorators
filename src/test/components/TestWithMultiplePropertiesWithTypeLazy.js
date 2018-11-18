@@ -16,7 +16,7 @@
 
 import {
   LazyCustomElement
-} from '../../customelement.stage2';
+} from '../../customelement';
 import {
   Component
 } from './../../component';

@@ -16,9 +16,10 @@
 
 import './reflect'; // tslint:disable-line
 
-import { CustomElement } from './customelement.stage2';
-import { PropertyOptions, propS2, stateS2 } from './prop.stage2';
-import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
+import { CustomElement } from './customelement';
+import { Prop as PropS2, State as StateS2 } from './stage2/prop';
+import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { PropertyOptions } from './propertyoptions';
 
 /**
  * fixed decorator for babels initializer
@@ -36,9 +37,9 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
       options.type = (<any>Reflect).getMetadata('design:type', target, propertyKey.toString()); // tslint:disable-line
     }
     if (isStage2FieldDecorator(target)) {
-      return propS2(options)(<any>target); // tslint:disable-line:no-any
+      return PropS2(options)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, propS2(options));
+      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, PropS2(options));
     }
   };
 }
@@ -49,9 +50,9 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
 export function State(): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => { // tslint:disable-line:no-any
     if (isStage2FieldDecorator(target)) {
-      return stateS2()(<any>target); // tslint:disable-line:no-any
+      return StateS2()(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, stateS2());
+      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, StateS2());
     }
   };
 }

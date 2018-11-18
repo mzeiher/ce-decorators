@@ -19,7 +19,7 @@ import { Stage2FieldDecorator, FieldDecoratorDescriptor } from './stage2decorato
 /**
  * trace stage-2 decorator
  */
-export function traceS2(): Stage2FieldDecorator<Object, typeof Object> {
+export function Trace(): Stage2FieldDecorator<Object, typeof Object> {
   return (descriptor: FieldDecoratorDescriptor) => {
     if (descriptor.kind === 'field') {
       const key = `___${descriptor.key.toString()}`;

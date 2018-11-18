@@ -15,14 +15,14 @@
  */
 
 import { Stage2MethodDecorator, MethodDecoratorDesciptor, MethodDecoratorResult } from './stage2decorators';
-import { CustomElement } from './customelement.stage2';
-import { getClassPropertyInterceptor } from './classpropertyinterceptors.stage2';
+import { CustomElement } from '../customelement';
+import { getClassPropertyWatcher } from '../classpropertywatcher';
 
 /**
- * stage-2 decorator for intercept
+ * stage 2 property watch decorator
  * @param propertyKey 
  */
-export function interceptS2(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
+export function Watch(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: MethodDecoratorDesciptor): MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     return {
       ...descriptor,
@@ -30,7 +30,7 @@ export function interceptS2(propertyKey: string): Stage2MethodDecorator<CustomEl
         if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} the property must be within a class which extends CustomElement`);
         }
-        getClassPropertyInterceptor(target, propertyKey).push(descriptor.descriptor.value); // tslint:disable-line:no-unsafe-any
+        getClassPropertyWatcher(target, propertyKey).push(descriptor.descriptor.value); // tslint:disable-line
       },
     };
   };

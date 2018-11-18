@@ -14,22 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { isStage2MethodDecorator, isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
-import { Trace as TraceS2 } from './stage2/trace';
-
 /**
- * Registers a watcher for property changes
- *
- * @param property property to watch
+ * interface for EventEmitter
  */
-export function Trace(): any { // tslint:disable-line
-  return (target: typeof Object,
-          propertyKey: string | symbol,
-          descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => { // tslint:disable-line:no-any
-    if (isStage2MethodDecorator(target) || isStage2FieldDecorator(target)) {
-      return TraceS2()(<any>target); // tslint:disable-line:no-any
-    } else {
-      return applyLegacyToStage2FieldDecorator(target, propertyKey, descriptor, TraceS2());
-    }
-  };
+export interface EventEmitter<T> {
+  emit(payload: T): void;
 }

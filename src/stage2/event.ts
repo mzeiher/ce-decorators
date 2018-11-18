@@ -15,36 +15,40 @@
  */
 
 import { Stage2FieldDecorator, FieldDecoratorDescriptor, FieldDecoratorResult, MethodDecoratorResult } from './stage2decorators';
-import { CustomElement } from './customelement.stage2';
-import { getSingleton, getInstance, ClassType } from './servicemap';
+import { CustomElement } from '../customelement';
+import { getClassEvents } from '../classevents';
+import { EventEmitter } from '../eventemitter';
 
-export interface InjectOptions {
-  singleton: boolean;
-  type: ClassType;
-}
 
-export function injectS2(options: InjectOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+/**
+ * stage-2 decorator for events
+ * @param name 
+ */
+export function Event(name: string): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     if (descriptor.kind === 'field') {
       return {
-        kind: "method",
+        kind: 'method',
         descriptor: {
           configurable: true,
           enumerable: false,
-          get: function (this: CustomElement): object {
-            if (options.singleton) {
-              return getSingleton(options.type);
-            } else {
-              return getInstance(this, descriptor.key, options.type);
-            }
+          get(this: CustomElement): EventEmitter<any> { // tslint:disable-line:no-any
+            return {
+              emit: (value: any): void => { // tslint:disable-line:no-any
+                const customEvent: CustomEvent = new CustomEvent(name || descriptor.key.toString(), { bubbles: true, detail: value });
+                this.dispatchEvent(customEvent);
+              },
+            };
           },
         },
         key: descriptor.key,
-        placement: 'own'
-      }
+        placement: 'own',
+        finisher: (target) => {
+          getClassEvents(target).set(descriptor.key.toString(), name || descriptor.key.toString());
+        },
+      };
     } else {
       throw new Error('only fields can be decorated with event');
     }
-  }
+  };
 }
-

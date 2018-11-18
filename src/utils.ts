@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { PropertyType } from './prop.stage2';
+import { PropertyType } from './propertyoptions';
 
 /**
  * deserializes a string to a typed value

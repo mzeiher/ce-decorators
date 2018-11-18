@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from '../../customelement.stage2';
+import { CustomElement } from '../../customelement';
 import { Component } from './../../component';
 import { Prop, State } from './../../prop';
 import { Watch } from './../../watch';
@@ -27,7 +27,7 @@ import {
 import {
   classMap,
 } from 'lit-html/directives/classMap';
-import { EventEmitter } from '../../event.stage2';
+import { EventEmitter } from '../../eventemitter';
 import { Interceptor } from '../../interceptor';
 
 /**

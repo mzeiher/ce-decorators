@@ -13,32 +13,14 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
-import { CustomElement } from './customelement.stage2';
-import { ComponentOptions } from './component.stage2';
-
-const map: Map<typeof CustomElement, ComponentOptions> = new Map();
+import { CustomElement } from './customelement';
 
 /**
- * return componentproperties
- * @param target 
+ * ComponentOptions
  */
-export function getComponentProperties(target: typeof CustomElement): ComponentOptions {
-  return map.get(target);
-}
-
-/**
- * set component properties
- * @param target 
- * @param options 
- */
-export function setComponentProperties(target: typeof CustomElement, options: ComponentOptions): void {
-  map.set(target, options);
-}
-
-/**
- * return all components defined with ce-decorators
- */
-export function getAllComponents(): Array<typeof CustomElement> {
-  return Array.from(map.keys());
+export interface ComponentOptions {
+  tag: string;
+  style?: string;
+  inheritStyle?: boolean;
+  dependencies?: Array<typeof CustomElement>; // tslint:disable-line:no-any
 }

@@ -15,10 +15,10 @@
  */
 
 export { Component } from './component';
-export { ComponentOptions } from './component.stage2';
-export { CustomElement, LazyCustomElement } from './customelement.stage2';
-export { EventEmitter } from './event.stage2';
-export { PropertyOptions } from './prop.stage2';
+export { ComponentOptions } from './componentoptions';
+export { CustomElement, LazyCustomElement } from './customelement';
+export { EventEmitter } from './eventemitter';
+export { PropertyOptions } from './propertyoptions';
 
 export { Event} from './event';
 export { Prop } from './prop';
@@ -26,6 +26,6 @@ export { Watch } from './watch';
 export { State } from './prop';
 export { Trace } from './trace';
 export { Interceptor } from './interceptor';
-export { COMPONENT_STATE } from './componentstate.stage2';
+export { COMPONENT_STATE } from './componentstate.';
 
 export { getComponentCatalog} from './componentcatalog';

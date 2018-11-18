@@ -14,9 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './customelement.stage2';
-import { isStage2ClassDecorator, applyLegacyToStage2ClassDecorator } from './stage2decorators';
-import { componentS2, ComponentOptions } from './component.stage2';
+import { CustomElement } from './customelement';
+import { isStage2ClassDecorator, applyLegacyToStage2ClassDecorator } from './stage2/stage2decorators';
+import { Component as ComponentS2 } from './stage2/component';
+import { ComponentOptions } from './componentoptions';
 
 /**
  * Component decorator, defines a new component to be used as a custom element compatible with stage-0, TS and stage-2 decorator implementations
@@ -26,9 +27,9 @@ import { componentS2, ComponentOptions } from './component.stage2';
 export function Component(options: ComponentOptions): ClassDecorator { // tslint:disable-line:function-name
   return (target: any): any => { // tslint:disable-line:no-any
     if (isStage2ClassDecorator(target)) {
-      return componentS2(options)(<any>target); // tslint:disable-line:no-any
+      return ComponentS2(options)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, componentS2(options)); // tslint:disable-line:no-unsafe-any
+      return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, ComponentS2(options)); // tslint:disable-line:no-unsafe-any
     }
   };
 }

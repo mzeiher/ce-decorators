@@ -14,15 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { PropertyOptions } from './prop.stage2';
-import { getComponentProperties, getAllComponents } from './componentproperties.stage2';
-import { getClassProperties } from './classproperties.stage2';
-import { getClassEvents } from './classevents.stage2';
+import { PropertyOptions } from './propertyoptions';
+import { getComponentProperties, getAllComponents } from './componentproperties';
+import { getClassProperties } from './classproperties';
+import { getClassEvents } from './classevents';
 
 /**
  * ComponentOptions type
  */
-export interface ComponentOptions {
+export interface ComponentCatalogOptions {
   properties: { [name: string]: PropertyOptions };
   events: Array<string>;
 }
@@ -31,7 +31,7 @@ export interface ComponentOptions {
  * Componets type
  */
 export interface Components {
-  [tag: string]: ComponentOptions;
+  [tag: string]: ComponentCatalogOptions;
 }
 
 /**

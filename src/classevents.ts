@@ -15,21 +15,24 @@
  */
 
 import { CustomElement } from './customelement';
-import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2/stage2decorators';
-import { Interceptor as InterceptorS2 } from './stage2/interceptor';
+
+const map: Map<typeof CustomElement, ClassEvents> = new Map();
 
 /**
- * Registers a interceptor for property changes
- *
- * @param property property to intercept
+ * CLassEvent type
  */
-export function Interceptor(property: string): MethodDecorator { // tslint:disable-line
-  // tslint:disable-next-line
-  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => {
-    if (isStage2MethodDecorator(target)) {
-      return InterceptorS2(property)(<any>target); // tslint:disable-line
-    } else {
-      return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, InterceptorS2(property));
-    }
-  };
+export type ClassEvents = Map<string | symbol, string>;
+
+/**
+ * return events registered for the given class
+ * 
+ * @param target Class to get ClassEvents from 
+ */
+export function getClassEvents(target: typeof CustomElement): ClassEvents {
+  let properties: ClassEvents | undefined = map.get(target);
+  if (!properties) {
+    properties = new Map();
+    map.set(target, properties);
+  }
+  return properties;
 }

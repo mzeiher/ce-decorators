@@ -14,9 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './customelement.stage2';
-import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2decorators';
-import { watchS2 } from './watch.stage2';
+import { CustomElement } from './customelement';
+import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2/stage2decorators';
+import { Watch as WatchS2 } from './stage2/watch';
 
 /**
  * Registers a watcher for property changes
@@ -28,9 +28,9 @@ export function Watch(property: string): MethodDecorator { // tslint:disable-lin
           propertyKey: string | symbol,
           descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => { // tslint:disable-line:no-any
     if (isStage2MethodDecorator(target)) {
-      return watchS2(property)(<any>target); // tslint:disable-line:no-any
+      return WatchS2(property)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, watchS2(property));
+      return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, WatchS2(property));
     }
   };
 }

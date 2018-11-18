@@ -15,35 +15,23 @@
  */
 
 import { Stage2FieldDecorator, MethodDecoratorResult, FieldDecoratorDescriptor, FieldDecoratorResult } from './stage2decorators';
-import { CustomElement, IndexableElement } from './customelement.stage2';
-import { getClassProperties } from './classproperties.stage2';
-import { PROPERTY_STATE } from './propertystate.stage2';
-
-/**
- * PropertyType
- */
-export type PropertyType = Boolean | Number | String | Object | Array<any>; // tslint:disable-line:no-any
-
-/**
- * PropertyOptions
- */
-export interface PropertyOptions {
-  type?: PropertyType;
-  reflectAsAttribute?: boolean;
-}
+import { CustomElement, IndexableElement } from '../customelement';
+import { getClassProperties } from '../classproperties';
+import { PROPERTY_STATE } from '../propertystate';
+import { PropertyOptions } from '../propertyoptions';
 
 /**
  * stage-2 state decorators
  */
-export function stateS2(): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
-  return propS2({ reflectAsAttribute: false, type: undefined });
+export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+  return Prop({ reflectAsAttribute: false, type: undefined });
 }
 
 /**
  * stage-2 prop decorator
  * @param _options 
  */
-export function propS2(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
 
     const key = typeof descriptor.key === 'symbol' ? Symbol() : `__${descriptor.key}`;

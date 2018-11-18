@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './customelement.stage2';
-import { PropertyOptions } from './prop.stage2';
+import { CustomElement } from './customelement';
+import { PropertyOptions } from './propertyoptions';
 
 const map: Map<typeof CustomElement, ClassProperties> = new Map();
 

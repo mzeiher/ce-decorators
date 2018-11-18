@@ -15,15 +15,16 @@
  */
 
 import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString } from './utils';
-import { getClassProperties } from './classproperties.stage2';
-import { COMPONENT_STATE } from './componentstate.stage2';
-import { PROPERTY_STATE } from './propertystate.stage2';
-import { PropertyOptions } from './prop.stage2';
+import { getClassProperties } from './classproperties';
+import { COMPONENT_STATE } from './componentstate.';
+import { PROPERTY_STATE } from './propertystate';
+import { PropertyOptions } from './propertyoptions';
+import { getComponentProperties } from './componentproperties';
+import { getClassPropertyWatcher } from './classpropertywatcher';
+import { getClassPropertyInterceptor } from './classpropertyinterceptors';
+
 import { TemplateResult } from 'lit-html';
 import { render, html } from 'lit-html/lib/shady-render';
-import { getComponentProperties } from './componentproperties.stage2';
-import { getClassPropertyWatcher } from './classpropertywatcher.stage2';
-import { getClassPropertyInterceptor } from './classpropertyinterceptors.stage2';
 
 let componentsToRender: Array<CustomElement> = [];
 let currentAnimationFrame: number | null = null;

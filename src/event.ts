@@ -14,9 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './customelement.stage2';
-import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
-import { eventS2 } from './event.stage2';
+import { CustomElement } from './customelement';
+import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { Event as Events2 } from './stage2/event';
 
 /**
  * PropertyDecorator -> fixed for babel initializer
@@ -31,9 +31,9 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
 export function Event(name?: string): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => { // tslint:disable-line:no-any
     if (isStage2FieldDecorator(target)) {
-      return eventS2(name)(<any>target); // tslint:disable-line:no-any
+      return Events2(name)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, eventS2(name));
+      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, Events2(name));
     }
   };
 }

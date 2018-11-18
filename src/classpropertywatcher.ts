@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './customelement.stage2';
+import { CustomElement } from './customelement';
 
 const map: Map<typeof CustomElement, PropertyWatcher> = new Map();
 

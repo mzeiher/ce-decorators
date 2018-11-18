@@ -15,30 +15,21 @@
  */
 
 import { Stage2ClassDecorator, ClassDecoratorDescriptor, ClassDecoratorResult } from './stage2decorators';
-import { CustomElement } from './customelement.stage2';
-import { getClassProperties } from './classproperties.stage2';
-import { PropertyOptions } from './prop.stage2';
-import { setComponentProperties, getComponentProperties } from './componentproperties.stage2';
-import { getAllClassPropertyWatcher, getClassPropertyWatcher } from './classpropertywatcher.stage2';
-import { getClassPropertyInterceptor, getAllClassPropertyInterceptors } from './classpropertyinterceptors.stage2';
-import { getClassEvents } from './classevents.stage2';
-
-/**
- * ComponentOptions
- */
-export interface ComponentOptions {
-  tag: string;
-  style?: string;
-  inheritStyle?: boolean;
-  dependencies?: Array<typeof CustomElement>; // tslint:disable-line:no-any
-}
+import { CustomElement } from '../customelement';
+import { getClassProperties } from '../classproperties';
+import { PropertyOptions } from '../propertyoptions';
+import { setComponentProperties, getComponentProperties } from '../componentproperties';
+import { getAllClassPropertyWatcher, getClassPropertyWatcher } from '../classpropertywatcher';
+import { getClassPropertyInterceptor, getAllClassPropertyInterceptors } from '../classpropertyinterceptors';
+import { getClassEvents } from '../classevents';
+import { ComponentOptions } from '../componentoptions';
 
 /**
  * stage-2 implementation of the component decorator
  *
  * @param options ComponentOptions
  */
-export function componentS2(options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> {
+export function Component(options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> {
   return (descriptor: ClassDecoratorDescriptor): ClassDecoratorResult<typeof CustomElement> => {
     return {
       elements: descriptor.elements,

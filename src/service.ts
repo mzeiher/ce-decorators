@@ -14,9 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { InjectOptions, injectS2 } from './inject.stage2';
-import { CustomElement } from './customelement.stage2';
-import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2decorators';
+import { Inject as InjectS2 } from './stage2/inject';
+import { CustomElement } from './customelement';
+import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { InjectOptions } from './injectoptions';
 
 export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
 
@@ -28,9 +29,9 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
 export function Inject(options: InjectOptions = { singleton: true, type: Object }): FixedPropertyDecorator {
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
     if (isStage2FieldDecorator(target)) {
-      return injectS2(options)(<any>target);
+      return InjectS2(options)(<any>target);
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, injectS2(options));
+      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, InjectS2(options));
     }
   };
 }

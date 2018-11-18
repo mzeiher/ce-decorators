@@ -14,25 +14,31 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { CustomElement } from './customelement.stage2';
+import { CustomElement } from './customelement';
+import { ComponentOptions } from './componentoptions';
 
-const map: Map<typeof CustomElement, ClassEvents> = new Map();
-
-/**
- * CLassEvent type
- */
-export type ClassEvents = Map<string | symbol, string>;
+const map: Map<typeof CustomElement, ComponentOptions> = new Map();
 
 /**
- * return events registered for the given class
- * 
- * @param target Class to get ClassEvents from 
+ * return componentproperties
+ * @param target 
  */
-export function getClassEvents(target: typeof CustomElement): ClassEvents {
-  let properties: ClassEvents | undefined = map.get(target);
-  if (!properties) {
-    properties = new Map();
-    map.set(target, properties);
-  }
-  return properties;
+export function getComponentProperties(target: typeof CustomElement): ComponentOptions {
+  return map.get(target);
+}
+
+/**
+ * set component properties
+ * @param target 
+ * @param options 
+ */
+export function setComponentProperties(target: typeof CustomElement, options: ComponentOptions): void {
+  map.set(target, options);
+}
+
+/**
+ * return all components defined with ce-decorators
+ */
+export function getAllComponents(): Array<typeof CustomElement> {
+  return Array.from(map.keys());
 }
