@@ -162,6 +162,8 @@ Because render calls are deferred into a microtask or async task, setting multip
 1. notify watchers
 1. deffer render() to microtask (so if multiple attributes/properties are set in the same task, render is only called once)
 
+## LazyCustomElement
+`LazyCustomElement` is an alternative to the default `CustomElement` which renders in an asnyc task (`setTimeout`) instead of a microtask .
 # Usage
 
 ## Use with Angular
