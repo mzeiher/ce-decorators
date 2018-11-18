@@ -18,7 +18,7 @@ import './reflect'; // tslint:disable-line
 
 import { CustomElement } from './customelement';
 import { Prop as PropS2, State as StateS2 } from './stage2/prop';
-import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { PropertyOptions } from './propertyoptions';
 
 /**
@@ -39,7 +39,7 @@ export function Prop(options?: PropertyOptions): FixedPropertyDecorator { // tsl
     if (isStage2FieldDecorator(target)) {
       return PropS2(options)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, PropS2(options));
+      return applyStage2ToLegacyFieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, PropS2(options));
     }
   };
 }
@@ -52,7 +52,7 @@ export function State(): FixedPropertyDecorator { // tslint:disable-line:functio
     if (isStage2FieldDecorator(target)) {
       return StateS2()(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, StateS2());
+      return applyStage2ToLegacyFieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, StateS2());
     }
   };
 }

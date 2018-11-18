@@ -118,7 +118,7 @@ export function isStage2MethodDecorator(element: any) { // tslint:disable-line:n
 /**
  * applyLegacyToStage2ClassDecorator
  */
-export function applyLegacyToStage2ClassDecorator<C>(target: C, decorator: Stage2ClassDecorator<C>): C | null {
+export function applyStage2toLegacyClassDecorator<C>(target: C, decorator: Stage2ClassDecorator<C>): C | null {
   const classDescriptor: ClassDecoratorDescriptor = {
     kind: 'class',
     elements: [], // tslint:disable-line:no-any
@@ -139,7 +139,7 @@ export function applyLegacyToStage2ClassDecorator<C>(target: C, decorator: Stage
 /**
  * applyLegacyToStage2FieldDecorator
  */
-export function applyLegacyToStage2FieldDecorator<T, C>(target: C,
+export function applyStage2ToLegacyFieldDecorator<T, C>(target: C,
                                                         propertyKey: string | symbol,
                                                         descriptor: PropertyDescriptor, decorator: Stage2FieldDecorator<T, C>): PropertyDescriptor {
   const fieldDecoratorDescriptor: FieldDecoratorDescriptor = {
@@ -169,7 +169,7 @@ export function applyLegacyToStage2FieldDecorator<T, C>(target: C,
 /**
  * applyLegacyToStage2MethodDecorator
  */
-export function applyLegacyToStage2MethodDecorator<T, C>(target: C,
+export function applyStage2ToLegacyMethodDecorator<T, C>(target: C,
                                                          propertyKey: string | symbol,
                                                          descriptor: TypedPropertyDescriptor<any>, // tslint:disable-line:no-any
                                                          decorator: Stage2MethodDecorator<T, C>): TypedPropertyDescriptor<any> | void { // tslint:disable-line:no-any

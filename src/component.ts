@@ -15,7 +15,7 @@
  */
 
 import { CustomElement } from './customelement';
-import { isStage2ClassDecorator, applyLegacyToStage2ClassDecorator } from './stage2/stage2decorators';
+import { isStage2ClassDecorator, applyStage2toLegacyClassDecorator } from './stage2/stage2decorators';
 import { Component as ComponentS2 } from './stage2/component';
 import { ComponentOptions } from './componentoptions';
 
@@ -29,7 +29,7 @@ export function Component(options: ComponentOptions): ClassDecorator { // tslint
     if (isStage2ClassDecorator(target)) {
       return ComponentS2(options)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2ClassDecorator<typeof CustomElement>(target, ComponentS2(options)); // tslint:disable-line:no-unsafe-any
+      return applyStage2toLegacyClassDecorator<typeof CustomElement>(target, ComponentS2(options)); // tslint:disable-line:no-unsafe-any
     }
   };
 }

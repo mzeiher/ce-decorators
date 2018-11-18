@@ -15,7 +15,7 @@
  */
 
 import { CustomElement } from './customelement';
-import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2/stage2decorators';
+import { isStage2MethodDecorator, applyStage2ToLegacyMethodDecorator } from './stage2/stage2decorators';
 import { Interceptor as InterceptorS2 } from './stage2/interceptor';
 
 /**
@@ -29,7 +29,7 @@ export function Interceptor(property: string): MethodDecorator { // tslint:disab
     if (isStage2MethodDecorator(target)) {
       return InterceptorS2(property)(<any>target); // tslint:disable-line
     } else {
-      return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, InterceptorS2(property));
+      return applyStage2ToLegacyMethodDecorator(target, propertyKey, descriptor, InterceptorS2(property));
     }
   };
 }

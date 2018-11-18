@@ -15,7 +15,7 @@
  */
 
 import { CustomElement } from './customelement';
-import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { Event as Events2 } from './stage2/event';
 
 /**
@@ -33,7 +33,7 @@ export function Event(name?: string): FixedPropertyDecorator { // tslint:disable
     if (isStage2FieldDecorator(target)) {
       return Events2(name)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, Events2(name));
+      return applyStage2ToLegacyFieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, Events2(name));
     }
   };
 }

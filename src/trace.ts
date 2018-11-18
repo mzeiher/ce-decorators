@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { isStage2MethodDecorator, isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { isStage2MethodDecorator, isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { Trace as TraceS2 } from './stage2/trace';
 
 /**
@@ -29,7 +29,7 @@ export function Trace(): any { // tslint:disable-line
     if (isStage2MethodDecorator(target) || isStage2FieldDecorator(target)) {
       return TraceS2()(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2FieldDecorator(target, propertyKey, descriptor, TraceS2());
+      return applyStage2ToLegacyFieldDecorator(target, propertyKey, descriptor, TraceS2());
     }
   };
 }

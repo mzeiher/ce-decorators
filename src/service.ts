@@ -16,7 +16,7 @@
 
 import { Inject as InjectS2 } from './stage2/inject';
 import { CustomElement } from './customelement';
-import { isStage2FieldDecorator, applyLegacyToStage2FieldDecorator } from './stage2/stage2decorators';
+import { isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { InjectOptions } from './injectoptions';
 
 export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
@@ -31,7 +31,7 @@ export function Inject(options: InjectOptions = { singleton: true, type: Object 
     if (isStage2FieldDecorator(target)) {
       return InjectS2(options)(<any>target);
     } else {
-      return applyLegacyToStage2FieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, InjectS2(options));
+      return applyStage2ToLegacyFieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, InjectS2(options));
     }
   };
 }

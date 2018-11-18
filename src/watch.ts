@@ -15,7 +15,7 @@
  */
 
 import { CustomElement } from './customelement';
-import { isStage2MethodDecorator, applyLegacyToStage2MethodDecorator } from './stage2/stage2decorators';
+import { isStage2MethodDecorator, applyStage2ToLegacyMethodDecorator } from './stage2/stage2decorators';
 import { Watch as WatchS2 } from './stage2/watch';
 
 /**
@@ -30,7 +30,7 @@ export function Watch(property: string): MethodDecorator { // tslint:disable-lin
     if (isStage2MethodDecorator(target)) {
       return WatchS2(property)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyLegacyToStage2MethodDecorator(target, propertyKey, descriptor, WatchS2(property));
+      return applyStage2ToLegacyMethodDecorator(target, propertyKey, descriptor, WatchS2(property));
     }
   };
 }
