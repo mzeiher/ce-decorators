@@ -14,11 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { LazyCustomElement } from '../../customelement';
+import { CustomElement } from '../../customelement';
 import { Component } from './../../component';
 import { Prop, State } from './../../prop';
 import { Watch } from './../../watch';
 import { Event } from './../../event';
+import { Trace } from '../../trace';
 
 import {
   html,
@@ -34,7 +35,7 @@ import { Interceptor } from '../../interceptor';
  * test-with-multiple-properties-base
  */
 @Component({
-  tag: 'test-with-multiple-properties-base-lazy',
+  tag: 'test-with-multiple-properties-base',
   style: `
   :host {
     background-color: #ababab;
@@ -51,7 +52,7 @@ import { Interceptor } from '../../interceptor';
     background-color: #00f;
   }`,
 })
-export class TestWithMultiplePropertiesBaseLazy extends LazyCustomElement {
+export class TestWithMultiplePropertiesBase extends CustomElement {
 
   @Prop({ type: String })
   baseProperty: string = 'test';
@@ -65,7 +66,7 @@ export class TestWithMultiplePropertiesBaseLazy extends LazyCustomElement {
  * test-with-multiple-properties
  */
 @Component({
-  tag: 'test-with-multiple-properties-lazy',
+  tag: 'test-with-multiple-properties',
   inheritStyle: true,
   style: `
   :host {
@@ -96,9 +97,10 @@ export class TestWithMultiplePropertiesBaseLazy extends LazyCustomElement {
   }
   `,
 })
-export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBaseLazy {
+export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
 
   @Prop()
+  @Trace()
   get getPropertyStringTest(): string {
     return this.internalPropertyString;
   }
@@ -111,6 +113,7 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
     return this.internalPropertyString2;
   }
 
+  @Trace()
   @Prop()
   set setPropertyStringTest(value: string) {
     this.internalPropertyString2 = value;
@@ -153,8 +156,10 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
   }
 
   @Prop()
+  @Trace()
   stringProperty: string;
 
+  @Trace()
   @Prop()
   stringPropertyWithInitializer: string = 'test';
 
@@ -202,10 +207,10 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
   @Prop()
   interceptableProperty: string = '';
 
-  @Event('change')
+  @Event({ name: 'change'})
   changeEvent: EventEmitter<string>;
 
-  @Event('test')
+  @Event()
   test: EventEmitter<string>;
 
   @State()
@@ -226,10 +231,12 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
   }
 
   @Watch('stringProperty')
+  @Trace()
   stringWatcher(oldValue: string, newValue: string) {
     this.watchGuard(oldValue, newValue);
   }
 
+  @Trace()
   @Watch('numberProperty')
   numberWatcher(oldValue: number, newValue: number) {
     this.watchGuard(oldValue, newValue);

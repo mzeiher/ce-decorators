@@ -4,8 +4,8 @@
     "declaration": true
   },
   "exclude": [
-    "src/test/*.ts",
-    "src/test/**/*.ts",
+    "src/__tests__/*.ts",
+    "src/__tests__/**/*.ts",
     "node_modules"
   ]
 }

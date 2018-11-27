@@ -265,10 +265,10 @@ export class TestWithMultiplePropertiesWithTypeLazy extends TestWithMultipleProp
   })
   interceptableProperty = '';
 
-  @Event('change')
+  @Event({ name: 'change' })
   changeEvent;
 
-  @Event('test')
+  @Event()
   test;
 
   @State()

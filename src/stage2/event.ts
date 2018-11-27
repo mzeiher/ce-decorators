@@ -18,13 +18,14 @@ import { Stage2FieldDecorator, FieldDecoratorDescriptor, FieldDecoratorResult, M
 import { CustomElement } from '../customelement';
 import { getClassEvents } from '../classevents';
 import { EventEmitter } from '../eventemitter';
+import { EventOptions } from '../eventoptions';
 
 
 /**
  * stage-2 decorator for events
  * @param name 
  */
-export function Event(name: string): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+export function Event(options?: EventOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     if (descriptor.kind === 'field') {
       return {
@@ -35,7 +36,7 @@ export function Event(name: string): Stage2FieldDecorator<CustomElement, typeof 
           get(this: CustomElement): EventEmitter<any> { // tslint:disable-line:no-any
             return {
               emit: (value: any): void => { // tslint:disable-line:no-any
-                const customEvent: CustomEvent = new CustomEvent(name || descriptor.key.toString(), { bubbles: true, detail: value });
+                const customEvent: CustomEvent = new CustomEvent(options!.name || descriptor.key.toString(), { ...options!.options, detail: value});
                 this.dispatchEvent(customEvent);
               },
             };

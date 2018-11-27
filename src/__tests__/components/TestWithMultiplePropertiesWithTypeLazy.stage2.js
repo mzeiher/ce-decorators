@@ -15,7 +15,7 @@
  */
 
 import {
-  CustomElement
+  LazyCustomElement
 } from '../../customelement';
 import {
   Component
@@ -45,7 +45,7 @@ import {
 } from 'lit-html/directives/classMap';
 
 @Component({
-  tag: 'test-with-multiple-properties-with-type-stage2-base',
+  tag: 'test-with-multiple-properties-with-type-stage2-base-lazy',
   style: `
   :host {
     background-color: #ababab;
@@ -62,7 +62,7 @@ import {
     background-color: #00f;
   }`
 })
-export class TestWithMultiplePropertiesWithTypeStage2Base extends CustomElement {
+export class TestWithMultiplePropertiesWithTypeStage2BaseLazy extends LazyCustomElement {
 
   @Prop({
     type: String
@@ -75,7 +75,7 @@ export class TestWithMultiplePropertiesWithTypeStage2Base extends CustomElement 
 }
 
 @Component({
-  tag: 'test-with-multiple-properties-with-type-stage2',
+  tag: 'test-with-multiple-properties-with-type-stage2-lazy',
   inheritStyle: true,
   style: `
   :host {
@@ -106,7 +106,7 @@ export class TestWithMultiplePropertiesWithTypeStage2Base extends CustomElement 
   }
   `
 })
-export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePropertiesWithTypeStage2Base {
+export class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWithMultiplePropertiesWithTypeStage2BaseLazy {
 
   @Prop({
     type: String
@@ -265,10 +265,10 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   })
   interceptableProperty = '';
 
-  @Event('change')
+  @Event({ name: 'change' })
   changeEvent;
 
-  @Event('test')
+  @Event()
   test;
 
   @State()

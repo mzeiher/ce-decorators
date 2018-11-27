@@ -16,7 +16,6 @@ module.exports = env => {
     umdNamedDefine: true,
     path: path.resolve(__dirname, 'umd')
   },
-  externals: ['lit-html', 'lit-html/lib/shady-render'],
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
     extensions: ['.ts', '.tsx', '.js']
@@ -46,10 +45,25 @@ const webpackConfigProduction = webpackMerge(webpackConfigDevelop, {
   }
 });
 
+const webpackConfigDevelopUMD = webpackMerge(webpackConfigDevelop, {
+  externals: ['lit-html', 'lit-html/lib/shady-render'],
+  output: {
+    filename: 'umd.js',
+  }
+});
+
+const webpackConfigProductionUMD = webpackMerge(webpackConfigDevelopUMD, {
+  mode: 'production',
+  devtool: 'none',
+  output: {
+    filename: 'umd.min.js',
+  }
+});
+
 const webpackConfigTest = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: [/*'@babel/polyfill',*/ './src/test/index.ts'],
+  entry: [/*'@babel/polyfill',*/ './src/__tests__/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -165,7 +179,7 @@ const webpackConfigTest = {
 const webpackConfigTestCoverage = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: [/*'@babel/polyfill',*/ './src/test/index.ts'],
+  entry: [/*'@babel/polyfill',*/ './src/__tests__/index.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -285,10 +299,10 @@ const webpackConfigDevServer = {
   mode: 'development',
   devtool: 'inline-source-map',
   entry: [/*'@babel/polyfill',*/ 
-          './src/test/components/TestWithMultipleProperties.ts',
-          './src/test/components/TestWithMultiplePropertiesWithType.js',
-          './src/test/components/TestWithMultiplePropertiesWithType.stage2.js',
-          './src/test/components/TestWithMultiplePropertiesWithTypeTS.ts'],
+          './src/__tests__/components/TestWithMultipleProperties.ts',
+          './src/__tests__/components/TestWithMultiplePropertiesWithType.js',
+          './src/__tests__/components/TestWithMultiplePropertiesWithType.stage2.js',
+          './src/__tests__/components/TestWithMultiplePropertiesWithTypeTS.ts'],
   output: {
     library: pkg.name + '-test',
     libraryTarget: 'umd',
@@ -411,7 +425,7 @@ const webpackConfigDevServer = {
 if(env && env.devserver) {
   return webpackConfigDevServer;
 } else {
-  return [webpackConfigDevelop, webpackConfigProduction, webpackConfigTest, webpackConfigTestCoverage];
+  return [webpackConfigDevelop, webpackConfigProduction, webpackConfigTest, webpackConfigTestCoverage, webpackConfigProductionUMD, webpackConfigDevelopUMD];
 }
 
 }
