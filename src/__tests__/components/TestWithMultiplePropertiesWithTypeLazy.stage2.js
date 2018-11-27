@@ -270,6 +270,10 @@ export class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWithMultip
 
   @Event()
   test;
+  
+  @Event('string')
+  stringEvent;
+
 
   @State()
   shouldHaveClass = false;

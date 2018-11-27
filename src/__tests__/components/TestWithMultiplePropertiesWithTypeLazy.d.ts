@@ -72,6 +72,9 @@ export declare class TestWithMultiplePropertiesWithTypeLazy extends TestWithMult
 
   test: EventEmitter<string>;
 
+  stringEvent: EventEmitter<string>
+
+
   shouldHaveClass:boolean;
 
   private internalPropertyString: string;

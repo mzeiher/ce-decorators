@@ -29,7 +29,7 @@ export type FixedPropertyDecorator = (target: Object, propertyKey: string | symb
  *
  * @param name (string) optional: name of the event, if no state, property name will be used
  */
-export function Event(options?: EventOptions): FixedPropertyDecorator { // tslint:disable-line:function-name
+export function Event(options?: EventOptions | string): FixedPropertyDecorator { // tslint:disable-line:function-name
   return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => { // tslint:disable-line:no-any
     if (isStage2FieldDecorator(target)) {
       return Events2(options)(<any>target); // tslint:disable-line:no-any

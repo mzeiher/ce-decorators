@@ -72,6 +72,8 @@ export declare class TestWithMultiplePropertiesWithType extends TestWithMultiple
 
   test: EventEmitter<string>;
 
+  stringEvent: EventEmitter<string>
+  
   shouldHaveClass:boolean;
 
   private internalPropertyString: string;

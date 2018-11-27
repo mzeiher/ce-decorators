@@ -25,8 +25,16 @@ import { EventOptions } from '../eventoptions';
  * stage-2 decorator for events
  * @param name 
  */
-export function Event(options?: EventOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+export function Event(options?: EventOptions | string): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
+    let optionsObject:EventOptions = <EventOptions>options;
+    if (typeof options === 'undefined') {
+      optionsObject = { name: descriptor.key.toString() };
+    } else if(typeof options === 'string') { // legacy mode
+      optionsObject = { name: <string>options };
+    } else if(typeof optionsObject.options === 'undefined') {
+      optionsObject.options = { cancelable: false, bubbles: true };
+    }
     if (descriptor.kind === 'field') {
       return {
         kind: 'method',
@@ -36,7 +44,7 @@ export function Event(options?: EventOptions): Stage2FieldDecorator<CustomElemen
           get(this: CustomElement): EventEmitter<any> { // tslint:disable-line:no-any
             return {
               emit: (value: any): void => { // tslint:disable-line:no-any
-                const customEvent: CustomEvent = new CustomEvent(options!.name || descriptor.key.toString(), { ...options!.options, detail: value});
+                const customEvent: CustomEvent = new CustomEvent(optionsObject.name, { ...optionsObject.options, detail: value});
                 this.dispatchEvent(customEvent);
               },
             };

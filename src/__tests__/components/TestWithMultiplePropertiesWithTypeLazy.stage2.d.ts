@@ -74,6 +74,8 @@ export declare class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWi
 
   test: EventEmitter<string>;
 
+  stringEvent: EventEmitter<string>
+
   shouldHaveClass:boolean;
 
   private internalPropertyString: string;

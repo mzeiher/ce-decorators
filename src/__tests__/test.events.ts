@@ -56,5 +56,13 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) =
       });
       element.test.emit("test");
     });
+    it('event emitter with string (' + name + ')', function (done) {
+      const element = new constructorInstance();
+      element.addEventListener('string', (event: CustomEvent) => {
+        expect(event.detail).toEqual('test');
+        done();
+      });
+      element.stringEvent.emit("test");
+    });
   });
 }

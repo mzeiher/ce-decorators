@@ -270,6 +270,9 @@ export class TestWithMultiplePropertiesWithType extends TestWithMultipleProperti
 
   @Event()
   test;
+  
+  @Event('string')
+  stringEvent;
 
   @State()
   shouldHaveClass = false;

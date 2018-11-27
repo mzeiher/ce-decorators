@@ -271,6 +271,9 @@ export class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMultiplePr
   @Event()
   test;
 
+  @Event('string')
+  stringEvent;
+
   @State()
   shouldHaveClass = false;
 

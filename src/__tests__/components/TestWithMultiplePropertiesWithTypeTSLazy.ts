@@ -257,6 +257,9 @@ export class TestWithMultiplePropertiesWithTypeTSLazy extends TestWithMultiplePr
   @Event()
   test: EventEmitter<string>;
 
+  @Event('string')
+  stringEvent: EventEmitter<string>
+
   @State()
   shouldHaveClass: boolean = false;
 
