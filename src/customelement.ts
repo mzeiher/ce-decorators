@@ -139,6 +139,7 @@ export abstract class CustomElement extends HTMLElement {
 
   protected _renderScheduled: boolean = false;
   protected _templateCache: TemplateStringsArray = null;
+  protected _firstRender: boolean = true;
 
   private _renderCompletedCallbacks: Array<() => void> = [];
   private _constructedCompletedCallbacks: Array<() => void> = [];
@@ -178,6 +179,11 @@ export abstract class CustomElement extends HTMLElement {
    * is called just after render() will be exexuted 
    */
   componentDidRender() { } // tslint:disable-line
+
+  /** 
+   * is called just after the first render()
+   */
+  componentFirstRender() { } // tslint:disable-line
 
   /**
    * return element whre the DOM from render will be rendered to
@@ -282,7 +288,11 @@ export abstract class CustomElement extends HTMLElement {
       this.renderToElement(),
       { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
     this.componentDidRender();
-    this._propertyState = PROPERTY_STATE.RENDERED;
+    if (this._firstRender) {
+      this.componentFirstRender();
+      this._firstRender = false;
+    }
+    this._propertyState = PROPERTY_STATE.UPDATED;
     this._renderCompletedCallbacks.forEach((value) => value());
     this._renderCompletedCallbacks = [];
   }
