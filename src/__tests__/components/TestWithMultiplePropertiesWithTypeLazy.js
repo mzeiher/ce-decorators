@@ -42,7 +42,7 @@ import {
 } from 'lit-html';
 import {
   classMap
-} from 'lit-html/directives/classMap';
+} from 'lit-html/directives/class-map';
 
 @Component({
   tag: 'test-with-multiple-properties-with-type-base-lazy',

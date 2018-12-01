@@ -16,7 +16,7 @@
 
 import { Component, CustomElement, Event, EventEmitter, Prop, Watch, State } from './../../index';
 import { html, TemplateResult } from 'lit-html';
-import { classMap } from 'lit-html/directives/classMap';
+import { classMap } from 'lit-html/directives/class-map';
 
 
 export declare class TestWithMultiplePropertiesWithTypeStage2Base extends CustomElement {

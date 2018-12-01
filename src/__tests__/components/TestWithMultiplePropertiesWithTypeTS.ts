@@ -26,7 +26,7 @@ import {
 } from 'lit-html';
 import {
   classMap,
-} from 'lit-html/directives/classMap';
+} from 'lit-html/directives/class-map';
 import { EventEmitter } from '../../eventemitter';
 import { Interceptor } from '../../interceptor';
 
