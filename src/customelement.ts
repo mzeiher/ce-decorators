@@ -109,19 +109,14 @@ export abstract class CustomElement extends HTMLElement {
   /* tslint:disable-next-line */
   private static _reflectAttributes(classProperty: PropertyOptions, instance: CustomElement, newValue: any, propertyKey: string) {
     if ((classProperty.reflectAsAttribute || classProperty.reflectAsAttribute === undefined) && instance._componentState !== COMPONENT_STATE.INIT) {
-      if (classProperty.type === Boolean) {
+      if (classProperty.type === Boolean || classProperty.type === String || classProperty.type === Number || classProperty.reflectAsAttribute === true) {
         if (instance._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
           instance._propertyState = PROPERTY_STATE.REFLECTING;
-          if (newValue) {
-            instance.setAttribute(camelToKebapCase(propertyKey), serializeValue(newValue, classProperty.type));
-          } else {
+          if (newValue === false || newValue === null || newValue === undefined) {
             instance.removeAttribute(camelToKebapCase(propertyKey));
+          } else {
+            instance.setAttribute(camelToKebapCase(propertyKey), serializeValue(newValue, classProperty.type));
           }
-        }
-      } else if (classProperty.type === String || classProperty.type === Number || classProperty.reflectAsAttribute === true) {
-        if (instance._propertyState !== PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE) {
-          instance._propertyState = PROPERTY_STATE.REFLECTING;
-          instance.setAttribute(camelToKebapCase(propertyKey), serializeValue(newValue, classProperty.type));
         }
       }
     }
@@ -307,9 +302,9 @@ export abstract class CustomElement extends HTMLElement {
       this._propertyState = PROPERTY_STATE.REFLECTING;
       const properties = getClassProperties(this.constructor as typeof CustomElement);
       properties.forEach((value, key) => {
-        const _propValue = (<IndexableElement>this)[key.toString()];
-        if (_propValue) {
-          (this.constructor as typeof CustomElement)._reflectAttributes(value, this, _propValue, key.toString());
+        const propValue = (<IndexableElement>this)[key.toString()];
+        if (propValue || propValue === 0) {
+          (this.constructor as typeof CustomElement)._reflectAttributes(value, this, propValue, key.toString());
         }
       });
       this._propertyState = _originalPropertyState;

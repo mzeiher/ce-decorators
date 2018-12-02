@@ -229,5 +229,55 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name:string) =>
       element.setAttribute('array-property-with-reflection', JSON.stringify([3,4,5]));
       expect(element.arrayPropertyWithReflection).toEqual([3,4,5]);
     });
+    it('null-false-handlingtest', async function(done) {
+      const element = new constructorInstance();
+      document.querySelector('body').appendChild(element);
+      await element.waitForRender();
+      expect(element.stringPropertyWithInitializer).toEqual('test');
+      expect(element.getAttribute('string-property-with-initializer')).toEqual('test');
+      expect(element.booleanPropertyWithInitializer).toEqual(true);
+      expect(element.getAttribute('boolean-property-with-initializer')).toEqual('true');
+      expect(element.numberPropertyWithInitializer).toEqual(0);
+      expect(element.getAttribute('number-property-with-initializer')).toEqual('0');
+      expect(element.objectPropertyWithReflection).toEqual({});
+      expect(element.getAttribute('object-property-with-reflection')).toEqual('{}');
+      expect(element.arrayPropertyWithReflection).toEqual([]);
+      expect(element.getAttribute('array-property-with-reflection')).toEqual('[]');
+
+      element.stringPropertyWithInitializer = null;
+      expect(element.hasAttribute('string-property-with-initializer')).toBeFalsy();
+      element.numberPropertyWithInitializer = null;
+      expect(element.hasAttribute('number-property-with-initializer')).toBeFalsy();
+      element.booleanPropertyWithInitializer = false;
+      expect(element.hasAttribute('boolean-property-with-initializer')).toBeFalsy();
+      element.objectPropertyWithReflection = null;
+      expect(element.hasAttribute('object-property-with-reflection')).toBeFalsy();
+      element.arrayPropertyWithReflection = null;
+      expect(element.hasAttribute('array-property-with-reflection')).toBeFalsy();
+
+      element.stringPropertyWithInitializer = 'test';
+      element.numberPropertyWithInitializer = 0;
+      element.booleanPropertyWithInitializer = true;
+      element.objectPropertyWithReflection = {};
+      element.arrayPropertyWithReflection = [];
+      expect(element.getAttribute('string-property-with-initializer')).toEqual('test');
+      expect(element.getAttribute('number-property-with-initializer')).toEqual('0');
+      expect(element.getAttribute('boolean-property-with-initializer')).toEqual('true');
+      expect(element.getAttribute('object-property-with-reflection')).toEqual('{}');
+      expect(element.getAttribute('array-property-with-reflection')).toEqual('[]');
+
+      element.removeAttribute('string-property-with-initializer');
+      element.removeAttribute('number-property-with-initializer');
+      element.removeAttribute('boolean-property-with-initializer');
+      element.removeAttribute('object-property-with-reflection');
+      element.removeAttribute('array-property-with-reflection');
+      expect(element.stringPropertyWithInitializer).toEqual(null);
+      expect(element.numberPropertyWithInitializer).toEqual(null);
+      expect(element.booleanPropertyWithInitializer).toEqual(false);
+      expect(element.objectPropertyWithReflection).toEqual(null);
+      expect(element.arrayPropertyWithReflection).toEqual(null);
+      element.remove();
+      done();
+    });
   });
 }
