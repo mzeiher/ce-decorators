@@ -148,6 +148,7 @@ document.querySelector('body').appenChild(element);
 await element.waitForRender();
     // element.componentWillRender() called
     // element.render() called
+    // element.componentFirstRender() called *only called on first render*
     // element.componentDidRender() called
 document.querySelector('body').removeChild(element);
     // element.componentDisconnected() called
