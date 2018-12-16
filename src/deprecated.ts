@@ -15,19 +15,19 @@
  */
 
 import { isStage2MethodDecorator, isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
-import { Trace as TraceS2 } from './stage2/trace';
+import { Deprecated as DeprecatedS2 } from './stage2/deprecated';
 
 /**
- * Displays trace messages
+ * Emits a deprecated warning
  */
-export function Trace(): any { // tslint:disable-line
+export function Deprecated(message?: string): any { // tslint:disable-line
   return (target: typeof Object,
           propertyKey: string | symbol,
           descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => { // tslint:disable-line:no-any
     if (isStage2MethodDecorator(target) || isStage2FieldDecorator(target)) {
-      return TraceS2()(<any>target); // tslint:disable-line:no-any
+      return DeprecatedS2(message)(<any>target); // tslint:disable-line:no-any
     } else {
-      return applyStage2ToLegacyFieldDecorator(target, propertyKey, descriptor, TraceS2());
+      return applyStage2ToLegacyFieldDecorator(target, propertyKey, descriptor, DeprecatedS2(message));
     }
   };
 }

@@ -25,7 +25,8 @@ export { Prop } from './prop';
 export { Watch } from './watch';
 export { State } from './prop';
 export { Trace } from './trace';
+export { Deprecated } from './deprecated';
 export { Interceptor } from './interceptor';
-export { COMPONENT_STATE } from './componentstate.';
+export { COMPONENT_STATE } from './componentstate';
 
 export { getComponentCatalog} from './componentcatalog';

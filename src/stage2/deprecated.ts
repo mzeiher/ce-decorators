@@ -17,9 +17,9 @@
 import { Stage2FieldDecorator, FieldDecoratorDescriptor } from './stage2decorators';
 
 /**
- * trace stage-2 decorator
+ * deprecated stage-2 decorator
  */
-export function Trace(): Stage2FieldDecorator<Object, typeof Object> {
+export function Deprecated(message?: string): Stage2FieldDecorator<Object, typeof Object> {
   return (descriptor: FieldDecoratorDescriptor) => {
     if (descriptor.kind === 'field') {
       const key = Symbol();
@@ -44,11 +44,11 @@ export function Trace(): Stage2FieldDecorator<Object, typeof Object> {
           configurable: true,
           enumerable: false,
           get(this: Object) {
-            console.log(`[LOG] [${this.constructor.name}] setter called on property ${descriptor.key.toString()}`); // tslint:disable-line
+            console.warn(`[DEPRECATED] [${this.constructor.name}] property ${descriptor.key.toString()} is deprecated: ${message || ''}`); // tslint:disable-line
             return (<any>this)[key]; // tslint:disable-line:no-any
           },
           set(this: Object, value: any) { // tslint:disable-line:no-any
-            console.log(`[LOG] [${this.constructor.name}] setter called on property ${descriptor.key.toString()} with value ${value}`); // tslint:disable-line
+            console.warn(`[DEPRECATED] [${this.constructor.name}] property ${descriptor.key.toString()} is deprecated: ${message || ''}`); // tslint:disable-line
             (<any>this)[key] = value; // tslint:disable-line:no-any
           },
         },
@@ -60,18 +60,18 @@ export function Trace(): Stage2FieldDecorator<Object, typeof Object> {
           configurable: true,
           enumerable: false,
           value(...args: Array<any>) { // tslint:disable-line:no-any
-            console.log(`[LOG] [${this.constructor.name}] method ${descriptor.key.toString()} calles with args`, [...args]); // tslint:disable-line
+            console.warn(`[DEPRECATED] [${this.constructor.name}] method ${descriptor.key.toString()} is deprecated: ${message || ''}`); // tslint:disable-line
             descriptor.descriptor.value.apply(this, [...args]); // tslint:disable-line
           },
         } : {
           configurable: true,
           enumerable: false,
           get(this: Object) {
-            console.log(`[LOG] [${this.constructor.name}] setter called on property ${descriptor.key.toString()}`); // tslint:disable-line
+            console.warn(`[DEPRECATED] [${this.constructor.name}] getter ${descriptor.key.toString()} is deprecated: ${message || ''}`); // tslint:disable-line
             return descriptor.descriptor.get.apply(this);
           },
           set(this: Object, value: any) { // tslint:disable-line:no-any
-            console.log(`[LOG] [${this.constructor.name}] setter called on property ${descriptor.key.toString()} with value ${value}`); // tslint:disable-line
+            console.warn(`[DEPRECATED] [${this.constructor.name}] setter ${descriptor.key.toString()} is deprecated: ${message || ''}`); // tslint:disable-line
             descriptor.descriptor.set.apply(this, [value]);
           },
         },

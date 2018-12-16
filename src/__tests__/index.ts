@@ -34,6 +34,7 @@ import { TestWithMultiplePropertiesWithTypeTSLazy } from './components/TestWithM
 import { TestWithMultiplePropertiesWithTypeStage2Lazy } from './components/TestWithMultiplePropertiesWithTypeLazy.stage2';
 import testInterceptors from './test.interceptors';
 import testLifecycle from './test.lifecycle';
+import testDeprecated from './test.deprecated';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -63,6 +64,7 @@ describe('root', function () {
     testWatcher(value.class, value.name);
     testInterceptors(value.class, value.name);
     testLifecycle(value.class, value.name);
+    testDeprecated(value.class, value.name);
   });
   [{ class: ServiceTest, name: 'ServiceTest' },
   { class: ServiceTestWithType, name: 'ServiceTestWithType' }].forEach(value => testService(value.class, value.name));

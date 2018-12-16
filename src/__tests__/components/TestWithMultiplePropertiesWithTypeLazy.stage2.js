@@ -33,6 +33,9 @@ import {
 import {
   Trace
 } from '../../trace';
+import { 
+  Deprecated 
+} from '../../deprecated';
 import {
   Interceptor
 } from '../../interceptor';
@@ -264,6 +267,22 @@ export class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWithMultip
     type: String
   })
   interceptableProperty = '';
+
+  @Deprecated('Custom Message')
+  deprecatedProperty = 'test';
+
+  @Deprecated()
+  get deprecatedPropertyGetSet() {
+    return 'test';
+  }
+
+  set deprecatedPropertyGetSet(_value) {
+  }
+
+  @Deprecated()
+  deprecatedMethod() {
+
+  }
 
   @Event({ name: 'change' })
   changeEvent;

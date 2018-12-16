@@ -16,7 +16,7 @@
 
 import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString } from './utils';
 import { getClassProperties } from './classproperties';
-import { COMPONENT_STATE } from './componentstate.';
+import { COMPONENT_STATE } from './componentstate';
 import { PROPERTY_STATE } from './propertystate';
 import { PropertyOptions } from './propertyoptions';
 import { getComponentProperties } from './componentproperties';

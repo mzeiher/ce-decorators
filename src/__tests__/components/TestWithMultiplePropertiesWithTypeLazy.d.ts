@@ -67,7 +67,13 @@ export declare class TestWithMultiplePropertiesWithTypeLazy extends TestWithMult
   arrayPropertyWithReflection: Array<number>;
 
   interceptableProperty:string;
-  
+
+  deprecatedProperty: string;
+
+  deprecatedPropertyGetSet:string;
+
+  deprecatedMethod(): void;
+
   changeEvent: EventEmitter<string>;
 
   test: EventEmitter<string>;

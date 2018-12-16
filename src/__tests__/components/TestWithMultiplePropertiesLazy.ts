@@ -19,6 +19,7 @@ import { Component } from './../../component';
 import { Prop, State } from './../../prop';
 import { Watch } from './../../watch';
 import { Event } from './../../event';
+import { Deprecated } from '../../deprecated';
 
 import {
   html,
@@ -201,6 +202,22 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
 
   @Prop()
   interceptableProperty: string = '';
+
+  @Deprecated('Custom Message')
+  deprecatedProperty: string = 'test';
+
+  @Deprecated()
+  get deprecatedPropertyGetSet():string {
+    return 'test';
+  }
+
+  set deprecatedPropertyGetSet(_value: string) {
+  }
+
+  @Deprecated()
+  deprecatedMethod() {
+
+  }
 
   @Event({ name: 'change' })
   changeEvent: EventEmitter<string>;

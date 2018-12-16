@@ -69,6 +69,12 @@ export declare class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWi
   arrayPropertyWithReflection: Array<number>;
 
   interceptableProperty:string;
+
+  deprecatedProperty: string;
+
+  deprecatedPropertyGetSet:string;
+
+  deprecatedMethod(): void;
   
   changeEvent: EventEmitter<string>;
 

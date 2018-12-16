@@ -30,6 +30,7 @@ import {
 } from 'lit-html/directives/class-map';
 import { EventEmitter } from '../../eventemitter';
 import { Interceptor } from '../../interceptor';
+import { Deprecated } from '../../deprecated';
 
 /**
  * test-with-multiple-properties-base
@@ -227,6 +228,22 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
 
   internalPropertyObject: object = {};
   internalPropertyObject2: object = {};
+
+  @Deprecated('Custom Message')
+  deprecatedProperty: string = 'test';
+
+  @Deprecated()
+  get deprecatedPropertyGetSet():string {
+    return 'test';
+  }
+
+  set deprecatedPropertyGetSet(_value: string) {
+  }
+
+  @Deprecated()
+  deprecatedMethod() {
+
+  }
 
   @Interceptor('interceptableProperty')
   propertyInterceptor(_oldValue: string, newValue: string) {

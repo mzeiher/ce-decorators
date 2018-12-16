@@ -68,6 +68,12 @@ export declare class TestWithMultiplePropertiesWithType extends TestWithMultiple
 
   interceptableProperty:string;
   
+  deprecatedProperty: string;
+
+  deprecatedPropertyGetSet:string;
+
+  deprecatedMethod(): void;
+
   changeEvent: EventEmitter<string>;
 
   test: EventEmitter<string>;

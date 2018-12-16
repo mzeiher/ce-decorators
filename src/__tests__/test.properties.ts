@@ -276,7 +276,7 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name:string) =>
       expect(element.booleanPropertyWithInitializer).toEqual(false);
       expect(element.objectPropertyWithReflection).toEqual(null);
       expect(element.arrayPropertyWithReflection).toEqual(null);
-      element.remove();
+      document.querySelector('body').removeChild(element);
       done();
     });
   });
