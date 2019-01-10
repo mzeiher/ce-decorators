@@ -27,7 +27,7 @@
  /**
   * shadycss interface
   */
-export interface ShadyCSSInterface {
+interface ShadyCSSInterface {
   nativeCss: boolean;
   nativeShadow: boolean;
 
@@ -37,14 +37,20 @@ export interface ShadyCSSInterface {
   styleSubtree(element: HTMLElement, overrideProperties?: boolean): void;
   styleDocument(overrideProperties: boolean): void;
   getComputedStyleValue(element: HTMLElement, propertyName: string): string;
+  ScopingShim: {prepareAdoptedCssText(cssText: string[], name: string): void;};
 }
 
-export declare var ShadyCSS: ShadyCSSInterface;
+declare var ShadyCSS: ShadyCSSInterface;
 
-/**
- * helper for shadydom
- */
-export function needShadyDOM(): boolean {
-  // tslint:disable-next-line:no-any
-  return (<any>window).ShadyCSS && !ShadyCSS.nativeShadow;
+interface ShadowRoot {
+  adoptedStyleSheets: CSSStyleSheet[];
+}
+
+interface Window {
+  ShadyCSS?: ShadyCSSInterface;
+}
+
+interface CSSStyleSheet {
+  replaceSync(cssText: string): void;
+  replace(cssText: string): Promise<unknown>;
 }

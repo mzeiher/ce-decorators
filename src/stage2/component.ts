@@ -18,11 +18,12 @@ import { Stage2ClassDecorator, ClassDecoratorDescriptor, ClassDecoratorResult } 
 import { CustomElement } from '../customelement';
 import { getClassProperties } from '../classproperties';
 import { PropertyOptions } from '../propertyoptions';
-import { setComponentProperties, getComponentProperties } from '../componentproperties';
+import { setComponentProperties, getComponentProperties, ExtendedComponentOptions } from '../componentproperties';
 import { getAllClassPropertyWatcher, getClassPropertyWatcher } from '../classpropertywatcher';
 import { getClassPropertyInterceptor, getAllClassPropertyInterceptors } from '../classpropertyinterceptors';
 import { getClassEvents } from '../classevents';
 import { ComponentOptions } from '../componentoptions';
+import { supportsAdoptingStyleSheets } from '../utils';
 
 /**
  * stage-2 implementation of the component decorator
@@ -39,6 +40,8 @@ export function Component(options: ComponentOptions): Stage2ClassDecorator<typeo
         if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} must extend CustomElement`);
         }
+        const componentExtendedOptions:ExtendedComponentOptions = { ...options, cssStyles: []};
+
         const prototype: typeof CustomElement = Object.getPrototypeOf(target) as typeof CustomElement;
         const prototypeClassProperties = getClassProperties(prototype);
         if (prototypeClassProperties) {
@@ -47,8 +50,24 @@ export function Component(options: ComponentOptions): Stage2ClassDecorator<typeo
             targetClassProperties.set(key, value);
           });
         }
-        if (options.inheritStyle) {
-          options.style = (getComponentProperties(prototype).style || '') + options.style;
+        const componentStyles = Array.isArray(options.style) ? options.style : [options.style || ''];
+        const componentCSSStyles = componentStyles.map((value) => {
+          if(supportsAdoptingStyleSheets) {
+            const css = new CSSStyleSheet();
+            css.replaceSync(value);
+            return css;
+          } else {
+            return {
+              cssText: value
+            }
+          }
+        });
+        if (componentExtendedOptions.inheritStyle) {
+          const parentStyle = getComponentProperties(prototype).cssStyles;
+          componentExtendedOptions.cssStyles.push(...parentStyle);
+          componentExtendedOptions.cssStyles.push(...componentCSSStyles);
+        } else {
+          componentExtendedOptions.cssStyles.push(...componentCSSStyles);
         }
         const prototypeWatcher = getAllClassPropertyWatcher(prototype);
         if (prototypeWatcher.size > 0) {
@@ -69,7 +88,7 @@ export function Component(options: ComponentOptions): Stage2ClassDecorator<typeo
           });
         }
 
-        setComponentProperties(target, options);
+        setComponentProperties(target, componentExtendedOptions);
         window.customElements.define(options.tag, target);
       },
     };

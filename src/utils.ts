@@ -80,3 +80,16 @@ export function makeTemplateString(template: Array<string>, raw: Array<string>):
 
   return <any>template; // tslint:disable-line:no-any
 }
+
+/**
+ * helper for shadydom
+ */
+export function needShadyDOM(): boolean {
+  // tslint:disable-next-line:no-any
+  return (<any>window).ShadyCSS && !window.ShadyCSS.nativeShadow;
+}
+
+/**
+ * support for new adopting stylesheet functionality
+ */
+export const supportsAdoptingStyleSheets: boolean = ('adoptedStyleSheets' in Document.prototype);

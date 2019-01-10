@@ -17,13 +17,27 @@
 import { CustomElement } from './customelement';
 import { ComponentOptions } from './componentoptions';
 
-const map: Map<typeof CustomElement, ComponentOptions> = new Map();
+const map: Map<typeof CustomElement, ExtendedComponentOptions> = new Map();
+
+/**
+ * CSSStyleSheetAlike if adoptedStylsheeets are not supported
+ */
+export interface CSSStyleSheetAlike {
+  cssText:string;
+}
+
+/**
+ * extended options for better style handling
+ */
+export interface ExtendedComponentOptions extends ComponentOptions {
+  cssStyles: Array<CSSStyleSheet | CSSStyleSheetAlike>;
+}
 
 /**
  * return componentproperties
  * @param target 
  */
-export function getComponentProperties(target: typeof CustomElement): ComponentOptions {
+export function getComponentProperties(target: typeof CustomElement): ExtendedComponentOptions {
   return map.get(target);
 }
 
@@ -32,7 +46,7 @@ export function getComponentProperties(target: typeof CustomElement): ComponentO
  * @param target 
  * @param options 
  */
-export function setComponentProperties(target: typeof CustomElement, options: ComponentOptions): void {
+export function setComponentProperties(target: typeof CustomElement, options: ExtendedComponentOptions): void {
   map.set(target, options);
 }
 

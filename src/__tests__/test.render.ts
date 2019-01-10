@@ -18,7 +18,7 @@
 
 import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
 import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
-import { needShadyDOM } from '../shadycss';
+import { needShadyDOM } from '../utils';
 import { TESTABLECLASSES } from './test.events';
 
 declare var BABEL_COMPILE: boolean;

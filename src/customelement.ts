@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString } from './utils';
+import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString, supportsAdoptingStyleSheets } from './utils';
 import { getClassProperties } from './classproperties';
 import { COMPONENT_STATE } from './componentstate';
 import { PROPERTY_STATE } from './propertystate';
@@ -274,13 +274,24 @@ export abstract class CustomElement extends HTMLElement {
   renderComponent() {
     this.componentWillRender();
     this._renderScheduled = false;
+    const elementToRender = this.renderToElement();
     if (this._templateCache === null) {
-      const style = getComponentProperties(this.constructor as typeof CustomElement)!.style || '';
-      this._templateCache = makeTemplateString([`<style>${style ? style : ''}</style>`, ''], [`<style>${style ? style : ''}</style>`, '']);
+      const styles = getComponentProperties(this.constructor as typeof CustomElement)!.cssStyles;
+      const tag = getComponentProperties(this.constructor as typeof CustomElement).tag;
+      if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) { // TODO: skip this step if once adopted
+        window.ShadyCSS.ScopingShim.prepareAdoptedCssText(styles.map((value) => value.cssText), tag);
+        this._templateCache = makeTemplateString(['', ''], ['', '']);
+      } else if(supportsAdoptingStyleSheets) {
+        this.shadowRoot.adoptedStyleSheets = <CSSStyleSheet[]>styles;
+        this._templateCache = makeTemplateString(['', ''], ['', '']);
+      } else {
+        const styleString = styles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
+        this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
+      }
     }
     render(html(this._templateCache,
       this.render()),
-      this.renderToElement(),
+      elementToRender,
       { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
     this.componentDidRender();
     if (this._firstRender) {
