@@ -276,16 +276,18 @@ export abstract class CustomElement extends HTMLElement {
     this._renderScheduled = false;
     const elementToRender = this.renderToElement();
     if (this._templateCache === null) {
-      const styles = getComponentProperties(this.constructor as typeof CustomElement)!.cssStyles;
-      const tag = getComponentProperties(this.constructor as typeof CustomElement).tag;
-      if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) { // TODO: skip this step if once adopted
-        window.ShadyCSS.ScopingShim.prepareAdoptedCssText(styles.map((value) => value.cssText), tag);
+      const { cssStyles, tag, styleSheetAdopted} = getComponentProperties(this.constructor as typeof CustomElement);
+      if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
+        if(!styleSheetAdopted) {
+          window.ShadyCSS.ScopingShim.prepareAdoptedCssText(cssStyles.map((value) => value.cssText), tag);
+          getComponentProperties(this.constructor as typeof CustomElement).styleSheetAdopted = true;
+        }
         this._templateCache = makeTemplateString(['', ''], ['', '']);
       } else if(supportsAdoptingStyleSheets) {
-        this.shadowRoot.adoptedStyleSheets = <CSSStyleSheet[]>styles;
+        this.shadowRoot.adoptedStyleSheets = <CSSStyleSheet[]>cssStyles;
         this._templateCache = makeTemplateString(['', ''], ['', '']);
       } else {
-        const styleString = styles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
+        const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
         this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
       }
     }
