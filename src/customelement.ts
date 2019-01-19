@@ -23,8 +23,8 @@ import { getComponentProperties } from './componentproperties';
 import { getClassPropertyWatcher } from './classpropertywatcher';
 import { getClassPropertyInterceptor } from './classpropertyinterceptors';
 
-import { TemplateResult } from 'lit-html';
-import { render, html } from 'lit-html/lib/shady-render';
+import { TemplateResult, render as defaultRenderer } from 'lit-html';
+import { render as shadyRender, html } from 'lit-html/lib/shady-render';
 
 let componentsToRender: Array<CustomElement> = [];
 let currentAnimationFrame: number | null = null;
@@ -275,26 +275,42 @@ export abstract class CustomElement extends HTMLElement {
     this.componentWillRender();
     this._renderScheduled = false;
     const elementToRender = this.renderToElement();
-    if (this._templateCache === null) {
-      const { cssStyles, tag, styleSheetAdopted} = getComponentProperties(this.constructor as typeof CustomElement);
-      if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
-        if(!styleSheetAdopted) {
-          window.ShadyCSS.ScopingShim.prepareAdoptedCssText(cssStyles.map((value) => value.cssText), tag);
-          getComponentProperties(this.constructor as typeof CustomElement).styleSheetAdopted = true;
+    if (elementToRender === this.shadowRoot) { // render to shadowroot
+      if (this._templateCache === null) {
+        const { cssStyles, tag, styleSheetAdopted } = getComponentProperties(this.constructor as typeof CustomElement);
+        if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
+          if (!styleSheetAdopted) {
+            window.ShadyCSS.ScopingShim.prepareAdoptedCssText(cssStyles.map((value) => value.cssText), tag);
+            getComponentProperties(this.constructor as typeof CustomElement).styleSheetAdopted = true;
+          }
+          this._templateCache = makeTemplateString(['', ''], ['', '']);
+        } else if (supportsAdoptingStyleSheets) {
+          this.shadowRoot.adoptedStyleSheets = <CSSStyleSheet[]>cssStyles;
+          this._templateCache = makeTemplateString(['', ''], ['', '']);
+        } else {
+          const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
+          this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
+        }
+      }
+      shadyRender(html(this._templateCache,
+        this.render()),
+        elementToRender,
+        { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
+    } else {
+      if (this._templateCache === null) {
+        const { cssStyles, tag, styleSheetAdopted } = getComponentProperties(this.constructor as typeof CustomElement);
+        if (!styleSheetAdopted) {
+          const styleSheet = document.createElement('style');
+          const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
+          styleSheet.textContent = styleString.replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, _1, _2, _3) => {
+            return `${tag}${_3 ? _3 : ''}`;
+          });
+          document.querySelector('head').appendChild(styleSheet);
         }
         this._templateCache = makeTemplateString(['', ''], ['', '']);
-      } else if(supportsAdoptingStyleSheets) {
-        this.shadowRoot.adoptedStyleSheets = <CSSStyleSheet[]>cssStyles;
-        this._templateCache = makeTemplateString(['', ''], ['', '']);
-      } else {
-        const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
-        this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
       }
+      defaultRenderer(this.render(), elementToRender, { eventContext: this });
     }
-    render(html(this._templateCache,
-      this.render()),
-      elementToRender,
-      { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
     this.componentDidRender();
     if (this._firstRender) {
       this.componentFirstRender();

@@ -38,10 +38,10 @@ export default (constructorInstance: { new(): TESTABLECLASSES  }, name: string) 
     it('state change tests (' + name + ')', async function (done) {
       document.querySelector('body').appendChild(element);
       await element.waitForRender();
-      expect(element.shadowRoot.querySelector('div').classList.contains('hasclass')).toBeFalsy();
+      expect((element.shadowRoot || element).querySelector('div').classList.contains('hasclass')).toBeFalsy();
       element.shouldHaveClass = true;
       await element.waitForRender();
-      expect(element.shadowRoot.querySelector('div').classList.contains('hasclass')).toBeTruthy();
+      expect((element.shadowRoot || element).querySelector('div').classList.contains('hasclass')).toBeTruthy();
       document.querySelector('body').removeChild(element);
       done();
     });

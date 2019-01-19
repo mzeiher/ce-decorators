@@ -35,6 +35,7 @@ import { TestWithMultiplePropertiesWithTypeStage2Lazy } from './components/TestW
 import testInterceptors from './test.interceptors';
 import testLifecycle from './test.lifecycle';
 import testDeprecated from './test.deprecated';
+import { TestWithMultiplePropertiesNoShadow } from './components/TestWithMultiplePropertiesNoShadow';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -49,6 +50,7 @@ describe('root', function () {
   });
   [
     { class: TestWithMultipleProperties, name: 'TestWithMultipleProperties' },
+    { class: TestWithMultiplePropertiesNoShadow, name: 'TestWithMultiplePropertiesNoShadow' },
     { class: TestWithMultiplePropertiesWithTypeTS, name: 'TestWithMultiplePropertiesWithTypeTS' },
     { class: TestWithMultiplePropertiesWithType, name: 'TestWithMultiplePropertiesWithType' },
     { class: TestWithMultiplePropertiesWithTypeStage2, name: 'TestWithMultiplePropertiesWithTypeStage2' },

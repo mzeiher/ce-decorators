@@ -53,7 +53,7 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) =
       element.objectPropertyWithInitializer = {};
       element.arrayPropertyWithInitializer = [];
       await element.waitForRender();
-      const divs = element.shadowRoot.querySelectorAll('div');
+      const divs = (element.shadowRoot || element).querySelectorAll('div');
       expect(divs[0].innerText).toEqual('test');
       expect(divs[1].innerText).toEqual('foobar');
       expect(divs[2].innerText).toEqual('1');
@@ -71,7 +71,7 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) =
     it('effective dom rendering (' + name + ')', async function (done) {
       document.querySelector('body').appendChild(element);
       await element.waitForRender();
-      const divs = element.shadowRoot.querySelectorAll('div');
+      const divs = (element.shadowRoot || element).querySelectorAll('div');
 
       element.stringPropertyWithInitializer = "foobar";
       element.numberPropertyWithInitializer = 1;
@@ -79,7 +79,7 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) =
       element.objectPropertyWithInitializer = {};
       element.arrayPropertyWithInitializer = [];
       await element.waitForRender();
-      const newDivs = element.shadowRoot.querySelectorAll('div');
+      const newDivs = (element.shadowRoot || element).querySelectorAll('div');
       newDivs.forEach((value: any, key: any) => {
         expect(value).toBe(divs[key]);
       });
