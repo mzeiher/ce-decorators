@@ -302,8 +302,8 @@ export abstract class CustomElement extends HTMLElement {
         if (!styleSheetAdopted) {
           const styleSheet = document.createElement('style');
           const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
-          styleSheet.textContent = styleString.replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, _1, _2, _3) => {
-            return `${tag}${_3 ? _3 : ''}`;
+          styleSheet.textContent = styleString.replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, ...args) => {
+            return `${tag}${args[2] ? args[2] : ''}`;
           });
           document.querySelector('head').appendChild(styleSheet);
         }

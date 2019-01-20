@@ -2,6 +2,7 @@ const pkg = require('./package.json');
 const webpackMerge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = env => {
 
@@ -57,7 +58,15 @@ const webpackConfigProductionUMD = webpackMerge(webpackConfigDevelopUMD, {
   devtool: 'none',
   output: {
     filename: 'umd.min.js',
-  }
+  },
+  plugins: [
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false,
+      analyzerMode: 'static',
+      generateStatsFile: true,
+      reportFilename: path.resolve(__dirname, 'reports', 'report.html')
+    })
+  ]
 });
 
 const webpackConfigTest = {
