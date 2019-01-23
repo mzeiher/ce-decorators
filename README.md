@@ -67,8 +67,7 @@ If decorators are used with babel the data type for the Prop decorator has to be
 
 # Sample
 ```typescript
-import { Component, CutomElement, Prop, Watch Event, EventEmitter, State } from 'ce-decorators'
-import { html } from 'lit-html'
+import { Component, CutomElement, Prop, Watch Event, EventEmitter, State, html } from 'ce-decorators'
 
 @Component({
     tag: 'my-custom-element'

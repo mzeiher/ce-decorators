@@ -39,13 +39,7 @@ import {
 import {
   Interceptor
 } from '../../interceptor';
-import {
-  html,
-  // TemplateResult
-} from 'lit-html';
-import {
-  classMap
-} from 'lit-html/directives/class-map';
+import { html, classMap } from './../../lit-html';
 
 @Component({
   tag: 'test-with-multiple-properties-with-type-base-lazy',

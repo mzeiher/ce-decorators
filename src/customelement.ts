@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString, supportsAdoptingStyleSheets } from './utils';
+import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString, supportsAdoptingStyleSheets, needShadyDOM } from './utils';
 import { getClassProperties } from './classproperties';
 import { COMPONENT_STATE } from './componentstate';
 import { PROPERTY_STATE } from './propertystate';
@@ -23,8 +23,7 @@ import { getComponentProperties } from './componentproperties';
 import { getClassPropertyWatcher } from './classpropertywatcher';
 import { getClassPropertyInterceptor } from './classpropertyinterceptors';
 
-import { TemplateResult, render as defaultRenderer } from 'lit-html';
-import { render as shadyRender, html } from 'lit-html/lib/shady-render';
+import { TemplateResult, render as defaultRenderer, shadyRender, html } from './lit-html';
 
 let componentsToRender: Array<CustomElement> = [];
 let currentAnimationFrame: number | null = null;
@@ -292,10 +291,14 @@ export abstract class CustomElement extends HTMLElement {
           this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
         }
       }
-      shadyRender(html(this._templateCache,
-        this.render()),
-        elementToRender,
-        { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
+      if(needShadyDOM()) {
+        shadyRender(html(this._templateCache,
+          this.render()),
+          elementToRender,
+          { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
+      } else {
+        defaultRenderer(html(this._templateCache, this.render()), elementToRender, { eventContext: this});
+      }
     } else {
       if (this._templateCache === null) {
         const { cssStyles, tag, styleSheetAdopted } = getComponentProperties(this.constructor as typeof CustomElement);

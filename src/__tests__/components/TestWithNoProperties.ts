@@ -15,7 +15,7 @@
  */
 
 import { Component, CustomElement } from './../../index';
-import { html } from 'lit-html';
+import { html } from './../../lit-html';
 
 /**
  * test-no-properties

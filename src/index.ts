@@ -30,3 +30,5 @@ export { Interceptor } from './interceptor';
 export { COMPONENT_STATE } from './componentstate';
 
 export { getComponentCatalog} from './componentcatalog';
+
+export * from './lit-html';

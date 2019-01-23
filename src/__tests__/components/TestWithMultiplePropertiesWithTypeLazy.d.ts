@@ -15,8 +15,7 @@
  */
 
 import { Component, LazyCustomElement, Event, EventEmitter, Prop, Watch, State } from './../../index';
-import { html, TemplateResult } from 'lit-html';
-import { classMap } from 'lit-html/directives/class-map';
+import { html, classMap, TemplateResult } from './../../lit-html';
 
 export declare class TestWithMultiplePropertiesWithTypeBaseLazy extends LazyCustomElement {
   baseProperty:string;

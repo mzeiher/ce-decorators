@@ -21,15 +21,10 @@ import { Watch } from './../../watch';
 import { Event } from './../../event';
 import { Deprecated } from '../../deprecated';
 
-import {
-  html,
-  // TemplateResult
-} from 'lit-html';
-import {
-  classMap,
-} from 'lit-html/directives/class-map';
 import { EventEmitter } from '../../eventemitter';
 import { Interceptor } from '../../interceptor';
+
+import { html, classMap } from './../../lit-html';
 
 /**
  * test-with-multiple-properties-with-type-ts-base

@@ -21,17 +21,10 @@ import { Watch } from './../../watch';
 import { Event } from './../../event';
 import { Trace } from '../../trace';
 
-import {
-  html,
-  // TemplateResult
-} from 'lit-html';
-import {
-  classMap,
-} from 'lit-html/directives/class-map';
 import { EventEmitter } from '../../eventemitter';
 import { Interceptor } from '../../interceptor';
 import { Deprecated } from '../../deprecated';
-
+import { html, classMap } from './../../lit-html';
 /**
  * test-with-multiple-properties-base
  */
