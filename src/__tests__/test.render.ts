@@ -60,7 +60,7 @@ export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) =
       expect(divs[3].innerText).toEqual('true');
       expect(divs[4].innerText).toEqual('{}');
       expect(divs[5].innerText).toEqual('[]');
-      if (needShadyDOM()) {
+      if (needShadyDOM() && element.renderToElement() === element.shadowRoot) {
         expect(divs[0].getAttribute('class')).toContain('style-scope');
         // expect(divs[0].getAttribute('class')).toContain('test-with-multiple-properties');
       }

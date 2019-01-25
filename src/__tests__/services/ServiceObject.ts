@@ -18,11 +18,14 @@ import { Inject } from '../../service';
 import { InstanceService } from './InstanceService';
 import { SingletonService } from './SingletonService';
 
+/**
+ * service tests
+ */
 export class ServiceTest {
 
   @Inject({singleton: false, type: InstanceService})
-  public instanceService: InstanceService;
+  instanceService: InstanceService;
 
   @Inject({singleton: true, type: SingletonService})
-  public singletonService: SingletonService;
+  singletonService: SingletonService;
 }

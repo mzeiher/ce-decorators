@@ -75,7 +75,7 @@ export interface ClassDecoratorResult<T> {
   elements: Array<FieldDecoratorDescriptor | MethodDecoratorDesciptor>;
   constructor?: T;
   kind: 'class';
-  finisher?: (target: T) => void | { new (): any}; // tslint:disable-line:no-any
+  finisher?: (target: T) => void | { new (): any}; // tslint:disable-line
 }
 
 /**

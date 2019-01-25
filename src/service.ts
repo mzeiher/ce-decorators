@@ -19,17 +19,20 @@ import { CustomElement } from './customelement';
 import { isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { InjectOptions } from './injectoptions';
 
-export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any;
+/**
+ * fixed prop decorator
+ */
+export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any; // tslint:disable-line
 
 /**
  * Simple dependency injection decorator
  *
  * @param newInstance (boolean) determines if a new instance should be created
  */
-export function Inject(options: InjectOptions = { singleton: true, type: Object }): FixedPropertyDecorator {
-  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => {
+export function Inject(options: InjectOptions = { singleton: true, type: Object }): FixedPropertyDecorator { // tslint:disable-line
+  return (target: typeof CustomElement, propertyKey: string | symbol, descriptor?: PropertyDescriptor): PropertyDescriptor | any => { // tslint:disable-line
     if (isStage2FieldDecorator(target)) {
-      return InjectS2(options)(<any>target);
+      return InjectS2(options)(<any>target); // tslint:disable-line
     } else {
       return applyStage2ToLegacyFieldDecorator<CustomElement, typeof CustomElement>(target, propertyKey, descriptor, InjectS2(options));
     }

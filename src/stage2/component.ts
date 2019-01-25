@@ -30,7 +30,7 @@ import { supportsAdoptingStyleSheets } from '../utils';
  *
  * @param options ComponentOptions
  */
-export function Component(options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> {
+export function Component(options: ComponentOptions): Stage2ClassDecorator<typeof CustomElement> { //tslint:disable-line
   return (descriptor: ClassDecoratorDescriptor): ClassDecoratorResult<typeof CustomElement> => {
     return {
       elements: descriptor.elements,
@@ -40,7 +40,7 @@ export function Component(options: ComponentOptions): Stage2ClassDecorator<typeo
         if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} must extend CustomElement`);
         }
-        const componentExtendedOptions:ExtendedComponentOptions = { ...options, cssStyles: [], styleSheetAdopted: false};
+        const componentExtendedOptions: ExtendedComponentOptions = { ...options, cssStyles: [], styleSheetAdopted: false };
 
         const prototype: typeof CustomElement = Object.getPrototypeOf(target) as typeof CustomElement;
         const prototypeClassProperties = getClassProperties(prototype);
@@ -52,14 +52,14 @@ export function Component(options: ComponentOptions): Stage2ClassDecorator<typeo
         }
         const componentStyles = Array.isArray(options.style) ? options.style : [options.style || ''];
         const componentCSSStyles = componentStyles.map((value) => {
-          if(supportsAdoptingStyleSheets) {
+          if (supportsAdoptingStyleSheets) {
             const css = new CSSStyleSheet();
             css.replaceSync(value);
             return css;
           } else {
             return {
-              cssText: value
-            }
+              cssText: value,
+            };
           }
         });
         if (componentExtendedOptions.inheritStyle) {

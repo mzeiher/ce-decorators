@@ -19,28 +19,31 @@ import { CustomElement } from '../customelement';
 import { getSingleton, getInstance } from '../servicemap';
 import { InjectOptions } from '../injectoptions';
 
-export function Inject(options: InjectOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+/**
+ * Inject decorator
+ * @param options 
+ */
+export function Inject(options: InjectOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     if (descriptor.kind === 'field') {
       return {
-        kind: "method",
+        kind: 'method',
         descriptor: {
           configurable: true,
           enumerable: false,
-          get: function (this: CustomElement): object {
+          get(this: CustomElement): object {
             if (options.singleton) {
               return getSingleton(options.type);
             } else {
-              return getInstance(this, descriptor.key, options.type);
+              return getInstance(this, descriptor.key, options.type); // tslint:disable-line
             }
           },
         },
         key: descriptor.key,
-        placement: 'own'
-      }
+        placement: 'own',
+      };
     } else {
       throw new Error('only fields can be decorated with event');
     }
-  }
+  };
 }
-

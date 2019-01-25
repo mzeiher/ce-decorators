@@ -202,16 +202,11 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
   deprecatedProperty: string = 'test';
 
   @Deprecated()
-  get deprecatedPropertyGetSet():string {
+  get deprecatedPropertyGetSet(): string {
     return 'test';
   }
 
-  set deprecatedPropertyGetSet(_value: string) {
-  }
-
-  @Deprecated()
-  deprecatedMethod() {
-
+  set deprecatedPropertyGetSet(_value: string) { // tslint:disable-line:no-empty
   }
 
   @Event({ name: 'change' })
@@ -221,8 +216,8 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
   test: EventEmitter<string>;
 
   @Event('string')
-  stringEvent: EventEmitter<string>
-  
+  stringEvent: EventEmitter<string>;
+
   @State()
   shouldHaveClass: boolean = false;
 
@@ -234,6 +229,11 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
 
   internalPropertyObject: object = {};
   internalPropertyObject2: object = {};
+
+  @Deprecated()
+  deprecatedMethod() {
+
+  }
 
   @Interceptor('interceptableProperty')
   propertyInterceptor(_oldValue: string, newValue: string) {

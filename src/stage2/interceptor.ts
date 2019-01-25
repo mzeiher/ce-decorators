@@ -22,7 +22,7 @@ import { getClassPropertyInterceptor } from '../classpropertyinterceptors';
  * stage-2 decorator for intercept
  * @param propertyKey 
  */
-export function Interceptor(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
+export function Interceptor(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return (descriptor: MethodDecoratorDesciptor): MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     return {
       ...descriptor,

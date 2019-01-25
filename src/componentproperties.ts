@@ -23,7 +23,7 @@ const map: Map<typeof CustomElement, ExtendedComponentOptions> = new Map();
  * CSSStyleSheetAlike if adoptedStylsheeets are not supported
  */
 export interface CSSStyleSheetAlike {
-  cssText:string;
+  cssText: string;
 }
 
 /**

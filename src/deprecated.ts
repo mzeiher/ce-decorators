@@ -16,11 +16,12 @@
 
 import { isStage2MethodDecorator, isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { Deprecated as DeprecatedS2 } from './stage2/deprecated';
+import { FixedPropertyDecorator } from './prop';
 
 /**
  * Emits a deprecated warning
  */
-export function Deprecated(message?: string): any { // tslint:disable-line
+export function Deprecated(message?: string): FixedPropertyDecorator { // tslint:disable-line
   return (target: typeof Object,
           propertyKey: string | symbol,
           descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => { // tslint:disable-line:no-any

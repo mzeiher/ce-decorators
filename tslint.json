@@ -1,9 +1,87 @@
 {
-  // "extends": [
-  //   ""
-  // ],
+  "defaultSeverity": "warning",
+  "rulesDirectory": [
+    "tslint-microsoft-contrib"
+  ],
+  "extends": [
+    "tslint:recommended"
+  ],
   "jsRules": {
 
   },
-  "rules": {}
+  "rules": {
+    "ordered-imports" : false,
+    "no-debugger": true,
+    "encoding": true,
+    "eofline": true,
+    "file-header": false,
+    "indent": [true, "spaces", 2],
+    "max-line-length": [true, 180],
+    "quotemark": [true, "single"],
+    "comment-format": [true, "check-space"],
+    "completed-docs": [true, {
+      "enums": {
+        "visibilities": ["exported"]
+      },
+      "functions": {
+        "visibilities": ["exported"]
+      },
+      "classes": {
+        "visibilities": ["exported"]
+      },
+      "interfaces": {
+        "visibilities": ["exported"]
+      },
+      "types": {
+        "visibilities": ["exported"]
+      },
+      "methods": {
+        "locations": "instance",
+        "privacies": ["public", "protected"]
+      },
+      "properties": {
+        "locations": "instance",
+        "privacies": ["public", "protected"]
+      }
+    }],
+    "no-use-before-declare": true,
+    "no-var-keyword": true,
+    "prefer-object-spread": true,
+    "promise-function-async": true,
+    "space-before-function-paren": [true, {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "arrow-parens": true,
+    "arrow-return-shorthand": true,
+    "class-name": true,
+    "variable-name": [true, "allow-leading-underscore", "check-format", "ban-keywords"],
+    "array-type": [true, "generic"],
+    "semicolon": [true, "always"],
+    "curly": true,
+    "switch-default": true,
+    "ban-types": [true],
+    "no-any": true,
+    "no-unsafe-any": true,
+    "interface-name": [true, "never-prefix"],
+    "no-angle-bracket-type-assertion": false,
+    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-type", "check-type-operator", "check-preblock"],
+    "prefer-const": true,
+    "prefer-for-of": true,
+    "max-classes-per-file": false,
+    "forin": false,
+    "function-name": [true, {
+      "method-regex": "^[a-z][\\w\\d]+$",
+      "private-method-regex": "^_[a-z][\\w\\d]+$",
+      "protected-method-regex": "^[a-z][\\w\\d]+$",
+      "static-method-regex": "^[a-z][\\w\\d]+$",
+      "function-regex": "^[a-z][\\w\\d]+$"
+    }],
+    "member-access": [true, "no-public"],
+    "object-literal-sort-keys": false,
+    "no-trailing-whitespace": [true, "ignore-jsdoc"],
+    "no-unused-expression" : [true, "allow-fast-null-checks", "allow-tagged-template"],
+    "no-empty": [true, "allow-empty-functions"]
+  }
 }

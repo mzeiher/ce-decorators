@@ -23,7 +23,7 @@ import { PropertyOptions } from '../propertyoptions';
 /**
  * stage-2 state decorators
  */
-export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return Prop({ reflectAsAttribute: false, type: undefined });
 }
 
@@ -31,7 +31,7 @@ export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElemen
  * stage-2 prop decorator
  * @param _options 
  */
-export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
 
     const key = typeof descriptor.key === 'symbol' ? Symbol() : `__${descriptor.key}`;

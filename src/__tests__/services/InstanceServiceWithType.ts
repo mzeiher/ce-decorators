@@ -17,11 +17,14 @@
 import { Inject } from '../../service';
 import { NestedService } from './NestedService';
 
+/**
+ * test for instance service
+ */
 export class InstanceServiceWithType {
 
   @Inject({type: NestedService, singleton: true})
-  public nestedSingletonService: NestedService;
+  nestedSingletonService: NestedService;
 
   @Inject({singleton: false, type: NestedService})
-  public nestedInstanceService: NestedService;
+  nestedInstanceService: NestedService;
 }
