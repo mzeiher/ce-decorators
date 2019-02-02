@@ -30,6 +30,7 @@ export function Trace(): Stage2FieldDecorator<Object, typeof Object> { // tslint
             kind: 'field',
             placement: 'own',
             initializer: descriptor.initializer,
+            initialize: descriptor.initialize,
             descriptor: {
               configurable: true,
               enumerable: false,

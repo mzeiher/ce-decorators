@@ -30,6 +30,7 @@ export function Deprecated(message?: string): Stage2FieldDecorator<Object, typeo
             kind: 'field',
             placement: 'own',
             initializer: descriptor.initializer,
+            initialize: descriptor.initialize,
             descriptor: {
               configurable: true,
               enumerable: false,
