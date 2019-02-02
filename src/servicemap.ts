@@ -19,6 +19,10 @@ export type ClassType = { new(...args: any[]): Object };// tslint:disable-line
 const singletonServiceRegistry: Map<ClassType, Object> = new Map();
 const instanceServiceRegistry: WeakMap<Object, Map<string | symbol, Object>> = new WeakMap();
 
+/**
+ * return a singleton
+ * @param type 
+ */
 export function getSingleton(type: ClassType): Object {
   if (!singletonServiceRegistry.has(type)) {
     singletonServiceRegistry.set(type, new (type)());
@@ -27,7 +31,13 @@ export function getSingleton(type: ClassType): Object {
   return <Object>singletonServiceRegistry.get(type);
 }
 
-export function getInstance(instance: Object, property: string | symbol, type: ClassType): any {
+/**
+ * get instance
+ * @param instance 
+ * @param property 
+ * @param type 
+ */
+export function getInstance(instance: Object, property: string | symbol, type: ClassType): any { // tslint:disable-line
   if (!instanceServiceRegistry.has(instance)) {
     instanceServiceRegistry.set(instance, new Map());
   }

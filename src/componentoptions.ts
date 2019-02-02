@@ -20,7 +20,7 @@ import { CustomElement } from './customelement';
  */
 export interface ComponentOptions {
   tag: string;
-  style?: string | string[];
+  style?: string | Array<string>;
   inheritStyle?: boolean;
   dependencies?: Array<typeof CustomElement>; // tslint:disable-line:no-any
 }

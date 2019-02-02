@@ -38,7 +38,7 @@ export interface IndexableElement {
 /**
  * define the render strategy for the control
  */
-export const enum RENDER_STRATEGY {
+export enum RENDER_STRATEGY {
   DEFAULT,
   LAZY,
   PIPELINE_EXPERIMENTAL,
@@ -121,7 +121,7 @@ export abstract class CustomElement extends HTMLElement {
     }
   }
 
-  static get observedAttributes(this: typeof CustomElement): Array<string> { // filter out states -> type === undefined
+  static get observedAttributes(): Array<string> { // filter out states -> type === undefined
     return Array.from(getClassProperties(this)).filter((value) => value[1].type !== undefined).map((value) => camelToKebapCase(value[0].toString()));
   }
 
@@ -284,20 +284,20 @@ export abstract class CustomElement extends HTMLElement {
           }
           this._templateCache = makeTemplateString(['', ''], ['', '']);
         } else if (supportsAdoptingStyleSheets) {
-          this.shadowRoot.adoptedStyleSheets = <CSSStyleSheet[]>cssStyles;
+          this.shadowRoot.adoptedStyleSheets = <Array<CSSStyleSheet>>cssStyles;
           this._templateCache = makeTemplateString(['', ''], ['', '']);
         } else {
           const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
           this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
         }
       }
-      if(needShadyDOM()) {
+      if (needShadyDOM()) {
         shadyRender(html(this._templateCache,
           this.render()),
           elementToRender,
           { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
       } else {
-        defaultRenderer(html(this._templateCache, this.render()), elementToRender, { eventContext: this});
+        defaultRenderer(html(this._templateCache, this.render()), elementToRender, { eventContext: this });
       }
     } else {
       if (this._templateCache === null) {

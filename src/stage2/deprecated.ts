@@ -19,7 +19,7 @@ import { Stage2FieldDecorator, FieldDecoratorDescriptor } from './stage2decorato
 /**
  * deprecated stage-2 decorator
  */
-export function Deprecated(message?: string): Stage2FieldDecorator<Object, typeof Object> {
+export function Deprecated(message?: string): Stage2FieldDecorator<Object, typeof Object> { // tslint:disable-line
   return (descriptor: FieldDecoratorDescriptor) => {
     if (descriptor.kind === 'field') {
       const key = Symbol();
@@ -30,6 +30,7 @@ export function Deprecated(message?: string): Stage2FieldDecorator<Object, typeo
             kind: 'field',
             placement: 'own',
             initializer: descriptor.initializer,
+            initialize: descriptor.initialize,
             descriptor: {
               configurable: true,
               enumerable: false,

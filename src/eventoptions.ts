@@ -17,7 +17,7 @@
 /**
  * EventOptions
  */
-export interface EventOptions { 
-  name?: string, 
-  options?: CustomEventInit 
+export interface EventOptions {
+  name?: string;
+  options?: CustomEventInit;
 }

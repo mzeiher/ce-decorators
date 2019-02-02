@@ -201,15 +201,15 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
   @Prop()
   interceptableProperty: string = '';
 
-  @Event({ name: 'change'})
+  @Event({ name: 'change' })
   changeEvent: EventEmitter<string>;
 
   @Event()
   test: EventEmitter<string>;
 
   @Event('string')
-  stringEvent: EventEmitter<string>
-  
+  stringEvent: EventEmitter<string>;
+
   @State()
   shouldHaveClass: boolean = false;
 
@@ -226,11 +226,11 @@ export class TestWithMultipleProperties extends TestWithMultiplePropertiesBase {
   deprecatedProperty: string = 'test';
 
   @Deprecated()
-  get deprecatedPropertyGetSet():string {
+  get deprecatedPropertyGetSet(): string {
     return 'test';
   }
 
-  set deprecatedPropertyGetSet(_value: string) {
+  set deprecatedPropertyGetSet(_value: string) { // tslint:disable-line:no-empty
   }
 
   @Deprecated()

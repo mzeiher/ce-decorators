@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { Stage2FieldDecorator, MethodDecoratorResult, FieldDecoratorDescriptor, FieldDecoratorResult } from './stage2decorators';
+import { Stage2FieldDecorator, MethodDecoratorResult, FieldDecoratorDescriptor, FieldDecoratorResult, MethodDecoratorDesciptor } from './stage2decorators';
 import { CustomElement, IndexableElement } from '../customelement';
 import { getClassProperties } from '../classproperties';
 import { PROPERTY_STATE } from '../propertystate';
@@ -23,7 +23,7 @@ import { PropertyOptions } from '../propertyoptions';
 /**
  * stage-2 state decorators
  */
-export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
+export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return Prop({ reflectAsAttribute: false, type: undefined });
 }
 
@@ -31,12 +31,12 @@ export function State(): Stage2FieldDecorator<CustomElement, typeof CustomElemen
  * stage-2 prop decorator
  * @param _options 
  */
-export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> {
-  return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
+export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
+  return (descriptor: FieldDecoratorDescriptor | MethodDecoratorDesciptor): FieldDecoratorResult<CustomElement, typeof CustomElement> |
+                                                                            MethodDecoratorResult<CustomElement, typeof CustomElement> => {
 
     const key = typeof descriptor.key === 'symbol' ? Symbol() : `__${descriptor.key}`;
     if (descriptor.kind === 'field') {
-
       return {
         kind: 'method',
         descriptor: {
@@ -58,6 +58,7 @@ export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElem
         extras: [{
           placement: 'own',
           initializer: descriptor.initializer,
+          initialize: descriptor.initialize,
           key,
           descriptor: {
             enumerable: false,
@@ -98,7 +99,6 @@ export function Prop(_options: PropertyOptions): Stage2FieldDecorator<CustomElem
         },
         key: descriptor.key,
         placement: 'own',
-        initializer: descriptor.initializer,
         finisher: (target: typeof CustomElement) => {
           if (!CustomElement.isPrototypeOf(target)) {
             throw new Error(`${target.name} the property must be within a class which extends CustomElement`);

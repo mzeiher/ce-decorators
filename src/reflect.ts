@@ -49,7 +49,7 @@ function decorate(decorators: Array<DecoratorFunc>, target: Object, propertyKey:
     origReflect.decorate(decorators, target, propertyKey, description); // tslint:disable-line:no-unsafe-any
   }
   const desciptor: any = decorators.reverse() // tslint:disable-line:no-any
-    .reduce<PropertyDescriptor>((prevValue, currentValue) => { return currentValue(target, propertyKey, prevValue) || prevValue }, description);
+    .reduce<PropertyDescriptor>((prevValue, currentValue) => (currentValue(target, propertyKey, prevValue) || prevValue), description); // tslint:disable-line
   return desciptor || description;
 }
 

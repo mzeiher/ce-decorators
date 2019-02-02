@@ -18,11 +18,12 @@
  * FieldDecoratorDescriptor
  */
 export interface FieldDecoratorDescriptor {
-  kind: 'field' | 'method';
+  kind: 'field' | 'method' | 'accessor';
   key: string | symbol;
   placement: 'static' | 'prototype' | 'own';
   descriptor: PropertyDescriptor;
   initializer: () => string | boolean | number | Object | symbol;
+  initialize(): () => string | boolean | number | Object | symbol;
 }
 
 /**
@@ -47,11 +48,12 @@ export interface ClassDecoratorDescriptor {
  * FieldDecoratorResult
  */
 export interface FieldDecoratorResult<T, C> {
-  kind: 'field' | 'method';
+  kind: 'field' | 'method' | 'accessor';
   key: string | symbol;
   placement: 'static' | 'prototype' | 'own';
   descriptor: PropertyDescriptor;
-  initializer?: () => any; // tslint:disable-line:no-any
+  initializer?: () => any; // tslint:disable-line:no-any old implementation
+  initialize?: () => any; // tslint:disable-line:no-any
   extras?: Array<FieldDecoratorResult<T, C>>;
   finisher?: (target: C) => void;
 }
@@ -75,7 +77,7 @@ export interface ClassDecoratorResult<T> {
   elements: Array<FieldDecoratorDescriptor | MethodDecoratorDesciptor>;
   constructor?: T;
   kind: 'class';
-  finisher?: (target: T) => void | { new (): any}; // tslint:disable-line:no-any
+  finisher?: (target: T) => void | (new () => any); // tslint:disable-line:no-any
 }
 
 /**
@@ -146,6 +148,8 @@ export function applyStage2ToLegacyFieldDecorator<T, C>(target: C,
     key: propertyKey,
     // tslint:disable-next-line
     initializer: descriptor ? (<any>descriptor)['initializer'] : undefined, // in babel case there is an initializer
+    // tslint:disable-next-line
+    initialize: descriptor ? (<any>descriptor)['initializer'] : undefined, // in babel case there is an initializer
     kind: descriptor ? descriptor.get || descriptor.set || typeof descriptor.value === 'function' ? 'method' : 'field' : 'field',
     descriptor: descriptor ? descriptor : { configurable: true, enumerable: false, value: null },
     placement: 'own',
@@ -156,7 +160,7 @@ export function applyStage2ToLegacyFieldDecorator<T, C>(target: C,
     result.extras.forEach((value) => Object.defineProperty((<any>target).constructor.prototype, value.key, {// tslint:disable-line
       configurable: true,
       enumerable: false,
-      value: fieldDecoratorDescriptor.initializer ? fieldDecoratorDescriptor.initializer() : undefined,
+      value: fieldDecoratorDescriptor.initialize ? fieldDecoratorDescriptor.initialize() : undefined,
       writable: true,
     }));
   }

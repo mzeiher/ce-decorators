@@ -12,3 +12,4 @@ devserver.html
 .vscode
 *.tgz
 /src/__tests__
+/src

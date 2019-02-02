@@ -22,7 +22,7 @@ import { getClassPropertyWatcher } from '../classpropertywatcher';
  * stage 2 property watch decorator
  * @param propertyKey 
  */
-export function Watch(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> {
+export function Watch(propertyKey: string): Stage2MethodDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return (descriptor: MethodDecoratorDesciptor): MethodDecoratorResult<CustomElement, typeof CustomElement> => {
     return {
       ...descriptor,

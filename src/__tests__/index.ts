@@ -36,6 +36,7 @@ import testInterceptors from './test.interceptors';
 import testLifecycle from './test.lifecycle';
 import testDeprecated from './test.deprecated';
 import { TestWithMultiplePropertiesNoShadow } from './components/TestWithMultiplePropertiesNoShadow';
+import testTemplatestrings from './test.templatestrings';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -48,6 +49,7 @@ describe('root', function () {
       })
     }
   });
+  testTemplatestrings();
   [
     { class: TestWithMultipleProperties, name: 'TestWithMultipleProperties' },
     { class: TestWithMultiplePropertiesNoShadow, name: 'TestWithMultiplePropertiesNoShadow' },

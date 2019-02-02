@@ -16,11 +16,12 @@
 
 import { isStage2MethodDecorator, isStage2FieldDecorator, applyStage2ToLegacyFieldDecorator } from './stage2/stage2decorators';
 import { Trace as TraceS2 } from './stage2/trace';
+import { FixedPropertyDecorator } from './prop';
 
 /**
  * Displays trace messages
  */
-export function Trace(): any { // tslint:disable-line
+export function Trace(): FixedPropertyDecorator { // tslint:disable-line
   return (target: typeof Object,
           propertyKey: string | symbol,
           descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> | any | void => { // tslint:disable-line:no-any

@@ -67,20 +67,20 @@ If decorators are used with babel the data type for the Prop decorator has to be
 
 # Sample
 ```typescript
-import { Component, CutomElement, Prop, Watch Event, EventEmitter, State, html } from 'ce-decorators'
+import { Component, CustomElement, Event, EventEmitter, Interceptor, Prop, State, Watch, html } from 'ce-decorators';
 
 @Component({
-    tag: 'my-custom-element'
-    style: `
+  tag: 'my-custom-element',
+  style: `
     :host {
         background-color : #f0f;
     }
-    `
+    `,
 })
 export class MyCustomElement extends CustomElement {
 
   @Prop()
-  propertyOne: string = "default value"; // register a property propertyOne with a reflection to attribute property-one
+  propertyOne: string = 'default value'; // register a property propertyOne with a reflection to attribute property-one
 
   @Event()
   change: EventEmitter<string>; // will trigger a custom event with name "change" (name can be overriden by decorator argument)
@@ -89,13 +89,13 @@ export class MyCustomElement extends CustomElement {
   private myState: boolean = false; // only visible to the instance, will not reflect but trigger a re-render
 
   @Watch('propertyOne') // watches for changes in propertyOne (changes to properties within this method will not be reflected, please use intercept for that case)
-  propertyOneChanged(oldValue:string, newValue:string) {
+  propertyOneChanged(oldValue: string, newValue: string) {
     console.log('propertyOne Changed');
   }
 
   @Interceptor('propertyOne') // watches for changes of propertyOne and change the value, the changed value will be reflected and written
-  propertyOneInterceptor(oldValue:string, newValue:string) {
-      return newValue + "test";
+  propertyOneInterceptor(oldValue: string, newValue: string) {
+    return newValue + 'test';
   }
 
   render() {
