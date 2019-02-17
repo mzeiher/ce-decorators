@@ -336,3 +336,10 @@ export abstract class LazyCustomElement extends CustomElement {
     this._renderStrategy = RENDER_STRATEGY.LAZY;
   }
 }
+
+/** helper for shimmed browsers */
+(function() { // tslint:disable-line
+  if ('ShadyCSS' in window && typeof window.ShadyCSS.ScopingShim.prepareAdoptedCssText === 'undefined') {
+    console.error('Please check your "@webcomponents/webcomponentsjs" polyfill, minimum version 2.2.6 required'); // tslint:disable-line
+  }
+})();
