@@ -59,7 +59,7 @@
     "variable-name": [true, "allow-leading-underscore", "check-format", "ban-keywords"],
     "array-type": [true, "generic"],
     "semicolon": [true, "always"],
-    "curly": true,
+    "curly": false,
     "switch-default": true,
     "ban-types": [true],
     "no-any": true,

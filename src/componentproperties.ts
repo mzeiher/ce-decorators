@@ -32,6 +32,7 @@ export interface CSSStyleSheetAlike {
 export interface ExtendedComponentOptions extends ComponentOptions {
   cssStyles: Array<CSSStyleSheet | CSSStyleSheetAlike>;
   styleSheetAdopted: boolean;
+  templateCache: TemplateStringsArray;
 }
 
 /**

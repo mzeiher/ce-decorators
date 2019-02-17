@@ -14,19 +14,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue, makeTemplateString, supportsAdoptingStyleSheets, needShadyDOM } from './utils';
+import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue } from './utils';
 import { getClassProperties } from './classproperties';
 import { COMPONENT_STATE } from './componentstate';
 import { PROPERTY_STATE } from './propertystate';
 import { PropertyOptions } from './propertyoptions';
-import { getComponentProperties } from './componentproperties';
 import { getClassPropertyWatcher } from './classpropertywatcher';
 import { getClassPropertyInterceptor } from './classpropertyinterceptors';
 
-import { TemplateResult, render as defaultRenderer, shadyRender, html } from './lit-html';
-
-let componentsToRender: Array<CustomElement> = [];
-let currentAnimationFrame: number | null = null;
+import { TemplateResult } from './lit-html';
+import { renderToLightDOM } from './renderer/lightDOMRenderer';
+import { renderToShadowDOM } from './renderer/shadowDOMRenderer';
+import { addComponentToRenderPipeline, removeComponentFromRenderPipeline } from './renderer/pipeRenderer';
 
 /**
  * interface for an indexable element
@@ -42,23 +41,6 @@ export enum RENDER_STRATEGY {
   DEFAULT,
   LAZY,
   PIPELINE_EXPERIMENTAL,
-}
-
-// TODO: add frame budget and delay multiple renders to later frames :)
-function addComponentToRenderPipeline(component: CustomElement) {
-  componentsToRender.push(component);
-  if (currentAnimationFrame === null) {
-    currentAnimationFrame = window.requestAnimationFrame(() => {
-      // var now = performance.now();
-      componentsToRender.forEach((value) => {
-        value.renderComponent();
-        value['_renderScheduled'] = false; // tslint:disable-line
-      });
-      componentsToRender = [];
-      currentAnimationFrame = null;
-      // console.log(`rendered ${componentsToRender.length} components in ${performance.now()-now} ms`);
-    });
-  }
 }
 
 /**
@@ -137,6 +119,7 @@ export abstract class CustomElement extends HTMLElement {
 
   private _renderCompletedCallbacks: Array<() => void> = [];
   private _constructedCompletedCallbacks: Array<() => void> = [];
+  private _layoutRAFReference: number = null;
 
   constructor() {
     super();
@@ -178,6 +161,11 @@ export abstract class CustomElement extends HTMLElement {
    * is called just after the first render()
    */
   componentFirstRender() { } // tslint:disable-line
+
+  /**
+   * is called after render and broser layouting
+   */
+  componentDidLayout() { } // tslint:disable-line
 
   /**
    * return element whre the DOM from render will be rendered to
@@ -255,7 +243,7 @@ export abstract class CustomElement extends HTMLElement {
           });
           return;
         } else if (this._renderStrategy === RENDER_STRATEGY.PIPELINE_EXPERIMENTAL) {
-          componentsToRender.splice(componentsToRender.indexOf(this), 1);
+          removeComponentFromRenderPipeline(this);
         } else {
           return; // render already scheduled as microtask
         }
@@ -275,44 +263,9 @@ export abstract class CustomElement extends HTMLElement {
     this._renderScheduled = false;
     const elementToRender = this.renderToElement();
     if (elementToRender === this.shadowRoot) { // render to shadowroot
-      if (this._templateCache === null) {
-        const { cssStyles, tag, styleSheetAdopted } = getComponentProperties(this.constructor as typeof CustomElement);
-        if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
-          if (!styleSheetAdopted) {
-            window.ShadyCSS.ScopingShim.prepareAdoptedCssText(cssStyles.map((value) => value.cssText), tag);
-            getComponentProperties(this.constructor as typeof CustomElement).styleSheetAdopted = true;
-          }
-          this._templateCache = makeTemplateString(['', ''], ['', '']);
-        } else if (supportsAdoptingStyleSheets) {
-          this.shadowRoot.adoptedStyleSheets = <Array<CSSStyleSheet>>cssStyles;
-          this._templateCache = makeTemplateString(['', ''], ['', '']);
-        } else {
-          const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
-          this._templateCache = makeTemplateString([`<style>${styleString}</style>`, ''], [`<style>${styleString}</style>`, '']);
-        }
-      }
-      if (needShadyDOM()) {
-        shadyRender(html(this._templateCache,
-          this.render()),
-          elementToRender,
-          { scopeName: getComponentProperties(this.constructor as typeof CustomElement)!.tag, eventContext: this });
-      } else {
-        defaultRenderer(html(this._templateCache, this.render()), elementToRender, { eventContext: this });
-      }
+      renderToShadowDOM.apply(this, [elementToRender]);
     } else {
-      if (this._templateCache === null) {
-        const { cssStyles, tag, styleSheetAdopted } = getComponentProperties(this.constructor as typeof CustomElement);
-        if (!styleSheetAdopted) {
-          const styleSheet = document.createElement('style');
-          const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
-          styleSheet.textContent = styleString.replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, ...args) => {
-            return `${tag}${args[2] ? args[2] : ''}`;
-          });
-          document.querySelector('head').appendChild(styleSheet);
-        }
-        this._templateCache = makeTemplateString(['', ''], ['', '']);
-      }
-      defaultRenderer(this.render(), elementToRender, { eventContext: this });
+      renderToLightDOM.apply(this, [elementToRender]);
     }
     this.componentDidRender();
     if (this._firstRender) {
@@ -322,6 +275,14 @@ export abstract class CustomElement extends HTMLElement {
     this._propertyState = PROPERTY_STATE.UPDATED;
     this._renderCompletedCallbacks.forEach((value) => value());
     this._renderCompletedCallbacks = [];
+    if (this._layoutRAFReference === null) { // queue a promise which resolves after browser layouting
+      this._layoutRAFReference = window.requestAnimationFrame(() => {
+        Promise.resolve().then(() => {
+          this.componentDidLayout();
+          this._layoutRAFReference = null;
+        });
+      });
+    }
   }
 
   /**

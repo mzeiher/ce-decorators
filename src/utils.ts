@@ -92,4 +92,4 @@ export function needShadyDOM(): boolean {
 /**
  * support for new adopting stylesheet functionality
  */
-export const supportsAdoptingStyleSheets: boolean = ('adoptedStyleSheets' in Document.prototype);
+export const supportsAdoptingStyleSheets: boolean = ('adoptedStyleSheets' in Document.prototype) && 'replace' in CSSStyleSheet.prototype;
