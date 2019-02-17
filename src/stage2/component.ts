@@ -40,7 +40,7 @@ export function Component(options: ComponentOptions): Stage2ClassDecorator<typeo
         if (!CustomElement.isPrototypeOf(target)) {
           throw new Error(`${target.name} must extend CustomElement`);
         }
-        const componentExtendedOptions: ExtendedComponentOptions = { ...options, cssStyles: [], styleSheetAdopted: false, templateCache: null };
+        const componentExtendedOptions: ExtendedComponentOptions = { ...options, cssStyles: [], shadyCSSStyleSheetAdopted: false, templateCache: null };
 
         const prototype: typeof CustomElement = Object.getPrototypeOf(target) as typeof CustomElement;
         const prototypeClassProperties = getClassProperties(prototype);

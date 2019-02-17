@@ -26,8 +26,8 @@ import { render } from '../lit-html';
  */
 export function renderToLightDOM(this: CustomElement, elementToRender: HTMLElement) {
   if (this._templateCache === null) {
-    const { cssStyles, tag, styleSheetAdopted, templateCache } = getComponentProperties(this.constructor as typeof CustomElement);
-    if (!styleSheetAdopted) {
+    const { cssStyles, tag, shadyCSSStyleSheetAdopted, templateCache } = getComponentProperties(this.constructor as typeof CustomElement);
+    if (!shadyCSSStyleSheetAdopted) {
       const styleSheet = document.createElement('style');
       const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
       styleSheet.textContent = styleString.replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, ...args) => {
