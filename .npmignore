@@ -13,3 +13,4 @@ devserver.html
 *.tgz
 /src/__tests__
 /src
+yarn.lock
