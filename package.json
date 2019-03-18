@@ -1,6 +1,6 @@
 {
   "name": "ce-decorators",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Custom Element decorators for typescript",
   "module": "lib/index.js",
   "sideEffects": [
