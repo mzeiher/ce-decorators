@@ -15,17 +15,11 @@
  */
 
 import { TESTABLECLASSES } from './test.events';
-import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
-import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
-
 /* tslint:disable */
-
-
-declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
-  if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
+
   describe('interceptor tests (' + name + ')', function () {
     it('string watcher test (' + name + ')', async function (done) {
       let element: TESTABLECLASSES = new constructorInstance();

@@ -15,17 +15,11 @@
  */
 
 /* tslint:disable */
-
-import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
-import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
 import { needShadyDOM } from '../utils';
 import { TESTABLECLASSES } from './test.events';
 
-declare var BABEL_COMPILE: boolean;
-
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
-  if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
   describe('render tests (' + name + ')', function () {
     let element: TESTABLECLASSES = null;
     beforeEach(function () {

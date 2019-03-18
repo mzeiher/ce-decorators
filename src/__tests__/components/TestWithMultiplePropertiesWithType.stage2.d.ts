@@ -69,6 +69,12 @@ export declare class TestWithMultiplePropertiesWithTypeStage2 extends TestWithMu
 
   interceptableProperty:string;
 
+  functionProperty: () => void;
+  regexpProperty: RegExp;
+
+  onlyAttributeConverterProperty: string;
+  attributePropertyConverterProperty: string;
+
   deprecatedProperty: string;
 
   deprecatedPropertyGetSet:string;

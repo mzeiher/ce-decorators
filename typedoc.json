@@ -1,0 +1,5 @@
+{
+  "mode": "modules",
+  "out": "docs",
+  "exclude": ["**/*+(index|.spec).ts","/__tests__/**"]
+}

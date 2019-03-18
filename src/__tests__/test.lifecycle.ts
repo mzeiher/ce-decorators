@@ -15,16 +15,10 @@
  */
 
 /* tslint:disable */
-
-import { TestWithMultipleProperties } from './components/TestWithMultipleProperties';
-import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePropertiesLazy';
 import { TESTABLECLASSES } from './test.events';
-
-declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
-  if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
   describe('lifecycle tests (' + name + ')', function () {
     it('lifecycle of (' + name + ')', async function (done) {
       let element: TESTABLECLASSES = new constructorInstance();

@@ -24,6 +24,7 @@ import { TestWithMultiplePropertiesLazy } from './components/TestWithMultiplePro
 import { TestWithMultiplePropertiesWithTypeLazy } from './components/TestWithMultiplePropertiesWithTypeLazy';
 import { TestWithMultiplePropertiesWithTypeStage2Lazy } from './components/TestWithMultiplePropertiesWithTypeLazy.stage2';
 import { TestWithMultiplePropertiesWithTypeTSLazy } from './components/TestWithMultiplePropertiesWithTypeTSLazy';
+import { TestWithMultiplePropertiesNoShadow } from './components/TestWithMultiplePropertiesNoShadow';
 
 export type TESTABLECLASSES = TestWithMultipleProperties |
   TestWithMultiplePropertiesWithType |
@@ -32,38 +33,29 @@ export type TESTABLECLASSES = TestWithMultipleProperties |
   TestWithMultiplePropertiesLazy |
   TestWithMultiplePropertiesWithTypeLazy |
   TestWithMultiplePropertiesWithTypeStage2Lazy |
+  TestWithMultiplePropertiesNoShadow |
   TestWithMultiplePropertiesWithTypeTSLazy;
-
-const propertyTemplate = (ctor: { new(): TESTABLECLASSES }, property: string, message: string) => `[DEPRECATED] [${ctor.name}] property ${property} is deprecated: ${message || ''}`;
-const methodTemplate = (ctor: { new(): TESTABLECLASSES }, method: string, message: string) => `[DEPRECATED] [${ctor.name}] method ${method} is deprecated: ${message || ''}`;
-const setterTemplate = (ctor: { new(): TESTABLECLASSES }, property: string, message: string) => `[DEPRECATED] [${ctor.name}] setter ${property} is deprecated: ${message || ''}`;
-const getterTemplate = (ctor: { new(): TESTABLECLASSES }, property: string, message: string) => `[DEPRECATED] [${ctor.name}] getter ${property} is deprecated: ${message || ''}`;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
-  describe('deprecated tests (' + name + ')', function () {
-    it('deprecated decorator (' + name + ')', async function (done) {
-      const element = new constructorInstance();
-      await element.waitForConstruction();
+  describe('test caching behaviour (' + name + ')', function () {
+    it('test caching behaviour (' + name + ')', async function (done) {
+      const elements = [new constructorInstance(), new constructorInstance(), new constructorInstance(), new constructorInstance()];
+      const promises: Array<PromiseLike<{}>> = [];
+      elements.forEach((value) => {
+        document.body.appendChild(value);
+        promises.push(value.waitForRender());
+      })
 
-      let lastMessage = '';
-      spyOn(console, "warn").and.callFake(function (message: string) { lastMessage = message; });
+      await Promise.all(promises);
 
-      element.deprecatedProperty = '';
-      expect(lastMessage).toEqual(propertyTemplate(constructorInstance, 'deprecatedProperty', 'Custom Message'));
-      
-      element.deprecatedProperty;
-      expect(lastMessage).toEqual(propertyTemplate(constructorInstance, 'deprecatedProperty', 'Custom Message'));
+      expect((<any>elements[0])['_templateCache'] === (<any>elements[1])['_templateCache'] &&
+      (<any>elements[0])['_templateCache'] === (<any>elements[2])['_templateCache'] &&
+      (<any>elements[0])['_templateCache'] === (<any>elements[3])['_templateCache']).toBeTruthy();
 
-      element.stringProperty = element.deprecatedPropertyGetSet;
-      expect(lastMessage).toEqual(getterTemplate(constructorInstance, 'deprecatedPropertyGetSet', ''));
-
-      element.deprecatedPropertyGetSet = 'blaaa'
-      expect(lastMessage).toEqual(setterTemplate(constructorInstance, 'deprecatedPropertyGetSet', ''));
-      
-      element.deprecatedMethod();
-      expect(lastMessage).toEqual(methodTemplate(constructorInstance, 'deprecatedMethod', ''));
-
+      elements.forEach((value) => {
+        document.body.removeChild(value);
+      })
       done();
     });
   });

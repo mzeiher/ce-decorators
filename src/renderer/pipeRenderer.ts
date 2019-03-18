@@ -15,13 +15,12 @@
  */
 
 import { CustomElement } from '../customelement';
+import { renderComponent } from './renderComponent';
 
 const componentsToRender: Array<CustomElement> = [];
 let currentAnimationFrame: number | null = null;
 
-let componentsInRenderBatch: number = 25;
 const frameBudget = 1000 / 60;
-let currentAverageRenderTime: number = frameBudget / componentsInRenderBatch;
 
 /**
  * remove component from render queue
@@ -36,23 +35,26 @@ export function removeComponentFromRenderPipeline(component: CustomElement) {
  * @param component 
  */
 export function addComponentToRenderPipeline(component: CustomElement) {
-  componentsToRender.push(component);
+  if (componentsToRender.indexOf(component) < 0) {
+    componentsToRender.push(component);
+  }
   scheduleNextRAFRender();
 }
 
 function scheduleNextRAFRender() {
   if (currentAnimationFrame === null) {
     currentAnimationFrame = window.requestAnimationFrame(() => {
-      let i = 0;
-      while (i < componentsInRenderBatch) {
+      let currentFrameBudget = frameBudget;
+      do {
         const component = componentsToRender.splice(0, 1)[0];
         if (!component) break;
         const start = performance.now();
-        component.renderComponent();
-        currentAverageRenderTime = ((performance.now() - start) + currentAverageRenderTime) / 2;
-        componentsInRenderBatch = Math.round(frameBudget / currentAverageRenderTime);
-        i++;
-      }
+
+        renderComponent.apply(component);
+
+        const renderTime = performance.now() - start;
+        currentFrameBudget = currentFrameBudget - renderTime;
+      } while (currentFrameBudget > 0);
       currentAnimationFrame = null;
       scheduleNextRAFRender();
     });

@@ -18,13 +18,14 @@ import { PropertyOptions } from './propertyoptions';
 import { getComponentProperties, getAllComponents } from './componentproperties';
 import { getClassProperties } from './classproperties';
 import { getClassEvents } from './classevents';
+import { EventOptions } from './eventoptions';
 
 /**
  * ComponentOptions type
  */
 export interface ComponentCatalogOptions {
   properties: { [name: string]: PropertyOptions };
-  events: Array<string>;
+  events: Array<EventOptions>;
 }
 
 /**
@@ -48,7 +49,7 @@ export function getComponentCatalog(): Components {
       properties[name.toString()] = options;
     });
 
-    const events: Array<string> = Array.from(getClassEvents(value).values());
+    const events: Array<EventOptions> = Array.from(getClassEvents(value).values());
 
     catalog[componentProperties.tag] = {
       properties,
@@ -57,3 +58,8 @@ export function getComponentCatalog(): Components {
   });
   return catalog;
 }
+
+if (!(<any>window)['CEDECORATORCOMPONENTS']) { // tslint:disable-line
+ (<any>window)['CEDECORATORCOMPONENTS'] = []; // tslint:disable-line
+} // ts-lint:disable-line
+(<any>window)['CEDECORATORCOMPONENTS'].push(getComponentCatalog); // tslint:disable-line

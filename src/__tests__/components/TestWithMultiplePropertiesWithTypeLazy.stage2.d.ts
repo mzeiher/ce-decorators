@@ -69,6 +69,12 @@ export declare class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWi
 
   interceptableProperty:string;
 
+  functionProperty: () => void;
+  regexpProperty: RegExp;
+  
+  onlyAttributeConverterProperty: string;
+  attributePropertyConverterProperty: string;
+
   deprecatedProperty: string;
 
   deprecatedPropertyGetSet:string;

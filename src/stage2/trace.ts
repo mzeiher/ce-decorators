@@ -45,7 +45,7 @@ export function Trace(): Stage2FieldDecorator<Object, typeof Object> { // tslint
           configurable: true,
           enumerable: false,
           get(this: Object) {
-            console.log(`[LOG] [${this.constructor.name}] setter called on property ${descriptor.key.toString()}`); // tslint:disable-line
+            console.log(`[LOG] [${this.constructor.name}] getter called on property ${descriptor.key.toString()}`); // tslint:disable-line
             return (<any>this)[key]; // tslint:disable-line:no-any
           },
           set(this: Object, value: any) { // tslint:disable-line:no-any
@@ -68,7 +68,7 @@ export function Trace(): Stage2FieldDecorator<Object, typeof Object> { // tslint
           configurable: true,
           enumerable: false,
           get(this: Object) {
-            console.log(`[LOG] [${this.constructor.name}] setter called on property ${descriptor.key.toString()}`); // tslint:disable-line
+            console.log(`[LOG] [${this.constructor.name}] getter called on property ${descriptor.key.toString()}`); // tslint:disable-line
             return descriptor.descriptor.get.apply(this);
           },
           set(this: Object, value: any) { // tslint:disable-line:no-any

@@ -37,6 +37,7 @@ import testLifecycle from './test.lifecycle';
 import testDeprecated from './test.deprecated';
 import { TestWithMultiplePropertiesNoShadow } from './components/TestWithMultiplePropertiesNoShadow';
 import testTemplatestrings from './test.templatestrings';
+import testCaching from './test.caching';
 
 /* istanbul ignore next */
 describe('root', function () {
@@ -69,6 +70,7 @@ describe('root', function () {
     testInterceptors(value.class, value.name);
     testLifecycle(value.class, value.name);
     testDeprecated(value.class, value.name);
+    testCaching(value.class, value.name);
   });
   [{ class: ServiceTest, name: 'ServiceTest' },
   { class: ServiceTestWithType, name: 'ServiceTestWithType' }].forEach(value => testService(value.class, value.name));

@@ -27,6 +27,7 @@ module.exports = env => {
         {
           test: /(\.tsx?|\.js)$/,
           loader: 'babel-loader',
+          sideEffects: true,
           options: {
             babelrc: false,
             presets: [
@@ -74,10 +75,20 @@ module.exports = env => {
     externals: ['lit-html', 'lit-html/lib/shady-render'],
     output: {
       filename: 'umd.js',
-    }
+    },
+    plugins: [
+      new BundleAnalyzerPlugin({
+        openAnalyzer: false,
+        analyzerMode: 'static',
+        generateStatsFile: true,
+        statsFilename: path.resolve(__dirname, 'reports', 'report_develop_umd.json'),
+        reportFilename: path.resolve(__dirname, 'reports', 'report_develop_umd.html')
+      })
+    ]
   });
 
-  const webpackConfigProductionUMD = webpackMerge(webpackConfigDevelopUMD, {
+  const webpackConfigProductionUMD = webpackMerge(webpackConfigDevelop, {
+    externals: ['lit-html', 'lit-html/lib/shady-render'],
     mode: 'production',
     devtool: 'none',
     output: {
@@ -88,7 +99,8 @@ module.exports = env => {
         openAnalyzer: false,
         analyzerMode: 'static',
         generateStatsFile: true,
-        reportFilename: path.resolve(__dirname, 'reports', 'report.html')
+        statsFilename: path.resolve(__dirname, 'reports', 'report_production_umd.json'),
+        reportFilename: path.resolve(__dirname, 'reports', 'report_production_umd.html')
       })
     ]
   });
@@ -206,9 +218,6 @@ module.exports = env => {
       ]
     },
     plugins: [
-      new webpack.DefinePlugin({
-        BABEL_COMPILE: false
-      })
     ]
   }
 
@@ -328,9 +337,6 @@ module.exports = env => {
       ]
     },
     plugins: [
-      new webpack.DefinePlugin({
-        BABEL_COMPILE: false
-      })
     ]
   }
 
@@ -458,10 +464,7 @@ module.exports = env => {
       ]
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.DefinePlugin({
-        BABEL_COMPILE: false
-      })
+      new webpack.HotModuleReplacementPlugin()
     ]
   }
 

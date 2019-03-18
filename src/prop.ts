@@ -25,6 +25,7 @@ import { PropertyOptions } from './propertyoptions';
  * fixed decorator for babels initializer
  */
 export type FixedPropertyDecorator = (target: Object, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => any; // tslint:disable-line:no-any
+
 /**
  * Property decorator, handles attribute reflection and type checking
  *

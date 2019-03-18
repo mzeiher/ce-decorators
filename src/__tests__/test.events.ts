@@ -25,8 +25,6 @@ import { TestWithMultiplePropertiesWithTypeLazy } from './components/TestWithMul
 import { TestWithMultiplePropertiesWithTypeStage2Lazy } from './components/TestWithMultiplePropertiesWithTypeLazy.stage2';
 import { TestWithMultiplePropertiesWithTypeTSLazy } from './components/TestWithMultiplePropertiesWithTypeTSLazy';
 
-declare var BABEL_COMPILE:boolean;
-
 export type TESTABLECLASSES = TestWithMultipleProperties | 
 TestWithMultiplePropertiesWithType | 
 TestWithMultiplePropertiesWithTypeStage2 | 
@@ -38,7 +36,6 @@ TestWithMultiplePropertiesWithTypeTSLazy;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): TESTABLECLASSES }, name: string) => {
-  if (BABEL_COMPILE && (constructorInstance === TestWithMultipleProperties || constructorInstance === TestWithMultiplePropertiesLazy)) return;
   describe('event tests (' + name + ')', function () {
     it('event emitter (' + name + ')', function (done) {
       const element = new constructorInstance();

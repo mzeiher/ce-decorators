@@ -18,14 +18,13 @@ import { camelToKebapCase, kebapToCamelCase, deserializeValue, serializeValue } 
 import { getClassProperties } from './classproperties';
 import { COMPONENT_STATE } from './componentstate';
 import { PROPERTY_STATE } from './propertystate';
-import { PropertyOptions } from './propertyoptions';
+import { PropertyOptions, AttributePropConverter, FromAttributeConverter } from './propertyoptions';
 import { getClassPropertyWatcher } from './classpropertywatcher';
 import { getClassPropertyInterceptor } from './classpropertyinterceptors';
 
 import { TemplateResult } from './lit-html';
-import { renderToLightDOM } from './renderer/lightDOMRenderer';
-import { renderToShadowDOM } from './renderer/shadowDOMRenderer';
 import { addComponentToRenderPipeline, removeComponentFromRenderPipeline } from './renderer/pipeRenderer';
+import { renderComponent } from './renderer/renderComponent';
 
 /**
  * interface for an indexable element
@@ -55,7 +54,15 @@ export abstract class CustomElement extends HTMLElement {
       const classProperty: PropertyOptions = getClassProperties(this).get(propertyName);
 
       oldValue = (<IndexableElement>instance)[propertyName];
-      newValue = deserializeValue(newValue, classProperty.type); // tslint:disable-line:no-unsafe-any
+      if (classProperty.converter) {
+        if ((<AttributePropConverter>classProperty.converter).fromAttribute) {
+          newValue = (<AttributePropConverter>classProperty.converter).fromAttribute(newValue, classProperty.type); // tslint:disable-line:no-unsafe-any
+        } else {
+          newValue = (<FromAttributeConverter>classProperty.converter)(newValue, classProperty.type); // tslint:disable-line:no-unsafe-any
+        }
+      } else {
+        newValue = deserializeValue(newValue, classProperty.type); // tslint:disable-line:no-unsafe-any
+      }
       if (oldValue !== newValue) {
         instance._propertyState = PROPERTY_STATE.UPDATE_FROM_ATTRIBUTE;
         this._fromProperty(propertyName, oldValue, newValue, instance);
@@ -96,7 +103,11 @@ export abstract class CustomElement extends HTMLElement {
           if (newValue === false || newValue === null || newValue === undefined) {
             instance.removeAttribute(camelToKebapCase(propertyKey));
           } else {
-            instance.setAttribute(camelToKebapCase(propertyKey), serializeValue(newValue, classProperty.type));
+            if (classProperty.converter && (<AttributePropConverter>classProperty.converter).toAttribute) {
+                instance.setAttribute(camelToKebapCase(propertyKey), (<AttributePropConverter>classProperty.converter).toAttribute(newValue, classProperty.type));
+            } else {
+              instance.setAttribute(camelToKebapCase(propertyKey), serializeValue(newValue, classProperty.type));
+            }
           }
         }
       }
@@ -117,9 +128,9 @@ export abstract class CustomElement extends HTMLElement {
   protected _templateCache: TemplateStringsArray = null;
   protected _firstRender: boolean = true;
 
-  private _renderCompletedCallbacks: Array<() => void> = [];
-  private _constructedCompletedCallbacks: Array<() => void> = [];
-  private _layoutRAFReference: number = null;
+  protected _renderCompletedCallbacks: Array<() => void> = [];
+  protected _constructedCompletedCallbacks: Array<() => void> = [];
+  protected _layoutRAFReference: number = null;
 
   constructor() {
     super();
@@ -224,14 +235,14 @@ export abstract class CustomElement extends HTMLElement {
               setTimeout(resolve);
               this._renderCallbackResolver = resolve;
             }).then(() => {
-              this.renderComponent();
+              renderComponent.apply(this);
               this._renderCallbackResolver = null;
             });
             break;
           }
         default:
           Promise.resolve().then(() => {
-            this.renderComponent();
+            renderComponent.apply(this);
           });
           break;
       }
@@ -249,38 +260,7 @@ export abstract class CustomElement extends HTMLElement {
         }
       }
       Promise.resolve().then(() => {
-        this.renderComponent();
-      });
-    }
-  }
-
-  /**
-   * render the component to the DOM
-   * you should never call this function directly, use scheduleRender(force)
-   */
-  renderComponent() {
-    this.componentWillRender();
-    this._renderScheduled = false;
-    const elementToRender = this.renderToElement();
-    if (elementToRender === this.shadowRoot) { // render to shadowroot
-      renderToShadowDOM.apply(this, [elementToRender]);
-    } else {
-      renderToLightDOM.apply(this, [elementToRender]);
-    }
-    this.componentDidRender();
-    if (this._firstRender) {
-      this.componentFirstRender();
-      this._firstRender = false;
-    }
-    this._propertyState = PROPERTY_STATE.UPDATED;
-    this._renderCompletedCallbacks.forEach((value) => value());
-    this._renderCompletedCallbacks = [];
-    if (this._layoutRAFReference === null) { // queue a promise which resolves after browser layouting
-      this._layoutRAFReference = window.requestAnimationFrame(() => {
-        Promise.resolve().then(() => {
-          this.componentDidLayout();
-          this._layoutRAFReference = null;
-        });
+        renderComponent.apply(this);
       });
     }
   }

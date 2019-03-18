@@ -198,6 +198,16 @@ export class TestWithMultiplePropertiesLazy extends TestWithMultiplePropertiesBa
   @Prop()
   interceptableProperty: string = '';
 
+  @Prop({type: Function}) functionProperty: () => void = null;
+  @Prop({type: RegExp}) regexpProperty: RegExp = /test/g;
+
+  @Prop({type: String, converter: (value, _type) => ('fromAttribute' + value)}) onlyAttributeConverterProperty: string =  '';
+  @Prop({type: String, converter: {
+    fromAttribute: (value, _type) => ('fromAttribute' + value),
+    toAttribute: (value, _type) => ('toAttribute' + value),
+  }})
+  attributePropertyConverterProperty: string = '';
+
   @Deprecated('Custom Message')
   deprecatedProperty: string = 'test';
 

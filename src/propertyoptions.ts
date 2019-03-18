@@ -17,7 +17,23 @@
 /**
  * PropertyType
  */
-export type PropertyType = Boolean | Number | String | Object | Array<any>; // tslint:disable-line:no-any
+export type PropertyType = Function | RegExp | Boolean | Number | String | Object | Array<any>; // tslint:disable-line:no-any
+
+/**
+ * to attribute converter type
+ */
+export type FromAttributeConverter = (value: unknown, type: PropertyType) => string;
+/**
+ * property converter
+ */
+export interface AttributePropConverter {
+  fromAttribute: (value: unknown, type: PropertyType) => unknown;
+  toAttribute: FromAttributeConverter;
+}
+/**
+ * Custom converter
+ */
+export type ConverterType = FromAttributeConverter | AttributePropConverter;
 
 /**
  * PropertyOptions
@@ -25,4 +41,5 @@ export type PropertyType = Boolean | Number | String | Object | Array<any>; // t
 export interface PropertyOptions {
   type?: PropertyType;
   reflectAsAttribute?: boolean;
+  converter?: ConverterType;
 }

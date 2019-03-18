@@ -15,13 +15,14 @@
  */
 
 import { CustomElement } from './customelement';
+import { EventOptions } from './eventoptions';
 
 const map: Map<typeof CustomElement, ClassEvents> = new Map();
 
 /**
  * CLassEvent type
  */
-export type ClassEvents = Map<string | symbol, string>;
+export type ClassEvents = Map<string | symbol, EventOptions>;
 
 /**
  * return events registered for the given class

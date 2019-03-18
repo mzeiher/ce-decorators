@@ -18,7 +18,7 @@
  * FieldDecoratorDescriptor
  */
 export interface FieldDecoratorDescriptor {
-  kind: 'field' | 'method' | 'accessor';
+  kind: 'field' | 'method';
   key: string | symbol;
   placement: 'static' | 'prototype' | 'own';
   descriptor: PropertyDescriptor;
@@ -48,7 +48,7 @@ export interface ClassDecoratorDescriptor {
  * FieldDecoratorResult
  */
 export interface FieldDecoratorResult<T, C> {
-  kind: 'field' | 'method' | 'accessor';
+  kind: 'field' | 'method';
   key: string | symbol;
   placement: 'static' | 'prototype' | 'own';
   descriptor: PropertyDescriptor;

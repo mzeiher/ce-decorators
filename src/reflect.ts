@@ -15,7 +15,7 @@
  */
 
 // reflect polyfill in case reflect-metadata package not installed
-const origReflect: any = Reflect; // tslint:disable-line:no-any
+const origReflect: any = (<any>window).Reflect || {}; // tslint:disable-line:no-any
 
 type MetadataMap = Map<string, any>; // tslint:disable-line:no-any
 type PropMap = Map<string | symbol, MetadataMap>;

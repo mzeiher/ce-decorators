@@ -4,6 +4,7 @@ node_modules
 .gitignore
 /index.html
 /test
+/docs
 /karma.conf.js
 *.json
 webpack.config.js

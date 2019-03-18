@@ -3,6 +3,7 @@ node_modules
 /test
 /reports
 /umd
+/docs
 *.tgz
 stats.json
 .vscode

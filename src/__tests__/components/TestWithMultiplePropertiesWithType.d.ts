@@ -66,6 +66,12 @@ export declare class TestWithMultiplePropertiesWithType extends TestWithMultiple
   arrayPropertyWithReflection: Array<number>;
 
   interceptableProperty:string;
+
+  functionProperty: () => void;
+  regexpProperty: RegExp;
+
+  onlyAttributeConverterProperty: string;
+  attributePropertyConverterProperty: string;
   
   deprecatedProperty: string;
 

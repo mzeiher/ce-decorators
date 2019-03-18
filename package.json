@@ -3,6 +3,10 @@
   "version": "2.5.0",
   "description": "Custom Element decorators for typescript",
   "module": "lib/index.js",
+  "sideEffects": [
+    "./lib/reflect.js",
+    "./lib/componentcatalog.js"
+  ],
   "main": "umd/bundle.min.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -15,7 +19,8 @@
     "build:babel": "babel src -d lib --extensions \".ts,.js\" --source-maps",
     "build:umdandtest": "webpack",
     "build:all": "npm run clean && npm run build:type && npm run build:babel && npm run build:umdandtest",
-    "serve": "webpack-dev-server --env.devserver"
+    "serve": "webpack-dev-server --env.devserver",
+    "audit": "npm audit"
   },
   "author": "Mathis Zeiher",
   "keywords": [
@@ -33,7 +38,7 @@
   },
   "homepage": "https://github.com/mzeiher/ce-decorators.git",
   "license": "ISC",
-  "peerDependencies": {
+  "dependencies": {
     "lit-html": ">=1.0.0"
   },
   "devDependencies": {
@@ -51,12 +56,12 @@
     "@types/jasmine": "~3.3.8",
     "@webcomponents/webcomponentsjs": "2.2.7",
     "babel-loader": "~8.0.5",
-    "babel-plugin-istanbul": "~5.1.0",
+    "babel-plugin-istanbul": "~5.1.1",
     "corejs": "~1.0.0",
     "jasmine-core": "~3.3.0",
-    "karma": "~4.0.0",
+    "karma": "~4.0.1",
     "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "~2.0.4",
+    "karma-coverage-istanbul-reporter": "~2.0.5",
     "karma-detect-browsers": "~2.3.3",
     "karma-edge-launcher": "~0.4.2",
     "karma-firefox-launcher": "~1.1.0",
@@ -65,15 +70,15 @@
     "karma-junit-reporter": "~1.2.0",
     "karma-mocha-reporter": "~2.2.5",
     "karma-source-map-support": "~1.4.0",
-    "karma-sourcemap-loader": "^0.3.7",
-    "lit-html": "~1.0.0-rc.2",
+    "karma-sourcemap-loader": "~0.3.7",
     "ts-loader": "~5.3.3",
-    "tslint": "~5.13.1",
-    "tslint-microsoft-contrib": "^6.0.0",
-    "typescript": "~3.3.1",
-    "webpack": "~4.29.0",
-    "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "~3.2.1",
+    "tslint": "~5.14.0",
+    "tslint-microsoft-contrib": "~6.1.0",
+    "typedoc": "~0.14.2",
+    "typescript": "~3.3.3333",
+    "webpack": "~4.29.6",
+    "webpack-bundle-analyzer": "~3.1.0",
+    "webpack-cli": "~3.3.0",
     "webpack-dev-server": "~3.2.1",
     "webpack-merge": "~4.2.1"
   }

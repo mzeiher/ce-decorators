@@ -14,14 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 /* tslint:disable */
-
 import { ServiceTest } from "./services/ServiceObject";
 import { ServiceTestWithType } from './services/ServiceObjectWithType';
-declare var BABEL_COMPILE: boolean;
 
 /* istanbul ignore next */
 export default (constructorInstance: { new(): ServiceTest | ServiceTestWithType }, name: string) => {
-  if (BABEL_COMPILE && constructorInstance === ServiceTest) return;
   describe('service tests (' + name + ')', function () {
     it('singleton service test', function () {
       const service1: ServiceTest = new constructorInstance();

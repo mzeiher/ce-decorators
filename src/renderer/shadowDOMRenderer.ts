@@ -27,7 +27,7 @@ import { render, shadyRender, html } from '../lit-html';
 export function renderToShadowDOM(this: CustomElement, elementToRender: ShadowRoot) {
   if (this._templateCache === null) {
     const { cssStyles, tag, shadyCSSStyleSheetAdopted, templateCache } = getComponentProperties(this.constructor as typeof CustomElement);
-    if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
+    if (window.ShadyCSS && !window.ShadyCSS.nativeShadow && window.ShadyCSS.ScopingShim.prepareAdoptedCssText) {
       if (!shadyCSSStyleSheetAdopted) {
         window.ShadyCSS.ScopingShim.prepareAdoptedCssText(cssStyles.map((value) => value.cssText), tag);
         getComponentProperties(this.constructor as typeof CustomElement).shadyCSSStyleSheetAdopted = true;

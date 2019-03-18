@@ -13,11 +13,13 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import { PropertyType } from './propertyoptions';
 
 /**
  * EventOptions
  */
 export interface EventOptions {
   name?: string;
+  detailType?: PropertyType;
   options?: CustomEventInit;
 }

@@ -262,6 +262,16 @@ export class TestWithMultiplePropertiesWithTypeStage2Lazy extends TestWithMultip
   })
   interceptableProperty = '';
 
+  @Prop({type: Function}) functionProperty = null;
+  @Prop({type: RegExp}) regexpProperty= /test/g;
+
+  @Prop({type: String, converter: (value, _type) => ('fromAttribute' + value)}) onlyAttributeConverterProperty =  '';
+  @Prop({type: String, converter: {
+    fromAttribute: (value, _type) => ('fromAttribute' + value),
+    toAttribute: (value, _type) => ('toAttribute' + value),
+  }})
+  attributePropertyConverterProperty = '';
+
   @Deprecated('Custom Message')
   deprecatedProperty = 'test';
 

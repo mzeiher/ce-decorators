@@ -25,11 +25,27 @@ export function deserializeValue(value: string, type: PropertyType): null | stri
   if ((value === null || value === undefined) && type !== Boolean) {
     return null;
   } else if (type === Boolean) {
-    return value !== null;
+    if (value === 'false') {
+      return false;
+    } else {
+      return value !== null;
+    }
   } else if (type === Number) {
     return parseFloat(value);
   } else if (type === String) {
     return value;
+  } else if (type === RegExp) {
+    const [, , _2, _3, _4 ] =  Array.from(/(\/(.*)\/([a-z]*))|(.+)/.exec(value));
+    if (_4) {
+      return new RegExp(_4);
+    } else if (_2) {
+      return new RegExp(_2, _3 || '');
+    } else {
+      return null;
+    }
+  } else if (type === Function) {
+    const callback = eval('( function() {' + value + '} )'); // tslint:disable-line
+    return callback;
   } else if (type instanceof Object) {
     return JSON.parse(value); // tslint:disable-line
   } else {
@@ -92,4 +108,4 @@ export function needShadyDOM(): boolean {
 /**
  * support for new adopting stylesheet functionality
  */
-export const supportsAdoptingStyleSheets: boolean = ('adoptedStyleSheets' in Document.prototype) && 'replace' in CSSStyleSheet.prototype;
+export const supportsAdoptingStyleSheets: boolean = ('adoptedStyleSheets' in Document.prototype) && ('replace' in CSSStyleSheet.prototype);

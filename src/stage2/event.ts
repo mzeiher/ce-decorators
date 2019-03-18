@@ -22,7 +22,7 @@ import { EventOptions } from '../eventoptions';
 
 /**
  * stage-2 decorator for events
- * @param name 
+ * @param options 
  */
 export function Event(options?: EventOptions | string): Stage2FieldDecorator<CustomElement, typeof CustomElement> { // tslint:disable-line
   return (descriptor: FieldDecoratorDescriptor): FieldDecoratorResult<CustomElement, typeof CustomElement> | MethodDecoratorResult<CustomElement, typeof CustomElement> => {
@@ -31,7 +31,8 @@ export function Event(options?: EventOptions | string): Stage2FieldDecorator<Cus
       optionsObject = { name: descriptor.key.toString() };
     } else if (typeof options === 'string') { // legacy mode
       optionsObject = { name: <string>options };
-    } else if (typeof optionsObject.options === 'undefined') {
+    } 
+    if (typeof optionsObject.options === 'undefined') {
       optionsObject.options = { cancelable: false, bubbles: true };
     }
     if (descriptor.kind === 'field') {
@@ -52,7 +53,7 @@ export function Event(options?: EventOptions | string): Stage2FieldDecorator<Cus
         key: descriptor.key,
         placement: 'own',
         finisher: (target) => {
-          getClassEvents(target).set(descriptor.key.toString(), name || descriptor.key.toString());
+          getClassEvents(target).set(descriptor.key.toString(), optionsObject);
         },
       };
     } else {

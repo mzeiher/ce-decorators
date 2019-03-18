@@ -69,6 +69,12 @@ export declare class TestWithMultiplePropertiesWithTypeLazy extends TestWithMult
 
   deprecatedProperty: string;
 
+  functionProperty: () => void;
+  regexpProperty: RegExp;
+
+  onlyAttributeConverterProperty: string;
+  attributePropertyConverterProperty: string;
+  
   deprecatedPropertyGetSet:string;
 
   deprecatedMethod(): void;
