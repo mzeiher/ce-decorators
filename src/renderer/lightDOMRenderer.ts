@@ -16,7 +16,7 @@
 
 import { CustomElement } from '../customelement';
 import { getComponentProperties } from '../componentproperties';
-import { makeTemplateString } from '../utils';
+import { makeTemplateString, supportsAdoptingStyleSheets } from '../utils';
 import { render } from '../lit-html';
 
 /**
@@ -29,11 +29,18 @@ export function renderToLightDOM(this: CustomElement, elementToRender: HTMLEleme
     const { cssStyles, tag, shadyCSSStyleSheetAdopted, templateCache } = getComponentProperties(this.constructor as typeof CustomElement);
     if (!shadyCSSStyleSheetAdopted) {
       const styleSheet = document.createElement('style');
-      const styleString = cssStyles.map((value) => value.cssText).reduce((prevValue, currentValue) => prevValue + currentValue);
-      styleSheet.textContent = styleString.replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, ...args) => {
+      styleSheet.setAttribute('scope', tag);
+      const styleString: string = cssStyles.map((value) => {
+        return !supportsAdoptingStyleSheets ? value.cssText :
+        Array.from((<any>value).rules).reduce((prev, current: any) => prev + current.cssText, '');
+      }).reduce((prevValue, currentValue) => prevValue + currentValue);
+      styleSheet.textContent = styleString.replace(/(};?|,)\s*((\.?|#?)[a-z\-A-Z]+)/g, (_token, ...args) => {
+        debugger; return `${args[0]} :host ${args[1]}`;
+      }).replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, ...args) => {
         return `${tag}${args[2] ? args[2] : ''}`;
       });
       document.querySelector('head').appendChild(styleSheet);
+      getComponentProperties(this.constructor as typeof CustomElement).shadyCSSStyleSheetAdopted = true;
     }
     this._templateCache = templateCache || makeTemplateString(['', ''], ['', '']);
     getComponentProperties(this.constructor as typeof CustomElement).templateCache = this._templateCache;
