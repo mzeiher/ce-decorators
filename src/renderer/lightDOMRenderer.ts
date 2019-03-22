@@ -35,7 +35,7 @@ export function renderToLightDOM(this: CustomElement, elementToRender: HTMLEleme
         Array.from((<any>value).rules).reduce((prev, current: any) => prev + current.cssText, '');
       }).reduce((prevValue, currentValue) => prevValue + currentValue);
       styleSheet.textContent = styleString.replace(/(};?|,)\s*((\.?|#?)[a-z\-A-Z]+)/g, (_token, ...args) => {
-        debugger; return `${args[0]} :host ${args[1]}`;
+        return `${args[0]} :host ${args[1]}`;
       }).replace(/((:host\(([^\(]*)\))|(:host))/g, (_token, ...args) => {
         return `${tag}${args[2] ? args[2] : ''}`;
       });
