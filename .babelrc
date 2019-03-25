@@ -1,15 +1,70 @@
 {
-    "presets": ["@babel/preset-typescript"],
-    "plugins": [
-        ["@babel/plugin-proposal-decorators", {
-            "legacy": false,
-            "decoratorsBeforeExport": true
-        }],
-        ["@babel/plugin-proposal-class-properties", {
-            "loose": true
-        }],
-        ["@babel/plugin-proposal-optional-chaining"]
-    ],
-    "ignore": ["**/__tests__/*"],
-    "sourceMaps": true
+    "env": {
+        "es2017": {
+            "presets": [
+                "@babel/preset-typescript"
+            ],
+            "plugins": [
+                [
+                    "@babel/plugin-proposal-decorators",
+                    {
+                        "legacy": false,
+                        "decoratorsBeforeExport": true
+                    }
+                ],
+                [
+                    "@babel/plugin-proposal-class-properties",
+                    {
+                        "loose": true
+                    }
+                ],
+                [
+                    "@babel/plugin-proposal-optional-chaining"
+                ]
+            ],
+            "ignore": [
+                "**/__tests__/*"
+            ],
+            "sourceMaps": true
+        },
+        "es5": {
+            "presets": [
+                "@babel/preset-typescript",
+                [
+                    "@babel/preset-env",
+                    {
+                        "modules" : false,
+                        "targets": {
+                            "chrome": "60",
+                            "safari": "11",
+                            "edge": "12",
+                            "ie": "11"
+                        }
+                    }
+                ]
+            ],
+            "plugins": [
+                [
+                    "@babel/plugin-proposal-decorators",
+                    {
+                        "legacy": false,
+                        "decoratorsBeforeExport": true
+                    }
+                ],
+                [
+                    "@babel/plugin-proposal-class-properties",
+                    {
+                        "loose": true
+                    }
+                ],
+                [
+                    "@babel/plugin-proposal-optional-chaining"
+                ]
+            ],
+            "ignore": [
+                "**/__tests__/*"
+            ],
+            "sourceMaps": true
+        }
+    }
 }
