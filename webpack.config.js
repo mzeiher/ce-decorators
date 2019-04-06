@@ -34,7 +34,8 @@ module.exports = env => {
               '@babel/preset-typescript',
               ['@babel/preset-env', {
                 targets: {
-                  "chrome": "70"
+                  "chrome": "70",
+                  "ie": 11
                 },
                 modules: false,
                 useBuiltIns: 'entry'

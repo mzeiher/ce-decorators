@@ -15,10 +15,10 @@
  */
 
 export { Component } from './component';
-export { ComponentOptions } from './componentoptions';
+export * from './componentoptions';
+export * from './eventemitter';
+export * from './propertyoptions';
 export { CustomElement, LazyCustomElement } from './customelement';
-export { EventEmitter } from './eventemitter';
-export { PropertyOptions } from './propertyoptions';
 
 export { Event} from './event';
 export { Prop } from './prop';
