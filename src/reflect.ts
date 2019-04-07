@@ -1,3 +1,5 @@
+import { isStage2FieldDecorator, isStage2MethodDecorator, MethodDecoratorResult, FieldDecoratorResult, ClassDecoratorResult, FieldDecoratorDescriptor, MethodDecoratorDesciptor } from "./stage2/stage2decorators";
+
 /**
  * Copyright (c) 2018 Mathis Zeiher
  *
@@ -58,12 +60,40 @@ function metadata(metadataKey: string, metaDataValue: any): (target: Object, pro
     return origReflect.metadata(metadataKey, metaDataValue); // tslint:disable-line:no-unsafe-any
   } else {
 
-    return (target: Object, property: string | symbol): void => {
-      if (!property) {
-        property = '';
+    return (target: Object, property: string | symbol): void | MethodDecoratorResult<any, any> | FieldDecoratorResult<any, any> | ClassDecoratorResult<any> => {
+      if (isStage2FieldDecorator(target) || isStage2MethodDecorator(target)) {
+        if (isStage2FieldDecorator(target)) {
+          const result: FieldDecoratorResult<any, any> = {
+            descriptor: (<FieldDecoratorDescriptor>target).descriptor,
+            key: (<FieldDecoratorDescriptor>target).key,
+            kind: (<FieldDecoratorDescriptor>target).kind,
+            placement: (<FieldDecoratorDescriptor>target).placement,
+            finisher: (finisherTarget) => {
+              const propMap: PropMap = getOrCreatePropMap(reflectMap, finisherTarget.prototype);
+              getOrCreateMetadataMap(propMap, (<FieldDecoratorDescriptor>target).key).set(metadataKey, metaDataValue);
+            }
+          }
+          return result;
+        } else if (isStage2MethodDecorator(target)) {
+          const result: MethodDecoratorResult<any, any> = {
+            descriptor: (<MethodDecoratorDesciptor>target).descriptor,
+            key: (<MethodDecoratorDesciptor>target).key,
+            kind: (<MethodDecoratorDesciptor>target).kind,
+            placement: (<MethodDecoratorDesciptor>target).placement,
+            finisher: (finisherTarget) => {
+              const propMap: PropMap = getOrCreatePropMap(reflectMap, finisherTarget.prototype);
+              getOrCreateMetadataMap(propMap, (<MethodDecoratorDesciptor>target).key).set(metadataKey, metaDataValue);
+            }
+          }
+          return result;
+        }
+      } else {
+        if (!property) {
+          property = '';
+        }
+        const propMap: PropMap = getOrCreatePropMap(reflectMap, target);
+        getOrCreateMetadataMap(propMap, property).set(metadataKey, metaDataValue);
       }
-      const propMap: PropMap = getOrCreatePropMap(reflectMap, target);
-      getOrCreateMetadataMap(propMap, property).set(metadataKey, metaDataValue);
     };
   }
 }

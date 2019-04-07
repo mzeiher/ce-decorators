@@ -15,3 +15,4 @@ devserver.html
 /src/__tests__
 /src
 yarn.lock
+.babelrc
