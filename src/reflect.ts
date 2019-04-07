@@ -52,7 +52,7 @@ function decorate(decorators: Array<DecoratorFunc>, target: Object, propertyKey:
   }
   const desciptor: any = decorators.reverse() // tslint:disable-line:no-any
     .reduce<PropertyDescriptor>((prevValue, currentValue) => (currentValue(target, propertyKey, prevValue) || prevValue), description); // tslint:disable-line
-  return desciptor || description;
+  return desciptor || description || target;
 }
 
 function metadata(metadataKey: string, metaDataValue: any): (target: Object, property: string | symbol) => void { // tslint:disable-line:no-any
